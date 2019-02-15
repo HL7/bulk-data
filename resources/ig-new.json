@@ -19,7 +19,7 @@
   }],
   "url" : "http://fhir-registry.smarthealthit.org/ImplementationGuide/ig",
   "version" : "1.0.0",
-  "name" : "SMART Application Launch Framework",
+  "name" : "FHIR Bulk Data Access",
   "status" : "active",
   "experimental" : false,
   "publisher" : "FHIR Project",

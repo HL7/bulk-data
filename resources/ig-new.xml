@@ -16,7 +16,7 @@
   </extension>
   <url value="http://fhir-registry.smarthealthit.org/ImplementationGuide/ig"/>
   <version value="1.0.0"/>
-  <name value="SMART Application Launch Framework"/>
+  <name value="FHIR Bulk Data Access"/>
   <status value="active"/>
   <experimental value="false"/>
   <publisher value="FHIR Project"/>
