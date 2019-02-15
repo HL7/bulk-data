@@ -14,7 +14,7 @@
   },
   "fixed-business-version": "1.0.0",
   "license": "CC0-1.0",
-  "status": "active",
+  "status": "draft",
   "npm-name": "hl7.fhir.smart",
   "paths": {
     "output": "output",
@@ -35,8 +35,8 @@
     "StructureDefinition/oauth-uris": {
       "base": "StructureDefinition-oauth-uris.html"
     },
-    "CapabilityStatement/smart-app-launch-example": {
-      "base": "CapabilityStatement-smart-app-launch-example.html"
+    "CapabilityStatement/us-bulk-data-example": {
+      "base": "CapabilityStatement-us-bulk-data-example.html"
     }
   },
   "source": "ig.xml",
