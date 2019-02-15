@@ -1,0 +1,27 @@
+{
+  "package-id" : "hl7.fhir.uv.smart-app-launch",
+  "title" : "Smart App Launch Implementation Guide",
+  "canonical" : "http://hl7.org/fhir/smart-app-launch",
+  "list" : [{
+    "version" : "current",
+    "date" : "n/a",
+    "desc" : "Continuous Integration Build (latest in version control)",
+    "path" : "https://build.fhir.org/ig/HL7/smart-app-launch",
+    "status" : "ci-build"
+  } , {
+    "version" : "1.0.0",
+    "date" : "2018-11-13",
+    "desc" : "Release 1.0.0 (STU)",
+    "path" : "http://hl7.org/fhir/smart-app-launch/1.0.0",
+    "status" : "current",
+    "sequence" : "STU1",
+    "current" : true
+  }, {
+    "version" : "0.8.0",
+    "date" : "2017-07-29",
+    "desc" : "STU Ballot",
+    "path" : "http://hl7.org/fhir/smart-app-launch/0.8.0",
+    "status" : "trial-use",
+    "sequence" : "STU1"
+  } ]
+}

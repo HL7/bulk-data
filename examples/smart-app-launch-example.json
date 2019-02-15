@@ -1,0 +1,82 @@
+{
+  "resourceType": "CapabilityStatement",
+  "id": "smart-app-launch-example",
+  "text": {
+    "status": "generated",
+    "div": "<div\nxmlns=\"http://www.w3.org/1999/xhtml\"><h2>SMART App Launch Capability Statement\nExample (Empty)</h2><div><p>This is the base Capability Statement for FHIR. It\nrepresents a server that supports <em>SMART on FHIR</em> authorization for\naccess, it declares support for automated discovery of OAuth2 endpoints in its\nCapabilityStatement using the OAuth Uri extension on the\n<code>rest.security</code> element (or, when using FHIR DSTU2, the\n<code>Conformance.rest.security</code> element). Any time a client sees this\nextension, it must be prepared to authorize using SMART’s OAuth2-based\nprotocol.</p>\n<p>None of the other functionality defined by FHIR is represented\nin this Capability Statement. It is provided to use as a template for system\ndesigners to build their own Capability Statements from. Since a capability\nstatement has to contain something, this contains a read of a Capability\nStatement</p></div>"
+  },
+  "url": "http://fhir-registry.smarthealthit.org/CapabilityStatement/smart-app-launch-example",
+  "version": "1.0.0",
+  "name": "SMART App Launch Capability Statement Example\n(Empty)",
+  "status": "draft",
+  "experimental": true,
+  "date": "2018-09-18T14:44:43-07:00",
+  "publisher": "Boston's Children Hospital and Hl7\nInternational",
+  "contact": [
+    {
+      "telecom": [
+        {
+          "system": "url",
+          "value": "http://hl7.org/fhir"
+        }
+      ]
+    }
+  ],
+  "description": "This is the base Capability\nStatement for FHIR. It represents a server that supports *SMART on FHIR*\nauthorization for access, it declares support for automated discovery of OAuth2\nendpoints in its CapabilityStatement using the OAuth Uri extension on the\n`rest.security` element (or, when using FHIR DSTU2, the\n`Conformance.rest.security` element). Any time a client sees this extension, it\nmust be prepared to authorize using SMART’s OAuth2-based protocol.\n\n   None of\nthe other functionality defined by FHIR is represented in this Capability\nStatement. It is provided to use as a template for system designers to build\ntheir own Capability Statements from. Since a capability statement has to\ncontain something, this contains a read of a Capability Statement",
+  "kind": "capability",
+  "software": {
+    "name": "Insert your softwware name here..."
+  },
+  "fhirVersion": "3.0.1",
+  "acceptUnknown" : "no",
+  "format": [
+    "xml",
+    "json"
+  ],
+  "rest": [
+    {
+      "mode": "server",
+      "documentation": "An empty Capability Statement",
+      "security": {
+        "extension": [
+          {
+            "extension": [
+              {
+                "url": "token",
+                "valueUri": "https://my-server.org/token"
+              },
+              {
+                "url": "authorize",
+                "valueUri": "https://my-server.org/authorize"
+              },
+              {
+                "url": "manage",
+                "valueUri": "https://my-server.org/authorizations/manage"
+              },
+              {
+                "url": "introspect",
+                "valueUri": "https://my-server.org/authorizations/introspect"
+              },
+              {
+                "url": "revoke",
+                "valueUri": "https://my-server.org/authorizations/revoke"
+              }
+            ],
+            "url": "http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris"
+          }
+        ],
+        "service": [
+          {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/restful-security-service",
+                "code": "SMART-on-FHIR"
+              }
+            ],
+            "text": "OAuth2 using SMART-on-FHIR profile (see http://docs.smarthealthit.org)"
+          }
+        ]
+      }
+    }
+  ]
+}

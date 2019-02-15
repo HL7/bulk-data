@@ -1,0 +1,70 @@
+{
+  "resourceType" : "ImplementationGuide",
+  "id" : "ig",
+  "extension" : [{
+    "url" : "http://hl7.org/fhir/StructureDefinition/igpublisher-folder-resource",
+    "valueString" : "/Users/ehaas/Documents/FHIR/smart-app-launch-brver/resources"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/igpublisher-folder-resource",
+    "valueString" : "/Users/ehaas/Documents/FHIR/smart-app-launch-brver/examples"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/igpublisher-folder-pages",
+    "valueString" : "/Users/ehaas/Documents/FHIR/smart-app-launch-brver/spec"
+  },
+  {
+    "url" : "http://hl7.org/fhir/StructureDefinition/igpublisher-folder-pages",
+    "valueString" : "/Users/ehaas/Documents/FHIR/smart-app-launch-brver/dstu2"
+  }],
+  "url" : "http://fhir-registry.smarthealthit.org/ImplementationGuide/ig",
+  "version" : "1.0.0",
+  "name" : "SMART Application Launch Framework",
+  "status" : "active",
+  "experimental" : false,
+  "publisher" : "FHIR Project",
+  "packageId" : "hl7.fhir.smart",
+  "license" : "CC0-1.0",
+  "fhirVersion" : ["3.0.1"],
+  "definition" : {
+    "grouping" : [{
+      "id" : "p1",
+      "name" : "base"
+    }],
+    "resource" : [{
+      "reference" : {
+        "reference" : "StructureDefinition/oauth-uris"
+      },
+      "exampleBoolean" : false,
+      "groupingId" : "p1"
+    },
+    {
+      "reference" : {
+        "reference" : "CapabilityStatement/smart-app-launch-example"
+      },
+      "exampleBoolean" : true,
+      "groupingId" : "p1"
+    }],
+    "page" : {
+      "nameUrl" : "index.html",
+      "title" : "SMART App Launch",
+      "generation" : "html"
+    },
+    "parameter" : [{
+      "code" : "apply",
+      "value" : "version"
+    },
+    {
+      "code" : "generate-json",
+      "value" : "true"
+    },
+    {
+      "code" : "generate-xml",
+      "value" : "true"
+    },
+    {
+      "code" : "generate-turtle",
+      "value" : "true"
+    }]
+  }
+}

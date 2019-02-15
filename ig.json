@@ -1,0 +1,45 @@
+{
+  "canonicalBase": "http://fhir-registry.smarthealthit.org",
+  "extraTemplates": [
+    "inline"
+  ],
+  "defaults": {
+    "Any": {
+      "template-base": "base.html",
+      "template-format": "format.html"
+    },
+    "StructureDefinition": {
+      "template-base": "sd.html"
+    }
+  },
+  "fixed-business-version": "1.0.0",
+  "license": "CC0-1.0",
+  "status": "active",
+  "npm-name": "hl7.fhir.smart",
+  "paths": {
+    "output": "output",
+    "pages": [
+      "spec",
+      "dstu2"
+    ],
+    "qa": "qa",
+    "resources": [
+      "resources",
+      "examples"
+    ],
+    "specification": "http://hl7.org/fhir/STU3",
+    "temp": "temp",
+    "txCache": "txCache"
+  },
+  "resources": {
+    "StructureDefinition/oauth-uris": {
+      "base": "StructureDefinition-oauth-uris.html"
+    },
+    "CapabilityStatement/smart-app-launch-example": {
+      "base": "CapabilityStatement-smart-app-launch-example.html"
+    }
+  },
+  "source": "ig.xml",
+  "tool": "jekyll",
+  "version": "3.0.1"
+}
