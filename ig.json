@@ -35,8 +35,8 @@
     "StructureDefinition/oauth-uris": {
       "base": "StructureDefinition-oauth-uris.html"
     },
-    "CapabilityStatement/us-bulk-data-example": {
-      "base": "CapabilityStatement-us-bulk-data-example.html"
+    "CapabilityStatement/bulk-data-export-example": {
+      "base": "CapabilityStatement-bulk-data-export-example.html"
     }
   },
   "source": "ig.xml",

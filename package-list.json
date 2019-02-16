@@ -1,12 +1,12 @@
 {
-  "package-id" : "hl7.fhir.uv.us-bulk-data",
+  "package-id" : "hl7.fhir.uv.bulk-data-export",
   "title" : "FHIR Bulk Data Access (Flat FHIR)",
-  "canonical" : "http://hl7.org/fhir/us-bulk-data",
+  "canonical" : "http://hl7.org/fhir/bulk-data-export",
   "list" : [{
     "version" : "current",
     "date" : "n/a",
     "desc" : "Continuous Integration Build (latest in version control)",
-    "path" : "https://build.fhir.org/ig/HL7/us-bulk-data",
+    "path" : "https://build.fhir.org/ig/HL7/bulk-data-export",
     "status" : "ci-build"
   }]
 }
