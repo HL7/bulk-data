@@ -67,7 +67,7 @@
   "base": "/",
   "system": true,
   "type": false,
-  "instance": true,
+  "instance": false,
   "parameter": [
     {
       "name": "_outputFormat",
