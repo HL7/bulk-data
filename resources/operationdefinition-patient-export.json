@@ -52,17 +52,6 @@
     }
   ],
   "description": "Export data from a FHIR server for all data associated with patients. This supports use cases like transmitting all data about patients or clinical care between systems.",
-  "jurisdiction": [
-    {
-      "coding": [
-        {
-          "system": "urn:iso:std:iso:3166",
-          "code": "US",
-          "display": "United States of America (the)"
-        }
-      ]
-    }
-  ],
   "code": "$export",
   "resource": ["Patient"],
   "system": false,

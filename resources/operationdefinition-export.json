@@ -52,17 +52,6 @@
     }
   ],
   "description": "Export data from a FHIR server whether or not it is associated with a patient. This supports use cases like backing up a server or exporting terminology data by restricting the resources returned using the _type parameter.",
-  "jurisdiction": [
-    {
-      "coding": [
-        {
-          "system": "urn:iso:std:iso:3166",
-          "code": "US",
-          "display": "United States of America (the)"
-        }
-      ]
-    }
-  ],
   "code": "$export",
   "base": "/",
   "system": true,
