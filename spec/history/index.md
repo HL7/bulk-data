@@ -7,5 +7,4 @@ layout: default
 
 | Date | Version  | Changes |
 |------|----------|---------|
-| 14 Febuary 2019 | [0.5.1](http://hl7.org/fhir/bulk-data-export/index.html) | Current Draft (undergoing Ballot) |
-| Current | [last commit](https://github.com/smart-on-fhir/fhir-bulk-data-docs/) | Current Development build (may be incoherent and change rapidly) |
+| Current | [last commit](https://github.com/smart-on-fhir/fhir-bulk-data-docs/) | Current  build |
