@@ -26,9 +26,9 @@ This use case exports all resources needed for the Common Clinical Data Set, as 
 This use case exports all resources needed to convey a patient's healththcare financial history, including Patient, ExplanationOfBenefit, Coverage, and Claim. While FHIR profiles are still being developed and standardized, see https://bluebutton.cms.gov/developers/#core-resources for a full-fledged example.
 
 ## Resources
-[Overview Presentation](https://docs.google.com/presentation/d/14ZHmam9hwz6-SsCG1YqUIQnJ56bvSqEatebltgEVR6c/edit?usp=sharing)
-[Client and Server Implementations](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/implementations.md)
-[Discussion Group (FHIR Zulip "Bulk Data" Track)](https://chat.fhir.org/#narrow/stream/bulk.20data)
+* [Overview Presentation](https://docs.google.com/presentation/d/14ZHmam9hwz6-SsCG1YqUIQnJ56bvSqEatebltgEVR6c/edit?usp=sharing)
+* [Client and Server Implementations](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/implementations.md)
+* [Discussion Group (FHIR Zulip "Bulk Data" Track)](https://chat.fhir.org/#narrow/stream/bulk.20data)
 
 ## Audience and Scope
 
