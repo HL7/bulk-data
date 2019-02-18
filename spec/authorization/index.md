@@ -158,9 +158,7 @@ integrity-protected link for securing all exchanges between the client
 and the authorization server's token endpoint.  All exchanges described herein between the client
 and the FHIR server SHALL be secured using TLS V1.2.
 
-<div>
 <img class="sequence-diagram-raw"  src="http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgQmFja2VuZCBTZXJ2aWNlIEF1dGhvcml6YXRpb24KCm5vdGUgb3ZlciBBcHA6ICBDcmVhdGUgYW5kIHNpZ24gYXV0aGVudGljACsFIEpXVCBcbntcbiAgImlzcyI6ICJhcHBfY2xpZW50X2lkIiwAFgVzdWIAAxhleHAiOiAxNDIyNTY4ODYwLCAASAVhdWQiOiAiaHR0cHM6Ly97dG9rZW4gdXJsfQBNBiAianRpIjogInJhbmRvbS1ub24tcmV1c2FibGUtand0LWlkLTEyMyJcbn0gLS0-AIE3BndpdGggYXBwJ3MgcHJpdmF0ZSBrZXkgKFJTMzg0KQCBbBBzY29wZT1zeXN0ZW0vKi5yZWFkJlxuZ3JhbnRfdHlwZT0AgV8HY3JlZGVudGlhbHMmXG4AgXQHYXNzZXJ0aW9uACUGdXJuOmlldGY6cGFyYW1zOm9hdXRoOgCCIQYtACMJLXR5cGU6and0LWJlYXJlcgA8Ez17c2lnbmVkAIJ1FGZyb20gYWJvdmV9CgpBcHAtPkVIUgCDXAUAg2kFZXI6ICBQT1NUIACCQxNcbihTYW1lIFVSTCBhcwCCegYARgYpAIQJDABAEUlzc3VlIG5ldyAAgx0FOgCECAUiYWNjZXNzXwCDMAUiOiAic2VjcmV0LQCDQAUteHl6IixcbiJleHBpcmVzX2luIjogMzAwLFxuLi4uXG59CgCBKA8tPgCFBwVbAFAGAGMGIHJlc3BvbnNlXQ&s=default"/>
-</div>
 
 #### Protocol details
 
@@ -170,6 +168,40 @@ the FHIR authorization server. The authentication JWT SHALL include the
 following claims, and SHALL be signed with the client's private
 key (which SHOULD be an RS384 or EC384 signature). For a practical reference on JWT, as well as debugging
 tools and client libraries, see https://jwt.io.
+
+<table class="table">
+  <thead>
+    <th colspan="3">Authentication JWT Header Values</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>alg</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>The JWA algorithm (e.g., `RS384`, `EC384`) used for signing the authentication JWT.
+      </td>
+    </tr>
+    <tr>
+      <td><code>kid</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>The identifier of the key-pair used to sign this JWT. This identifier SHALL
+          be unique within the client's JWK Set.</td>
+    </tr>
+    <tr>
+      <td><code>typ</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>Fixed value: <code>JWT</code>.</td>
+    </tr>
+    <tr>
+      <td><code>jku</code></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>The URL to the JWK Set containing the public key(s). When present,
+      this should match a value that the client supplied to the FHIR server at
+      client registration time.  (When absent, the FHIR server SHOULD fall back on the JWK
+      Set URL or the JWK Set supplied at registration time.</td>
+    </tr>
+  </tbody>
+</table>
+
 
 <table class="table">
   <thead>
