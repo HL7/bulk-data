@@ -180,13 +180,13 @@ tools and client libraries, see https://jwt.io.
       <td><code>iss</code></td>
       <td><span class="label label-success">required</span></td>
       <td>Issuer of the JWT -- the client's <code>client_id</code>, as determined during registration with the FHIR  authorization server
-        (note that this is the same as the value for the <code>sub<code> claim)</td>
+        (note that this is the same as the value for the <code>sub</code> claim)</td>
     </tr>
     <tr>
       <td><code>sub</code></td>
       <td><span class="label label-success">required</span></td>
       <td>The service's <code>client_id</code>, as determined during registration with the FHIR authorization server
-      (note that this is the same as the value for the <code>iss<code> claim)</td>
+      (note that this is the same as the value for the <code>iss</code> claim)</td>
     </tr>
     <tr>
       <td><code>aud</code></td>
