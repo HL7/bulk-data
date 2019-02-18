@@ -1,1 +1,1 @@
-historypath : "http://hl7.org/fhir/us/core/history.html" # complete path to Implementation Guide history file
+historypath : "/ig/HL7/bulk-data-export/history/index.html" # complete path to Implementation Guide history file
