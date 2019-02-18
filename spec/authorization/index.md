@@ -170,38 +170,6 @@ following claims, and SHALL be signed with the client's private
 key (which SHOULD be an RS384 or EC384 signature). For a practical reference on JWT, as well as debugging
 tools and client libraries, see https://jwt.io.
 
-<table class="table">
-  <thead>
-    <th colspan="3">Authentication JWT Header Values</th>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>alg</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td>The JWA algorithm (e.g., `RS384`, `EC384`) used for signing the authentication JWT.
-      </td>
-    </tr>
-    <tr>
-      <td><code>kid</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td>The identifier of the key-pair used to sign this JWT. This identifier SHALL
-          be unique within the client's JWK Set.</td>
-    </tr>
-    <tr>
-      <td><code>typ</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td>Fixed value: <code>JWT</code>.</td>
-    </tr>
-    <tr>
-      <td><code>jku</code></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>The URL to the JWK Set containing the public key(s). When present,
-      this should match a value that the client supplied to the FHIR server at
-      client registration time.  (When absent, the FHIR server SHOULD fall back on the JWK
-      Set URL or the JWK Set supplied at registration time.</td>
-    </tr>
-  </tbody>
-</table>
 
 
 <table class="table">
