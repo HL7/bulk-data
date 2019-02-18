@@ -325,7 +325,12 @@ to the client.
 If the access token request is valid and authorized, the authorization server
 SHALL issue an access token in response.  The access token response SHALL be a JSON object with
 the following properties:
-<div>
+
+| Access token response: property names |
+|---------------------------------------|
+|`access_token`|<span class="label label-success">required</span>|The access token issued by the authorization server.
+|`token_type`|<span class="label label-success">required</span>|Fixed value: `bearer`.
+
 <table class="table">
   <thead>
     <th colspan="3">Access token response: property names</th>
@@ -353,7 +358,6 @@ the following properties:
     </tr>
   </tbody>
 </table>
-</div>
 
 To minimize risks associated with token redirection, the scope of each access token SHOULD encompass, and be limited to, the resources requested. Access tokens issued under this profile SHALL be short-lived; the `expires_in`
 value SHOULD NOT exceed `300`, which represents an expiration-time of five minutes.
