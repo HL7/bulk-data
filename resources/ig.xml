@@ -15,12 +15,6 @@
         <reference value="StructureDefinition/oauth-uris"/>
       </sourceReference>
     </resource>
-    <resource>
-      <example value="true"/>
-      <sourceReference>
-        <reference value="CapabilityStatement/smart-app-launch-example"/>
-      </sourceReference>
-    </resource>
   </package>
   <page>
     <source value="index.html"/>

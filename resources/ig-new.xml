@@ -34,13 +34,6 @@
       <exampleBoolean value="false"/>
       <groupingId value="p1"/>
     </resource>
-    <resource>
-      <reference>
-        <reference value="CapabilityStatement/smart-app-launch-example"/>
-      </reference>
-      <exampleBoolean value="true"/>
-      <groupingId value="p1"/>
-    </resource>
     <page>
       <nameUrl value="index.html"/>
       <title value="SMART App Launch"/>

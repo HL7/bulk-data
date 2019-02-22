@@ -37,17 +37,10 @@
       },
       "exampleBoolean" : false,
       "groupingId" : "p1"
-    },
-    {
-      "reference" : {
-        "reference" : "CapabilityStatement/smart-app-launch-example"
-      },
-      "exampleBoolean" : true,
-      "groupingId" : "p1"
     }],
     "page" : {
       "nameUrl" : "index.html",
-      "title" : "SMART App Launch",
+      "title" : "Bulk Data",
       "generation" : "html"
     },
     "parameter" : [{
