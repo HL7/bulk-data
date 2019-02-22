@@ -1,1 +1,1 @@
-historypath : "{{base}}export/index.html" # complete path to Implementation Guide history file
+historypath : "/ig/HL7/bulk-data/history/index.html" # complete path to Implementation Guide history file
