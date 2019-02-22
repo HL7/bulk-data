@@ -23,8 +23,7 @@
     ],
     "qa": "qa",
     "resources": [
-      "resources",
-      "examples"
+      "resources"
     ],
     "specification": "http://hl7.org/fhir/STU3",
     "temp": "temp",
