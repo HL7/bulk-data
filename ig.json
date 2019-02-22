@@ -19,8 +19,7 @@
   "paths": {
     "output": "output",
     "pages": [
-      "spec",
-      "dstu2"
+      "spec"
     ],
     "qa": "qa",
     "resources": [
