@@ -407,7 +407,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzM4NCIsImtpZCI6ImVlZTlmMTdhM2I1OThmZDg2NDE3YTk4MGI1
 ```
 
 Note: to inspect this example JWT, you can visit https://jwt.io. Paste the signed
-JWT value above into the "Encoded"  field, and paste the [sample public signing key](sample-jwks/RS384.public.json) (starting with the `{"kty": "RSA"` JSON object, and excluding the `{ "keys": [` JWK Set wrapping array) into the "Public Key" box.
+JWT value above into the "Encoded"  field, and paste the [sample public signing key](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/sample-jwks/RS384.public.json) (starting with the `{"kty": "RSA"` JSON object, and excluding the `{ "keys": [` JWK Set wrapping array) into the "Public Key" box.
 The plaintext JWT will be displayed in the "Decoded:Payload"  field, and a "Signature Verified" message will appear.
 
 ##### 3. Obtain an access token
