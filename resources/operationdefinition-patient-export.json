@@ -28,7 +28,7 @@
       "telecom": [
         {
           "system": "email",
-          "value": "dan@gotdan.org"
+          "value": "daniel.gottlieb@childrens.harvard.edu"
         }
       ]
     },
@@ -37,7 +37,7 @@
       "telecom": [
         {
           "system": "email",
-          "value": "jmandel@gmail.com"
+          "value": "joshua.mandel@childrens.harvard.edu"
         }
       ]
     },
@@ -55,7 +55,7 @@
   "code": "$export",
   "resource": ["Patient"],
   "system": false,
-  "type": false,
+  "type": true,
   "instance": false,
   "parameter": [
     {
@@ -71,7 +71,7 @@
       "use": "in",
       "min": 0,
       "max": "1",
-      "documentation": "Resources updated after this period will be included in the response. Note: This parameter was named start in an earlier version of this proposal",
+      "documentation": "Resources updated after this period will be included in the response.",
       "type": "instant"
     },
     {
