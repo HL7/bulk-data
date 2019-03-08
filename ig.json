@@ -26,6 +26,7 @@
       "resources"
     ],
     "specification": "http://hl7.org/fhir/STU3",
+    "history": "history.html",
     "temp": "temp",
     "txCache": "txCache"
   },
