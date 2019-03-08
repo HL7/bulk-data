@@ -7,18 +7,9 @@
   <status value="active"/>
   <experimental value="false"/>
   <publisher value="FHIR Project"/>
-  <package>
-    <name value="base"/>
-    <resource>
-      <example value="false"/>
-      <sourceReference>
-        <reference value="StructureDefinition/oauth-uris"/>
-      </sourceReference>
-    </resource>
-  </package>
   <page>
     <source value="index.html"/>
-    <title value="SMART App Launch"/>
+    <title value="FHIR Bulk Data Access"/>
     <kind value="page"/>
   </page>
 </ImplementationGuide>
