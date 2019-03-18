@@ -12,6 +12,9 @@ These OperationDefinitions have been defined for this implementation guide.
 
 
 ### Export: export any data from a FHIR server
+`GET [fhir base]/$export`  
+
+Export data from a FHIR server whether or not it is associated with a patient.  
 
 ```json
 {
@@ -104,6 +107,10 @@ These OperationDefinitions have been defined for this implementation guide.
 
 ### Patient Export: export patient data from a FHIR server
 
+`GET [fhir base]/Patient/$export`  
+
+Export data only associated with patients and their resources.  
+
 ```json
 {
   "resourceType": "OperationDefinition",
@@ -194,6 +201,10 @@ These OperationDefinitions have been defined for this implementation guide.
 ```
 
 ### Group Export: export data for groups of patients from a FHIR server
+
+`GET [fhir base]/Group/[id]/$export`  
+
+FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/group.html).  
 
 ```json
 {
