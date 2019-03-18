@@ -3,16 +3,10 @@
 <ImplementationGuide xmlns="http://hl7.org/fhir">
   <id value="ig"/>
   <extension url="http://hl7.org/fhir/StructureDefinition/igpublisher-folder-resource">
-    <valueString value="/Users/ehaas/Documents/FHIR/smart-app-launch-brver/resources"/>
-  </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/igpublisher-folder-resource">
-    <valueString value="/Users/ehaas/Documents/FHIR/smart-app-launch-brver/examples"/>
+    <valueString value="C:\work\org.hl7.fhir.igs\bulk-data\resources"/>
   </extension>
   <extension url="http://hl7.org/fhir/StructureDefinition/igpublisher-folder-pages">
-    <valueString value="/Users/ehaas/Documents/FHIR/smart-app-launch-brver/spec"/>
-  </extension>
-  <extension url="http://hl7.org/fhir/StructureDefinition/igpublisher-folder-pages">
-    <valueString value="/Users/ehaas/Documents/FHIR/smart-app-launch-brver/dstu2"/>
+    <valueString value="C:\work\org.hl7.fhir.igs\bulk-data\spec"/>
   </extension>
   <url value="http://fhir-registry.smarthealthit.org/ImplementationGuide/ig"/>
   <version value="1.0.0"/>
@@ -20,23 +14,31 @@
   <status value="active"/>
   <experimental value="false"/>
   <publisher value="FHIR Project"/>
-  <packageId value="hl7.fhir.smart"/>
+  <packageId value="hl7.fhir.us.bulkdata"/>
   <license value="CC0-1.0"/>
-  <fhirVersion value="3.0.1"/>
+  <fhirVersion value="4.0.0"/>
   <definition>
-    <grouping id="p1">
-      <name value="base"/>
-    </grouping>
     <resource>
       <reference>
-        <reference value="StructureDefinition/oauth-uris"/>
+        <reference value="OperationDefinition/export"/>
       </reference>
-      <exampleBoolean value="false"/>
-      <groupingId value="p1"/>
+      <name value="Definition for $export"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="OperationDefinition/group-export"/>
+      </reference>
+      <name value="Definition for Group $export"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="OperationDefinition/patient-export"/>
+      </reference>
+      <name value="Definition for Patient $export"/>
     </resource>
     <page>
       <nameUrl value="index.html"/>
-      <title value="SMART App Launch"/>
+      <title value="FHIR Bulk Data Access"/>
       <generation value="html"/>
     </page>
     <parameter>

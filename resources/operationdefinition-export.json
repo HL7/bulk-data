@@ -1,10 +1,6 @@
 {
   "resourceType": "OperationDefinition",
-  "id": "example",
-  "text": {
-    "status": "generated",
-    "div" : "<div>!-- Snipped for Brevity --></div>"
-  },
+  "id": "export",
   "url": "http://h7.org/fhir/OperationDefinition/example",
   "version": "1.0.0",
   "name": "FHIR Bulk Data Export - System Level Export",

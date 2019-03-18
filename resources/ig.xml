@@ -7,9 +7,29 @@
   <status value="active"/>
   <experimental value="false"/>
   <publisher value="FHIR Project"/>
-  <page>
-    <source value="index.html"/>
-    <title value="FHIR Bulk Data Access"/>
-    <kind value="page"/>
-  </page>
+  <definition>
+    <resource>
+      <reference>
+        <reference value="OperationDefinition/export"/>
+      </reference>
+      <name value="Definition for $export"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="OperationDefinition/group-export"/>
+      </reference>
+      <name value="Definition for Group $export"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="OperationDefinition/patient-export"/>
+      </reference>
+      <name value="Definition for Patient $export"/>
+    </resource>
+    <page>
+      <nameUrl value="index.html"/>
+      <title value="FHIR Bulk Data Access"/>
+      <generation value="html"/>
+    </page>
+  </definition>
 </ImplementationGuide>

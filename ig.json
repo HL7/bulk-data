@@ -1,5 +1,5 @@
 {
-  "canonicalBase": "http://fhir-registry.smarthealthit.org",
+  "canonicalBase": "http://hl7.org/fhir/us/bulkdata",
   "extraTemplates": [
     "inline"
   ],
@@ -15,7 +15,7 @@
   "fixed-business-version": "1.0.0",
   "license": "CC0-1.0",
   "status": "draft",
-  "npm-name": "hl7.fhir.smart",
+  "npm-name": "hl7.fhir.us.bulkdata",
   "paths": {
     "output": "output",
     "pages": [
@@ -34,11 +34,11 @@
     "StructureDefinition/oauth-uris": {
       "base": "StructureDefinition-oauth-uris.html"
     },
-    "CapabilityStatement/bulk-data-export-example": {
-      "base": "CapabilityStatement-bulk-data-export-example.html"
+    "OperationDefinition/export": {
+      "base": "OperationDefinition-export.html"
     }
   },
   "source": "ig.xml",
   "tool": "jekyll",
-  "version": "3.0.1"
+  "version": "4.0.0"
 }
