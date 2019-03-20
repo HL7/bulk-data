@@ -12,7 +12,7 @@
       "template-base": "sd.html"
     }
   },
-  "fixed-business-version": "1.0.0",
+  "fixed-business-version": "0.1.0",
   "license": "CC0-1.0",
   "status": "draft",
   "npm-name": "hl7.fhir.us.bulkdata",

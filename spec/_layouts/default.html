@@ -78,11 +78,7 @@
 
         <div id="project-status" class="project-status"> <!-- ig title text -->
 
-        {% if site.data.fhir.ig.status == 'draft' %}
-        <strong>{{site.data.fhir.igName}} Implementation Guide CI Build</strong>
-        {% else %}
-        <strong>{{site.data.fhir.igName}} Implementation Guide Release {{site.data.fhir.ig.version}}</strong>
-        {% endif %}
+        <strong>{{site.data.fhir.igName}} IG: STU1 Ballot #1</strong>
 
       </div><!-- end ig title text -->
 
@@ -172,8 +168,10 @@
     <div id="segment-footer" class="segment">  <!-- segment-footer -->
   		<div class="container">  <!-- container -->
   			<div class="inner-wrapper">
-  				<p>FHIR Bulk Data Access Version: {{ site.data.fhir.ig.version }}
-          &copy; Boston Children's Hospital and Health Level Sevel International. This content is licensed under <a href="https://creativecommons.org/licenses/by/4.0/"><!-- <img height=auto  alt="CC BY 4.0" src="{{base}}dist/CC-BY_icon.svg"/> -->CC BY 4.0</a>.  Generated on {{ site.time }} by the FHIR IG-publisher v{{site.data.fhir.versionFull}}.
+  				<p>
+FHIR IG © {{site.data.info.copyrightyear}} HL7 &amp; Boston Children's Hospital.  
+{{site.data.fhir.packageId}}#{{site.data.fhir.igVer}} based on <a style="color: #81BEF7" href="{{site.data.fhir.path}}">FHIR {{site.data.fhir.version}}</a>. 
+Generated {{site.data.fhir.genDay}}
           <span style="color: #FFFF77"> |
             <a style="color: #81BEF7" target="_blank" href="{{base}}history/index.html">History</a>
             | <a style="color: #81BEF7" target="_blank" href="https://github.com/HL7/smart-app-launch/issues">Propose a change</a>

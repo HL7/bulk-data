@@ -9,7 +9,7 @@
     <valueString value="C:\work\org.hl7.fhir.igs\bulk-data\spec"/>
   </extension>
   <url value="http://fhir-registry.smarthealthit.org/ImplementationGuide/ig"/>
-  <version value="1.0.0"/>
+  <version value="0.1.0"/>
   <name value="FHIR Bulk Data Access"/>
   <status value="active"/>
   <experimental value="false"/>
