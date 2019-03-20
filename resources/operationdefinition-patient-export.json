@@ -1,9 +1,9 @@
 {
   "resourceType": "OperationDefinition",
   "id": "patient-export",
-  "url": "http://h7.org/fhir/OperationDefinition/example",
+  "url": "http://hl7.org/fhir/us/bulkdata/OperationDefinition/patient-export",
   "version": "1.0.0",
-  "name": "FHIR Bulk Data Export - System Level Export",
+  "name": "PatientLevelExport",
   "title": "FHIR Bulk Data Export (Flat FHIR) - System Level Export",
   "status": "active",
   "kind": "operation",
@@ -47,7 +47,7 @@
       ]
     }
   ],
-  "description": "Export data from a FHIR server for all data associated with patients. This supports use cases like transmitting all data about patients or clinical care between systems.",
+  "description": "Export data from a FHIR server for all data associated with patients. This supports use cases like transmitting all data about patients or clinical care between systems",
   "code": "$export",
   "resource": ["Patient"],
   "system": false,
@@ -67,7 +67,7 @@
       "use": "in",
       "min": 0,
       "max": "1",
-      "documentation": "Resources updated after this period will be included in the response.",
+      "documentation": "Resources updated after this period will be included in the response",
       "type": "instant"
     },
     {

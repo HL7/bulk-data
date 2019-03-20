@@ -2,11 +2,14 @@
 <!--Hidden IG for de facto IG publishing-->
 <ImplementationGuide xmlns="http://hl7.org/fhir">
   <id value="ig"/>
-  <url value="http://fhir-registry.smarthealthit.org/ImplementationGuide/ig"/>
-  <name value="FHIR Bulk Data Access"/>
+  <url value="http://hl7.org/fhir/us/bulkdata/ImplementationGuide/ig"/>
+  <name value="BulkDataAccess"/>
+  <title value="FHIR Bulk Data Access"/>
   <status value="active"/>
   <experimental value="false"/>
   <publisher value="FHIR Project"/>
+  <packageId value="hl7.fhir.us.bulkdata"/>
+  <fhirVersion value="4.0.0"/>
   <definition>
     <resource>
       <reference>

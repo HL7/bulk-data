@@ -9,15 +9,17 @@
     "url" : "http://hl7.org/fhir/StructureDefinition/igpublisher-folder-pages",
     "valueString" : "C:\\work\\org.hl7.fhir.igs\\bulk-data\\spec"
   }],
-  "url" : "http://fhir-registry.smarthealthit.org/ImplementationGuide/ig",
+  "url" : "http://hl7.org/fhir/us/bulkdata/ImplementationGuide/ig",
   "version" : "0.1.0",
-  "name" : "FHIR Bulk Data Access",
+  "name" : "BulkDataAccess",
+  "title" : "FHIR Bulk Data Access",
   "status" : "active",
   "experimental" : false,
   "publisher" : "FHIR Project",
   "packageId" : "hl7.fhir.us.bulkdata",
   "license" : "CC0-1.0",
-  "fhirVersion" : ["4.0.0"],
+  "fhirVersion" : ["4.0.0",
+  "4.0.0"],
   "definition" : {
     "resource" : [{
       "reference" : {

@@ -8,14 +8,16 @@
   <extension url="http://hl7.org/fhir/StructureDefinition/igpublisher-folder-pages">
     <valueString value="C:\work\org.hl7.fhir.igs\bulk-data\spec"/>
   </extension>
-  <url value="http://fhir-registry.smarthealthit.org/ImplementationGuide/ig"/>
+  <url value="http://hl7.org/fhir/us/bulkdata/ImplementationGuide/ig"/>
   <version value="0.1.0"/>
-  <name value="FHIR Bulk Data Access"/>
+  <name value="BulkDataAccess"/>
+  <title value="FHIR Bulk Data Access"/>
   <status value="active"/>
   <experimental value="false"/>
   <publisher value="FHIR Project"/>
   <packageId value="hl7.fhir.us.bulkdata"/>
   <license value="CC0-1.0"/>
+  <fhirVersion value="4.0.0"/>
   <fhirVersion value="4.0.0"/>
   <definition>
     <resource>
