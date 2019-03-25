@@ -26,7 +26,7 @@
       "resources"
     ],
     "specification": "http://hl7.org/fhir/STU3",
-    "history": "history",
+    "history": "http://hl7.org/fhir/us/bulkdata/history.cfml",
     "temp": "temp",
     "txCache": "txCache"
   },
