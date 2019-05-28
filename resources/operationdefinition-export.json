@@ -48,7 +48,7 @@
     }
   ],
   "description": "test Export data from a FHIR server whether or not it is associated with a patient. This supports use cases like backing up a server or exporting terminology data by restricting the resources returned using the _type parameter",
-  "code": "$export",
+  "code": "export",
   "base": "/",
   "system": true,
   "type": false,
