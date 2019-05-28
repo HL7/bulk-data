@@ -48,7 +48,7 @@
     }
   ],
   "description": "Export data from a FHIR server for all data associated with patients. This supports use cases like transmitting all data about patients or clinical care between systems",
-  "code": "$export",
+  "code": "export",
   "resource": ["Patient"],
   "system": false,
   "type": true,
