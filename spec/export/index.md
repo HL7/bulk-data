@@ -193,7 +193,7 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 - HTTP status of ```200 OK```
 - ```Content-Type header``` of ```application/json```
 - The server MAY return an ```Expires``` header indicating when the files listed will no longer be available.
-- A body containing a json object providing metadata and links to the generated bulk data files.  Note that the files-for-download MAY be served by a file server other than a FHIR-specific server.
+- A body containing a json object providing metadata and links to the generated bulk data files.  The files-for-download SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
 
   Required Fields:
   - ```transactionTime``` - a FHIR instant type that indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to (and including) this instant. Note: to properly meet these constraints, a FHIR Server might need to wait for any pending transactions to resolve in its database, before starting the export process.
