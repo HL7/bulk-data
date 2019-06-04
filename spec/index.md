@@ -18,7 +18,7 @@ This implementation guide is designed to support sharing any data that can be re
 #### US Core Data for Interoperability
 *Applies to: EHR systems that support the US Core Data for Interoperability.*
 
-This use case exports all resources needed for the US Core Data for Interoperability, as profiled by Argonaut. For a full list of these resources and profiles, see http://www.hl7.org/fhir/us/core/.
+This use case exports all resources needed for the US Core Data for Interoperability, as profiled by Argonaut. For a full list of these resources and profiles, see [http://www.hl7.org/fhir/us/core/](http://www.hl7.org/fhir/us/core/).
 
 #### Common Financial Data Set
 *Applies to: Financial systems that support FHIR-based interoperability.*
