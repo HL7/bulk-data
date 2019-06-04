@@ -71,9 +71,9 @@ and carefully weighed before choosing a different course
 
 ## Registering a SMART Backend Service (communicating public keys)
 
-Before a SMART client can run against a FHIR server, the client SHALL
-obtain a client-to-client digital certificate and SHALL
-register with that FHIR server's authorization service.  SMART does not specify a
+Before a SMART client can run against a FHIR server  the client SHALL generate
+or obtain an asymmetric key pair and SHALL register its public key set with that
+FHIR server’s authorization service.  SMART does not specify a
 standards-based registration process, but we encourage FHIR service implementers to
 consider using the [OAuth 2.0 Dynamic Client Registration
 Protocol](https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg).
