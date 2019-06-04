@@ -13,7 +13,7 @@ The scope of this document does NOT include:
 * A legal framework for sharing data between partners, including Business Associate Agreements, Service Level Agreements, and Data Use Agreements
 * Real-time data exchange
 * Data transformations that may be required by the client
-* Patient matching (although identifiers may be incuded in the exported FHIR resources)
+* Patient matching (although identifiers may be included in the exported FHIR resources)
 * Management of FHIR groups within the clinical system; the bulk data operation may include a valid group id, but this guide does not specify how FHIR Group resources are created and maintained within a system
 
 ## Referenced Specifications
