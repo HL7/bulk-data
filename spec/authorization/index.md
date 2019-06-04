@@ -79,7 +79,7 @@ consider using the [OAuth 2.0 Dynamic Client Registration
 Protocol](https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg).
 
 No matter how a client registers with a FHIR authorization service, the
-client SHALL register its **client_id** and the **public key** the
+client SHALL register the **public key** the
 client will use to authenticate itself to the SMART FHIR authorization server.  The public key SHALL
 be conveyed to the FHIR authorization server in a JSON Web Key (JWK) structure presented within
 a JWK Set, as defined in
