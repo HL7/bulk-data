@@ -71,15 +71,15 @@ and carefully weighed before choosing a different course
 
 ## Registering a SMART Backend Service (communicating public keys)
 
-Before a SMART client can run against a FHIR server  the client SHALL generate
-or obtain an asymmetric key pair and SHALL register its public key set with that
-FHIR server’s authorization service.  SMART does not specify a
+Before a SMART client can run against a FHIR server, the client SHALL
+obtain a client-to-client digital certificate and SHALL
+register with that FHIR server's authorization service.  SMART does not specify a
 standards-based registration process, but we encourage FHIR service implementers to
 consider using the [OAuth 2.0 Dynamic Client Registration
 Protocol](https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg).
 
 No matter how a client registers with a FHIR authorization service, the
-client SHALL register the **public key** the
+client SHALL register its **client_id** and the **public key** the
 client will use to authenticate itself to the SMART FHIR authorization server.  The public key SHALL
 be conveyed to the FHIR authorization server in a JSON Web Key (JWK) structure presented within
 a JWK Set, as defined in
@@ -364,7 +364,7 @@ If an error is encountered during the authorization process, the server SHALL
 respond with the appropriate error message defined in [Section 5.2 of the OAuth 2.0 specification](https://tools.ietf.org/html/rfc6749#page-45).  The server SHOULD include an
 `error_uri` or `error_description` as defined in OAuth 2.0.  
 
-Rules regarding circumstances under which a client is required to obtain and present an access token along with a request are based on risk-management decisions that each FHIR resource service needs to make, considering the workflows involved, perceived risks, and the organization’s risk-management policies.  Refresh tokens SHOULD NOT be issued.
+Rules regarding circumstances under which a client is required to obtain and present an access token along with a request are based on risk-management decisions that each FHIR resource service needs to make, considering the workflows involved, perceived risks, and the organization’s risk-management policies.  Each token issued under this profile MUST be short-lived, with an expiration time of no more than five minutes.  Refresh tokens SHOULD NOT be issued.
 
 ## Worked example
 

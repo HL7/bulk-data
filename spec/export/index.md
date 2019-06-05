@@ -6,24 +6,24 @@ active: export
 
 ## Audience and Scope
 
-This implementation guide is intended to be used by developers of backend services (clients) and FHIR Resource Servers (e.g., EHR systems, data warehouses, and other clinical and administrative systems) that aim to interoperate by sharing large FHIR datasets.  The guide defines the application programming interfaces (APIs) through which an authenticated and authorized client may request a bulk-data export from a server, receive status information regarding progress in the generation of the requested files, and receive these files.  It also includes recommendations regarding the FHIR resources that might be exposed through the export interface.  
+This implementation guide is intended to be used by developers of backend services (clients) and FHIR Resource Servers (e.g., EHR systems, data warehouses, and other clinical and administrative systems) that aim to interoperate by sharing large FHIR datasets.  The guide defines the application programming interfaces (APIs) through which an authenticated and authorized client may request a bulk-data export from a server, receive status information regarding progress in the generation of the requested files, and receive these files.  It also includes recommendations regarding the FHIR resources that might be exposed throuh the export interface.  
 
 The scope of this document does NOT include:
 
 * A legal framework for sharing data between partners, including Business Associate Agreements, Service Level Agreements, and Data Use Agreements
 * Real-time data exchange
 * Data transformations that may be required by the client
-* Patient matching (although identifiers may be included in the exported FHIR resources)
+* Patient matching (although identifiers may be incuded in the exported FHIR resources)
 * Management of FHIR groups within the clinical system; the bulk data operation may include a valid group id, but this guide does not specify how FHIR Group resources are created and maintained within a system
 
 ## Referenced Specifications
 
-* Newline-delimited JSON.  [http://ndjson.org](http://ndjson.org)
-* The OAuth 2.0 Authorization Framework, RFC6749, [https://tools.ietf.org/html/rfc6749](https://tools.ietf.org/html/rfc6749)
-* HL7 FHIR Release 3, [https://www.hl7.org/fhir/stu3/](https://www.hl7.org/fhir/stu3/)
-* The JavaScript Object Notation (JSON) Data Interchange Format, RFC7159.  [https://tools.ietf.org/html/rfc7159](https://tools.ietf.org/html/rfc7159)
-* Transport Layer Security (TLS) Protocol Version 1.2.  RFC5246).  [https://tools.ietf.org/html/rfc5246](https://tools.ietf.org/html/rfc5246)
-* The OAuth 2.0 Authorization Framework: Bearer Token Usage, RFC6750.  [https://tools.ietf.org/html/rfc6750](https://tools.ietf.org/html/rfc6750)
+* Newline-delimited JSON.  http://ndjson.org
+* The OAuth 2.0 Authorization Framework, RFC6749, https://tools.ietf.org/html/rfc6749
+* HL7 FHIR Release 3, https://www.hl7.org/fhir/
+* The JavaScript Object Notation (JSON) Data Interchange Format, RFC7159.  https://tools.ietf.org/html/rfc7159
+* Transport Layer Security (TLS) Protocol Version 1.2.  RFC5246).  https://tools.ietf.org/html/rfc5246
+* The OAuth 2.0 Authorization Framework: Bearer Token Usage, RFC6750.  https://tools.ietf.org/html/rfc6750
 
 ## Terminology
 
@@ -34,21 +34,20 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 All exchanges described herein between a client and a server MUST be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246).  Use of mutual TLS is OPTIONAL.  
 
-With each of the requests described herein implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/authorization.md).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
+With each of the requests described herein, the client MUST provide proof of authorization.  Implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/authorization.md).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
 
 This specification does not address protection of the servers themselves from potential compromise.  An adversary who successfully captures administrative rights to a server will have full control over that server and can use those rights to undermine the server's security protections.
 
 In the bulk-data-export workflow, the file server will be a particularly attractive target for adversaries, as it holds the “holy grail” – files containing highly sensitive and valued PHI.  An adversary who successfully takes control of a file server may choose to continue to deliver files in response to client requests, so that neither the client nor the FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own devious purposes.   
 
-Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches might be used to accomplish this, not all of which would be visible at the API.   Thus, this specification does not dictate an approach at this time.  Though it offers the use of an “Expires” header to limit the time period a file will be available for client download, removal of the file from the server is left up to the implementer.  Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.   
+Healthcare organizations are becoming increasingly aware of server vulnerabilities and the imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches might be used to accomplish this, not all of which would be visible at the API.   Thus, this specification does not dictate an approach at this time.  Though it offers the use of an “Expires” header to limit the time period a file will be available for client download, removal of the file from the server is left up to the implementer.  Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.   
 
-Bulk data export can be a resource-intensive operation. Server developers should consider and mitigate the risk of intentional or inadvertent denial-of-service attacks (though the details are beyond the scope of this specification).
 
 ## Request Flow
 
 ### Bulk Data Kick-off Request
 
-This FHIR Operation initiates the asynchronous process of a client's request for the generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
+This FHIR Operation initiates the asynchronous process of a client's request for the generation of as set of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
 
 The FHIR server MUST limit the data returned to only those FHIR resources for which the client is authorized.
 
@@ -60,7 +59,7 @@ The FHIR server MUST limit the data returned to only those FHIR resources for wh
 
 `GET [fhir base]/Group/[id]/$export`
 
-FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/stu3/group.html).
+FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/group.html).
 
 If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables  clients to discover available groups based on stable characteristics such as `Group.identifier`.
 
@@ -193,7 +192,7 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 - HTTP status of ```200 OK```
 - ```Content-Type header``` of ```application/json```
 - The server MAY return an ```Expires``` header indicating when the files listed will no longer be available.
-- A body containing a json object providing metadata and links to the generated bulk data files.  The files-for-download SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
+- A body containing a json object providing metadata and links to the generated bulk data files.  Note that the files-for-download MAY be served by a file server other than a FHIR-specific server.
 
   Required Fields:
   - ```transactionTime``` - a FHIR instant type that indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to (and including) this instant. Note: to properly meet these constraints, a FHIR Server might need to wait for any pending transactions to resolve in its database, before starting the export process.
