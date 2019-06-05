@@ -9,16 +9,16 @@ Existing FHIR APIs work well for accessing small amounts of data, but large expo
 
 ## Use Cases
 
-These specifications are designed to support sharing any data that can be represented in FHIR. This means they should be useful for such diverse systems as:
+This implementation guide is designed to support sharing any data that can be represented in FHIR. This means that the IG should be useful for such diverse systems as:
 
 * "Native" FHIR servers that store FHIR resources directly
 * EHR systems and population health tools implementing FHIR as an interoperability layer
 * Financial systems implementing FHIR as an interoperability layer
 
-#### Common Clinical Data Set
-*Applies to: EHR systems that support the Common Clinical Data Set (or, looking ahead, the US Core Data for Interoperability).*
+#### US Core Data for Interoperability
+*Applies to: EHR systems that support the US Core Data for Interoperability.*
 
-This use case exports all resources needed for the Common Clinical Data Set, as profiled by Argonaut. For a full list of these resources and profiles, see http://www.fhir.org/guides/argonaut/r2/profiles.html.
+This use case exports all resources needed for the US Core Data for Interoperability, as profiled by Argonaut. For a full list of these resources and profiles, see [http://www.hl7.org/fhir/us/core/](http://www.hl7.org/fhir/us/core/).
 
 #### Common Financial Data Set
 *Applies to: Financial systems that support FHIR-based interoperability.*
