@@ -20,7 +20,7 @@ The scope of this document does NOT include:
 
 * Newline-delimited JSON.  [http://ndjson.org](http://ndjson.org)
 * The OAuth 2.0 Authorization Framework, RFC6749, [https://tools.ietf.org/html/rfc6749](https://tools.ietf.org/html/rfc6749)
-* HL7 FHIR Release 3, [https://www.hl7.org/fhir/stu3/](https://www.hl7.org/fhir/stu3/)
+* HL7 FHIR, [https://www.hl7.org/fhir/](https://www.hl7.org/fhir/)
 * The JavaScript Object Notation (JSON) Data Interchange Format, RFC7159.  [https://tools.ietf.org/html/rfc7159](https://tools.ietf.org/html/rfc7159)
 * Transport Layer Security (TLS) Protocol Version 1.2.  RFC5246).  [https://tools.ietf.org/html/rfc5246](https://tools.ietf.org/html/rfc5246)
 * The OAuth 2.0 Authorization Framework: Bearer Token Usage, RFC6750.  [https://tools.ietf.org/html/rfc6750](https://tools.ietf.org/html/rfc6750)
@@ -34,7 +34,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 All exchanges described herein between a client and a server MUST be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246).  Use of mutual TLS is OPTIONAL.  
 
-With each of the requests described herein implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/authorization.md).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
+With each of the requests described herein implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](../authorization/index.html).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
 
 This specification does not address protection of the servers themselves from potential compromise.  An adversary who successfully captures administrative rights to a server will have full control over that server and can use those rights to undermine the server's security protections.
 
@@ -104,7 +104,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 ##### Experimental Query Parameters
 
-As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions (rather than historical prescriptions), or only laboratory observations (rather than all observations). We have considered several approaches to finer-grained filtering, including FHIR's `GraphDefinition`, the Clinical Query Language, and FHIR's REST API search parameters. We expect this will be an area of active exploration, so for the time being this document defines an experimental syntax based on search parameters that works side-by-side with the coarse-grained `_type`-based filtering.
+As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions (rather than historical prescriptions), or only laboratory observations (rather than all observations). We have considered several approaches to finer-grained filtering, including FHIR's `GraphDefinition`, the Clinical Quality Language (CQL), and FHIR's REST API search parameters. We expect this will be an area of active exploration, so for the time being this document defines an experimental syntax based on search parameters that works side-by-side with the coarse-grained `_type`-based filtering.
 
 To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that further restrict the results of the query. Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
 

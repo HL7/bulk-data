@@ -15,15 +15,15 @@ This implementation guide is designed to support sharing any data that can be re
 * EHR systems and population health tools implementing FHIR as an interoperability layer
 * Financial systems implementing FHIR as an interoperability layer
 
-#### US Core Data for Interoperability
+### US Core Data for Interoperability
 *Applies to: EHR systems that support the US Core Data for Interoperability.*
 
 This use case exports all resources needed for the US Core Data for Interoperability, as profiled by Argonaut. For a full list of these resources and profiles, see [http://www.hl7.org/fhir/us/core/](http://www.hl7.org/fhir/us/core/).
 
-#### Common Financial Data Set
+### Common Financial Data Set
 *Applies to: Financial systems that support FHIR-based interoperability.*
 
-This use case exports all resources needed to convey a patient's healththcare financial history, including Patient, ExplanationOfBenefit, Coverage, and Claim. While FHIR profiles are still being developed and standardized, see https://bluebutton.cms.gov/developers/#core-resources for a full-fledged example.
+This use case exports all resources needed to convey a patient's healththcare financial history, including Patient, ExplanationOfBenefit, Coverage, and Claim. While FHIR profiles are still being developed and standardized, see [https://bluebutton.cms.gov/developers/#core-resources](https://bluebutton.cms.gov/developers/#core-resources) for a full-fledged example.
 
 ## Resources
 * [Overview Presentation](https://docs.google.com/presentation/d/14ZHmam9hwz6-SsCG1YqUIQnJ56bvSqEatebltgEVR6c/edit?usp=sharing)
