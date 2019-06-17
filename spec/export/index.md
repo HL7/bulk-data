@@ -92,7 +92,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```_since``` (FHIR instant type, optional)  
 
-  Resources updated after this instant will be included in the response
+  Resources updated after this instant will be included in the response. Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied `_since time`).
 
   Note: This parameter was named ```start``` in an earlier version of this proposal
 
