@@ -95,7 +95,8 @@ For consistency in implementation, the client's JWK SHALL be shared with the
 FHIR server using one of the following techniques:
 
   1. URL to JWK Set (strongly preferred). This URL communicates the TLS-protected
-  endpoint where the client's public JWK Set can be found. Advantages
+  endpoint where the client's public JWK Set can be found.
+  This endpoint SHALL be accessible via TLS  without authentication or authorization. Advantages
   of this approach are that
   it allows a client to rotate its own keys by updating the hosted content at the
   JWK Set URL, assures that the public key used by the FHIR server is current, and avoids the
@@ -198,7 +199,7 @@ tools and client libraries, see https://jwt.io.
     <tr>
       <td><code>jku</code></td>
       <td><span class="label label-info">optional</span></td>
-      <td>The URL to the JWK Set containing the public key(s). When present,
+      <td>The TLS-protected URL to the JWK Set containing the public key(s) accessible without authentication or authorization. When present,
       this should match a value that the client supplied to the FHIR server at
       client registration time.  (When absent, the FHIR server SHOULD fall back on the JWK
       Set URL or the JWK Set supplied at registration time.</td>
