@@ -112,6 +112,8 @@ To request finer-grained filtering, a client MAY supply a `_typeFilter` paramete
 
 *Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters.
 
+*Note*: Servers may limit the data returned to a specific client in accordance with local considerations (e.g. policies or regulations).
+
 ###### Example Request with `_typeFilter`
 
 The following is an export request for `MedicationRequest` resources and `Condition` resources, where the client would further like to restrict `MedicationRequests` to requests that are `active`, or else `completed` after July 1 2018. This can be accomplished with two subqueries, joined together with a comma for a logical "or":
@@ -133,6 +135,7 @@ $export?
 ```
 
 Note: the `Condition` resource is included in `_type` but omitted from `_typeFilter` because the client intends to request all `Condition` resources without any filters.
+Note: We have not yet determined expectation for `_include` `_revinclude` or support for any specific search parameters.
 
 #### Response - Success
 
