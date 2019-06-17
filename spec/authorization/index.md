@@ -16,7 +16,7 @@ specification is not restricted to use for retrieving bulk data; it may be used
 to connect to any FHIR API endpoint, including both synchronous and asynchronous
 access.
 
-#### **Use this profile** when the following conditions apply:
+### **Use this profile** when the following conditions apply:
 
 * The target FHIR server can register the client and pre-authorize access to a
 defined set of FHIR resources.
