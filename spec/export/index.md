@@ -56,11 +56,13 @@ The FHIR server MUST limit the data returned to only those FHIR resources for wh
 
 `GET [fhir base]/Patient/$export`
 
+FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients.
+
 #### Endpoint - Group of Patients
 
 `GET [fhir base]/Group/[id]/$export`
 
-FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/stu3/group.html).
+FHIR Operation to obtain a detailed set of FHIR resources  of diverse resource types pertaining to all patients in specified [Group](https://www.hl7.org/fhir/stu3/group.html).
 
 If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables  clients to discover available groups based on stable characteristics such as `Group.identifier`.
 
