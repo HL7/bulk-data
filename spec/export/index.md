@@ -82,7 +82,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```Prefer``` (required)
 
-  Specifies whether the response is immediate or asynchronous. The header MUST be set to ```respond-async```.
+  Specifies whether the response is immediate or asynchronous. The header MUST be set to ```respond-async```[https://tools.ietf.org/html/rfc7240](https://tools.ietf.org/html/rfc7240).
 
 #### Query Parameters
 
