@@ -237,7 +237,8 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
       "error" : [{
         "type" : "OperationOutcome",
         "url" : "http://serverpath2/err_file_1.ndjson"
-      }]
+      }],
+      "extension":{"<a href="http://myserver.example.org/extra-property">http://myserver.example.org/extra-property</a>": true}
     }
   ```
 
