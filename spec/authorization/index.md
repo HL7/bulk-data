@@ -455,10 +455,10 @@ Pragma: no-cache
 With a valid access token, a client MAY issue a FHIR API call to a FHIR resource server or other appropriate endpoint. The request MUST include an ```Authorization``` header that presents the ```access_token``` as a “Bearer” token:
 
 ```
-Authorization: Bearer {{access_token}}  
+Authorization: Bearer {access_token}  
 ```
 
-[where {{access_token}} is replaced with the actual token value]
+[where {access_token} is replaced with the actual token value]
 
 **Example Request**
 
