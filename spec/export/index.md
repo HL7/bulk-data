@@ -28,11 +28,11 @@ The scope of this document does NOT include:
 ## Terminology
 
 This profile inherits terminology from the standards referenced above.
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in RFC2119.
+The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in RFC2119.
 
 ## Security Considerations
 
-All exchanges described herein between a client and a server MUST be secured using [Transport Layer Security (TLS) Protocol Version 1.2 or a more recent version of TLS (RFC5246)](https://tools.ietf.org/html/rfc5246).  Use of mutual TLS is OPTIONAL.  
+All exchanges described herein between a client and a server SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 or a more recent version of TLS (RFC5246)](https://tools.ietf.org/html/rfc5246).  Use of mutual TLS is OPTIONAL.  
 
 With each of the requests described herein implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](../authorization/index.html).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
 
@@ -50,7 +50,7 @@ Bulk data export can be a resource-intensive operation. Server developers should
 
 This FHIR Operation initiates the asynchronous process of a client's request for the generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
 
-The FHIR server MUST limit the data returned to only those FHIR resources for which the client is authorized.
+The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.
 
 #### Endpoint - All Patients
 
@@ -80,13 +80,13 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```Prefer``` (required)
 
-  Specifies whether the response is immediate or asynchronous. The header MUST be set to ```respond-async```.
+  Specifies whether the response is immediate or asynchronous. The header SHALL be set to ```respond-async```.
 
 #### Query Parameters
 
 - ```_outputFormat``` (string, optional, defaults to ```application/fhir+ndjson```)
 
-  The format for the requested bulk data files to be generated. Servers MUST support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers MUST accept the full content type of ```application/fhir+ndjson``` as well as the abbreviated representations ```application/ndjson``` and ```ndjson```.
+  The format for the requested bulk data files to be generated. Servers SHALL support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers SHALL accept the full content type of ```application/fhir+ndjson``` as well as the abbreviated representations ```application/ndjson``` and ```ndjson```.
 
 - ```_since``` (FHIR instant type, optional)  
 
@@ -139,7 +139,7 @@ Note: the `Condition` resource is included in `_type` but omitted from `_typeFil
 #### Response - Error (eg. unsupported search parameter)
 
 - HTTP Status Code of ```4XX``` or ```5XX```
-- The body MUST be a FHIR OperationOutcome in JSON format
+- The body SHALL be a FHIR OperationOutcome in JSON format
 
 If a server wants to prevent a client from beginning a new export before an in-progress export is completed, it SHOULD respond with a `429 Too Many Requests` status and a Retry-After header, following the rate-limiting advice for "Bulk Data Status Request" below.
 
@@ -160,7 +160,7 @@ After a bulk data request has been started, a client MAY send a delete request t
 #### Response - Error Status
 
 - HTTP status code of ```4XX``` or ```5XX```
-- The body MUST be a FHIR OperationOutcome in JSON format
+- The body SHALL be a FHIR OperationOutcome in JSON format
 
 ---
 ### Bulk Data Status Request
@@ -183,8 +183,8 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 #### Response - Error Status
 
 - HTTP status code of ```5XX```
-- The server MUST return a FHIR OperationOutcome resource in JSON format
-- Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response MUST be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong.
+- The server SHALL return a FHIR OperationOutcome resource in JSON format
+- Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response SHALL be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong.
 
 #### Response - Complete Status
 
@@ -196,19 +196,19 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
   Required Fields:
   - ```transactionTime``` - a FHIR instant type that indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to (and including) this instant. Note: to properly meet these constraints, a FHIR Server might need to wait for any pending transactions to resolve in its database, before starting the export process.
   - ```request``` - the full URI of the original bulk data kick-off request
-  - ```requiresAccessToken``` - boolean value of ```true``` or ```false``` indicating whether downloading the generated files requires a bearer access token. Value MUST be ```true``` if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens.   Value MAY be ```false``` for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URIs or verifiable file servers within an organization's firewall.
+  - ```requiresAccessToken``` - boolean value of ```true``` or ```false``` indicating whether downloading the generated files requires a bearer access token. Value SHALL be ```true``` if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens.   Value MAY be ```false``` for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URIs or verifiable file servers within an organization's firewall.
   - ```output``` - array of bulk data file items with one entry for each generated file. Note: If no resources are returned from the kick-off request, the server SHOULD return an empty array.
-  - ```error``` - array of error file items following the same structure as the `output` array. Note: If no errors occurred, the server SHOULD return an empty array.  Note: Only the `OperationOutcome` resource type is currently supported, so a server MUST generate files in the same format as the bulk data output files that contain `OperationOutcome` resources.
+  - ```error``` - array of error file items following the same structure as the `output` array. Note: If no errors occurred, the server SHOULD return an empty array.  Note: Only the `OperationOutcome` resource type is currently supported, so a server SHALL generate files in the same format as the bulk data output files that contain `OperationOutcome` resources.
 
   Each file item SHALL contain the following fields:
-   - ```type``` - the FHIR resource type that is contained in the file. Note: Each file MUST contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY  vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response. (These rules apply only to top-level resources within the response; as always in FHIR  any resource MAY have a "contained" array that includes referenced resources of other types.)
+   - ```type``` - the FHIR resource type that is contained in the file. Note: Each file SHALL contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY  vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response. (These rules apply only to top-level resources within the response; as always in FHIR  any resource MAY have a "contained" array that includes referenced resources of other types.)
    - ```url``` - the path to the file. The format of the file SHOULD reflect that requested in the ```_outputFormat``` parameter of the initial kick-off request.
 
   Each file item MAY optionally contain the following field:
    - ```count``` - the number of resources in the file, represented as a JSON number.
 
   The response body and any file item MAY optionally contain the following field:
-   - ```extension``` - To support extensions, this implementation guide reserves the name extension and will never define a field with that name, allowing server implementations to use it to provide custom behavior and information. For example, a server may choose to provide a custom extension that contains a decryption key for encrypted ndjson files. The value of an extension element MUST be a pre-coordinated JSON object.
+   - ```extension``` - To support extensions, this implementation guide reserves the name extension and will never define a field with that name, allowing server implementations to use it to provide custom behavior and information. For example, a server may choose to provide a custom extension that contains a decryption key for encrypted ndjson files. The value of an extension element SHALL be a pre-coordinated JSON object.
 
 	Example response body:
 
@@ -237,7 +237,7 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 ---
 ### File Request
 
-Using the URIs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated bulk data files (one or more per resource type) within the specified ```Expires``` time period. If the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the request MUST include a valid access token.  See the Security Considerations section above.  
+Using the URIs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated bulk data files (one or more per resource type) within the specified ```Expires``` time period. If the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the request SHALL include a valid access token.  See the Security Considerations section above.  
 
 #### Endpoint
 
@@ -252,7 +252,7 @@ Specifies the format of the file being requested.
 #### Response - Success
 
 - HTTP status of ```200 OK```
-- ```Content-Type``` header that matches the file format being delivered.  For files in ndjson format, MUST be ```application/fhir+ndjson```
+- ```Content-Type``` header that matches the file format being delivered.  For files in ndjson format, SHALL be ```application/fhir+ndjson```
 - Body of FHIR resources in newline delimited json - [ndjson](http://ndjson.org/) or other requested format
 
 #### Response - Error
