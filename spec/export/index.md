@@ -92,8 +92,6 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
   Resources updated after this period will be included in the response
 
-  Note: This parameter was named ```start``` in an earlier version of this proposal
-
 - ```_type``` (string of comma-delimited FHIR resource types, optional)
 
   Only resources of the specified resource types(s) SHOULD be included in the response. If this parameter is omitted, the server SHOULD return all supported resources within the scope of the client authorization. For non-system-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned as well as other resources outside of the patient compartment that are helpful in interpreting the patient data such as Organization and Practitioner.
