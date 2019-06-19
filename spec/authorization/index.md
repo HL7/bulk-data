@@ -286,10 +286,9 @@ software client rather than to a human end-user.
 ### Signature Verification
 
 The EHR's authorization server SHALL validate the JWT according to the
-processing requirements defined in [Section 3 of RFC7523](https://tools.ietf.org/html/rfc7523#section-3).
+processing requirements defined in [Section 3 of RFC7523](https://tools.ietf.org/html/rfc7523#section-3) including validation of the signature on the JWT.
 
 In addition, the authentication server SHALL:
-* validate the signature on the JWT
 * check that the `jti` value has not been previously encountered for the given `iss` within the maximum allowed authentication JWT lifetime (e.g., 5 minutes). This check prevents replay attacks.
 * ensure that the `client_id` provided is known and matches the JWT's `iss` claim
 
