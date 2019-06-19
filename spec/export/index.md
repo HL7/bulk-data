@@ -18,12 +18,12 @@ The scope of this document does NOT include:
 
 ## Referenced Specifications
 
-* Newline-delimited JSON.  [http://ndjson.org](http://ndjson.org)
-* The OAuth 2.0 Authorization Framework, RFC6749, [https://tools.ietf.org/html/rfc6749](https://tools.ietf.org/html/rfc6749)
-* HL7 FHIR, [https://www.hl7.org/fhir/](https://www.hl7.org/fhir/)
-* The JavaScript Object Notation (JSON) Data Interchange Format, RFC7159.  [https://tools.ietf.org/html/rfc7159](https://tools.ietf.org/html/rfc7159)
-* Transport Layer Security (TLS) Protocol Version 1.2.  RFC5246).  [https://tools.ietf.org/html/rfc5246](https://tools.ietf.org/html/rfc5246)
-* The OAuth 2.0 Authorization Framework: Bearer Token Usage, RFC6750.  [https://tools.ietf.org/html/rfc6750](https://tools.ietf.org/html/rfc6750)
+* [Newline-delimited JSON](http://ndjson.org)
+* [RFC6749, The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
+* [HL7 FHIR](https://www.hl7.org/fhir/)
+* [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
+* [RFC5246, Transport Layer Security (TLS) Protocol Version 1.2](https://tools.ietf.org/html/rfc5246)
+* [RFC6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
 
 ## Terminology
 
@@ -96,7 +96,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
   Only resources of the specified resource types(s) SHALL be included in the response. If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For non-system-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHALL be used as a point of reference for recommended resources to be returned as well as other resources outside of the patient compartment that are helpful in interpreting the patient data such as Organization and Practitioner. Servers unable to suppport `_type` should return an error and OperationOutcome so clients can re-submit a request omitting the `_type` parameter.
 
-  Resource references MAY be relative URIs with the format `<resource type>/<id>`, or absolute URIs with the same structure rooted in the base URI for the server from which the export was performed. References will be resolved looking for a resource with the specified type and id within the file set. 
+  Resource references MAY be relative URIs with the format `<resource type>/<id>`, or absolute URIs with the same structure rooted in the base URI for the server from which the export was performed. References will be resolved looking for a resource with the specified type and id within the file set.
 
   Note: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/)
 
