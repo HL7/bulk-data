@@ -152,11 +152,11 @@ client to authenticate itself to the FHIR server and to request a short-lived
 access token in a single exchange.
 
 To begin the exchange, the client SHALL use the [Transport Layer Security
-(TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) to
+(TLS) Protocol Version 1.2 or a more recent version of TLS (RFC5246)](https://tools.ietf.org/html/rfc5246) to
 authenticate the identity of the FHIR authorization server and to establish an encrypted,
 integrity-protected link for securing all exchanges between the client
 and the authorization server's token endpoint.  All exchanges described herein between the client
-and the FHIR server SHALL be secured using TLS V1.2.
+and the FHIR server SHALL be secured using TLS V1.2 or a more recent version of TLS .
 
 <div>
 <img class="sequence-diagram-raw"  src="http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgQmFja2VuZCBTZXJ2aWNlIEF1dGhvcml6YXRpb24KCm5vdGUgb3ZlciBBcHA6ICBDcmVhdGUgYW5kIHNpZ24gYXV0aGVudGljACsFIEpXVCBcbntcbiAgImlzcyI6ICJhcHBfY2xpZW50X2lkIiwAFgVzdWIAAxhleHAiOiAxNDIyNTY4ODYwLCAASAVhdWQiOiAiaHR0cHM6Ly97dG9rZW4gdXJsfQBNBiAianRpIjogInJhbmRvbS1ub24tcmV1c2FibGUtand0LWlkLTEyMyJcbn0gLS0-AIE3BndpdGggYXBwJ3MgcHJpdmF0ZSBrZXkgKFJTMzg0KQCBbBBzY29wZT1zeXN0ZW0vKi5yZWFkJlxuZ3JhbnRfdHlwZT0AgV8HY3JlZGVudGlhbHMmXG4AgXQHYXNzZXJ0aW9uACUGdXJuOmlldGY6cGFyYW1zOm9hdXRoOgCCIQYtACMJLXR5cGU6and0LWJlYXJlcgA8Ez17c2lnbmVkAIJ1FGZyb20gYWJvdmV9CgpBcHAtPkVIUgCDXAUAg2kFZXI6ICBQT1NUIACCQxNcbihTYW1lIFVSTCBhcwCCegYARgYpAIQJDABAEUlzc3VlIG5ldyAAgx0FOgCECAUiYWNjZXNzXwCDMAUiOiAic2VjcmV0LQCDQAUteHl6IixcbiJleHBpcmVzX2luIjogMzAwLFxuLi4uXG59CgCBKA8tPgCFBwVbAFAGAGMGIHJlc3BvbnNlXQ&s=default"/></div>

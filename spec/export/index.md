@@ -32,7 +32,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 ## Security Considerations
 
-All exchanges described herein between a client and a server MUST be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246).  Use of mutual TLS is OPTIONAL.  
+All exchanges described herein between a client and a server MUST be secured using [Transport Layer Security (TLS) Protocol Version 1.2 or a more recent version of TLS (RFC5246)](https://tools.ietf.org/html/rfc5246).  Use of mutual TLS is OPTIONAL.  
 
 With each of the requests described herein implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](../authorization/index.html).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
 
