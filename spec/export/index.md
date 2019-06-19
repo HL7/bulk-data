@@ -200,8 +200,8 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
   - ```output``` - array of bulk data file items with one entry for each generated file. Note: If no resources are returned from the kick-off request, the server SHOULD return an empty array.
   - ```error``` - array of error file items following the same structure as the `output` array. Note: If no errors occurred, the server SHOULD return an empty array.  Note: Only the `OperationOutcome` resource type is currently supported, so a server MUST generate files in the same format as the bulk data output files that contain `OperationOutcome` resources.
 
-  Each file item SHOULD contain the following fields:
-   - ```type``` - the FHIR resource type that is contained in the file. Note: Each file MUST contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY  vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response.
+  Each file item SHALL contain the following fields:
+   - ```type``` - the FHIR resource type that is contained in the file. Note: Each file MUST contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY  vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response. (These rules apply only to top-level resources within the response; as always in FHIR  any resource MAY have a "contained" array that includes referenced resources of other types.)
    - ```url``` - the path to the file. The format of the file SHOULD reflect that requested in the ```_outputFormat``` parameter of the initial kick-off request.
 
   Each file item MAY optionally contain the following field:
