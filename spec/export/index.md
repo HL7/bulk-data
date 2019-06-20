@@ -52,7 +52,9 @@ Bulk data export can be a resource-intensive operation. Server developers should
 
 This FHIR Operation initiates the asynchronous process of a client's request for the generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
 
-The FHIR server MUST limit the data returned to only those FHIR resources for which the client is authorized.
+The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.
+
+The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html).
 
 #### Endpoint - All Patients
 
@@ -62,7 +64,7 @@ The FHIR server MUST limit the data returned to only those FHIR resources for wh
 
 `GET [fhir base]/Group/[id]/$export`
 
-FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/stu3/group.html).
+FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/group.html).
 
 If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables  clients to discover available groups based on stable characteristics such as `Group.identifier`.
 
@@ -88,7 +90,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```_outputFormat``` (string, optional, defaults to ```application/fhir+ndjson```)
 
-  The format for the requested bulk data files to be generated. Servers MUST support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers MUST accept the full content type of ```application/fhir+ndjson``` as well as the abbreviated representations ```application/ndjson``` and ```ndjson```.
+  The format for the requested bulk data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html) defaults to `application/fhir+ndjson`. Servers SHALL support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers SHALL accept the full content type of ```application/fhir+ndjson``` as well as the abbreviated representations ```application/ndjson``` and ```ndjson```.
 
 - ```_since``` (FHIR instant type, optional)  
 
