@@ -56,9 +56,13 @@ The FHIR server MUST limit the data returned to only those FHIR resources for wh
 
 `GET [fhir base]/Patient/$export`
 
+[View table of parameters for Patient Export](/OperationDefinition-patient-export.html)
+
 #### Endpoint - Group of Patients
 
 `GET [fhir base]/Group/[id]/$export`
+
+[View table of parameters for Group Export](/OperationDefinition-group-export.html)
 
 FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/stu3/group.html).
 
@@ -69,6 +73,8 @@ Note: How these groups are defined is implementation specific for each FHIR syst
 #### Endpoint - System Level Export
 
 `GET [fhir base]/$export`
+
+[View table of parameters for Export](/OperationDefinition-export.html)
 
 Export data from a FHIR server whether or not it is associated with a patient. This supports use cases like backing up a server or exporting terminology data by restricting the resources returned using the ```_type``` parameter.
 
