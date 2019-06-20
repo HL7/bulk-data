@@ -56,6 +56,8 @@ The FHIR server SHALL limit the data returned to only those FHIR resources for w
 
 `GET [fhir base]/Patient/$export`
 
+FHIR Operation to obtain data on all patients available.
+
 #### Endpoint - Group of Patients
 
 `GET [fhir base]/Group/[id]/$export`
@@ -169,7 +171,7 @@ After a bulk data request has been started, a client MAY send a delete request t
 
 After a bulk data request has been started, the client MAY poll the URI provided in the ```Content-Location``` header.  
 
-Note: Clients SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach when polling for status. Servers SHOULD supply a [Retry-After header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) with a http date or a delay time in seconds. When provided, clients SHOULD use this information to inform the timing of future polling requests. Servers SHOULD keep an accounting of status queries received from a given client, and if a client is polling too frequently, the server SHOULD respond with a `429 Too Many Requests` status code in addition to a Retry-After header, and optionally a FHIR OperationOutcome resource with further explanation.  If excessively frequent status queries persist, the server MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP 4XX  as well as 5xx status codes may be used to identify errors as mentioned. 
+Note: Clients SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach when polling for status. Servers SHOULD supply a [Retry-After header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) with a http date or a delay time in seconds. When provided, clients SHOULD use this information to inform the timing of future polling requests. Servers SHOULD keep an accounting of status queries received from a given client, and if a client is polling too frequently, the server SHOULD respond with a `429 Too Many Requests` status code in addition to a Retry-After header, and optionally a FHIR OperationOutcome resource with further explanation.  If excessively frequent status queries persist, the server MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP 4XX  as well as 5xx status codes may be used to identify errors as mentioned.
 
 Note: When requesting status, the client SHOULD use an ```Accept``` header for indicating content type  ```application/json```. In the case that errors prevent the export from completing, the server SHOULD respond with  a JSON-encoded FHIR OperationOutcome resource.
 
