@@ -102,7 +102,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
   Resource references MAY be relative URLs with the format `<resource type>/<id>`, or absolute URIs with the same structure rooted in the base URI for the server from which the export was performed. References will be resolved looking for a resource with the specified type and id within the file set.
 
-  Note: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/)
+  Note: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/) If the client explicitly asks for export of resources that the bulk data server doesn't support  the server SHOULD return details via OperationOutcome in an error response to the request.
 
 ##### Experimental Query Parameters
 
