@@ -25,6 +25,11 @@ This use case exports all resources needed for the US Core Data for Interoperabi
 
 This use case exports all resources needed to convey a patient's healththcare financial history, including Patient, ExplanationOfBenefit, Coverage, and Claim. While FHIR profiles are still being developed and standardized, see [https://bluebutton.cms.gov/developers/#core-resources](https://bluebutton.cms.gov/developers/#core-resources) for a full-fledged example.
 
+### Additional Use cases
+* Terminology data  e.g. to allow export of all ValueSet from a terminology server.
+* Provider data to export information about an system's full Practitioner, Location, and Organization list
+* Use in training machine learning algorithms on historical data
+
 ## Resources
 * [Overview Presentation](https://docs.google.com/presentation/d/14ZHmam9hwz6-SsCG1YqUIQnJ56bvSqEatebltgEVR6c/edit?usp=sharing)
 * [Client and Server Implementations](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/implementations.md)
