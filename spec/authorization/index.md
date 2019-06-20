@@ -8,7 +8,7 @@ active: authorization
 
 This profile is intended to be used by developers of backend services (clients) that
 autonomously (or semi-autonomously) need to access resources from FHIR servers
-that have pre-authorized defined scopes of access.  This specification handles use cases complementary to the SMART App Launch protocol[link].  Specifically, this profile
+that have pre-authorized defined scopes of access.  This specification handles use cases complementary to the [SMART App Launch protocol](http://www.hl7.org/fhir/smart-app-launch/).  Specifically, this profile
 describes the registration-time metadata required for a client to be pre-authorized,
 and the runtime process by which the client acquires an
 access token that can be used to retrieve FHIR resources.  This
