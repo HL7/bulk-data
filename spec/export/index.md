@@ -189,6 +189,7 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 - HTTP status code of ```5XX```
 - The server SHALL return a FHIR OperationOutcome resource in JSON format
 - Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response SHALL be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong.  In the case of a partial success  the server uses a 200 status code  not 5xx.
+- The choice of when to determine that an export job has failed in its entirety (error status)  vs returning a partial success (complete status) is left up to the implementer.
 
 #### Response - Complete Status
 
