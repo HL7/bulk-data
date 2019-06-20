@@ -42,7 +42,7 @@ In the bulk-data-export workflow, the file server will be a particularly attract
 
 Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches might be used to accomplish this, not all of which would be visible at the API.   Thus, this specification does not dictate an approach at this time.  Though it offers the use of an “Expires” header to limit the time period a file will be available for client download, removal of the file from the server is left up to the implementer.  Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.   
 
-Bulk data export can be a resource-intensive operation. Server developers should consider and mitigate the risk of intentional or inadvertent denial-of-service attacks (though the details are beyond the scope of this specification).
+Bulk data export can be a resource-intensive operation. Server developers should consider and mitigate the risk of intentional or inadvertent denial-of-service attacks (though the details are beyond the scope of this specification). Servers may limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).
 
 ## Request Flow
 
