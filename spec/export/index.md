@@ -189,6 +189,7 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 #### Response - Error Status
 
 - HTTP status code of ```5XX```
+- ```Content-Type header``` of ```application/json```
 - The server MUST return a FHIR OperationOutcome resource in JSON format
 - Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response MUST be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong.
 
