@@ -76,7 +76,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```Accept``` (required)
 
-  Specifies the format of the optional OperationOutcome response to the kick-off request. Currently, only application/fhir+json is supported.
+  Specifies the format of the optional OperationOutcome response to the kick-off request. Currently, only ```application/fhir+json``` is supported.
 
 - ```Prefer``` (required)
 
