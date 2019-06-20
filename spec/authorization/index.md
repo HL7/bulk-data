@@ -111,12 +111,10 @@ FHIR server using one of the following techniques:
   on the FHIR server for protecting the integrity of the key(s) over time, and denies the FHIR server the
   opportunity to validate the currency and integrity of the key at the time it is used.  
 
-The client SHALL be capable of generating a JSON Web Signature in accordance
-with [RFC7515](https://tools.ietf.org/html/rfc7515), using JSON Web Algorithm (JWA)
-header parameter values `RS384` and `ES384` as defined in [RFC7518](https://tools.ietf.org/html/rfc7518).  
-The FHIR authorization server SHALL be capable of validating such signatures. Over time,
-we expect recommended algorithms to evolve, so while this specification recommends algorithms
-for interoperability, it does not mandate the use of any specific algorithm.
+The client SHALL be capable of generating a JSON Web Signature in accordance with [RFC7515](https://tools.ietf.org/html/rfc7515). The client SHALL support both `RS384` and `ES384` for the JSON Web Algorithm (JWA) header parameter as defined in [RFC7518](https://tools.ietf.org/html/rfc7518).
+The FHIR authorization server SHALL be capable of validating signatures with at least one of `RS384` or `ES384`.
+Over time  best practices for asymmetric signatures are likely to evolve. While this specification mandates a baseline of support clients and servers MAY support and use additional algorithms for signature validation.
+As a reference, the signature algorithm discovery protocol `token_endpoint_auth_signing_alg_values_supported` property is defined in OpenID Connect as part of the [OAuth2 server metadata](https://tools.ietf.org/html/rfc8414).
 
 No matter how a JWK Set is communicated to the FHIR server, each JWK SHALL represent an
 asymmetric key by including `kty` and `kid` properties, with content conveyed using
