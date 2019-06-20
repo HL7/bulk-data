@@ -78,6 +78,24 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
   Specifies the format of the optional OperationOutcome response to the kick-off request. Currently, only application/fhir+json is supported.
 
+  **Example OperationOutcome**
+
+  ```
+  {
+    "resourceType": "OperationOutcome",
+    "id": "101",
+    "issue": [
+      {
+        "severity": "error",
+        "code": "deleted",
+        "details": {
+          "text": "The bulk data file has been deleted and is no longer available for download"
+        }
+      }
+    ]
+  }
+  ```
+
 - ```Prefer``` (required)
 
   Specifies whether the response is immediate or asynchronous. The header MUST be set to ```respond-async```.
