@@ -42,6 +42,8 @@ In the bulk-data-export workflow, the file server will be a particularly attract
 
 Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches might be used to accomplish this, not all of which would be visible at the API. Thus, this specification does not dictate an approach at this time. Though it offers the use of an “Expires” header to limit the time period a file will be available for client download, removal of the file from the server is left up to the implementer. We recommend that servers SHOULD not delete files from a bulk data response that a client is actively in the process of downloading regardless of the pre-specified Expires time. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.   
 
+Data access control obligations can be met with a combination of in-band and out-of-band restrictions. For example, some clients are authorized to access sensitive mental health information and some aren't; this authorization is defined out-of-band but when a client requests a full data set filtering is automatically applied by the server, restricting data that the client can access. Therefore, servers may limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).
+
 Bulk data export can be a resource-intensive operation. Server developers should consider and mitigate the risk of intentional or inadvertent denial-of-service attacks (though the details are beyond the scope of this specification).
 
 ## Request Flow
@@ -50,7 +52,9 @@ Bulk data export can be a resource-intensive operation. Server developers should
 
 This FHIR Operation initiates the asynchronous process of a client's request for the generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
 
-The FHIR server MUST limit the data returned to only those FHIR resources for which the client is authorized.
+The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.
+
+The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html).
 
 #### Endpoint - All Patients
 
@@ -78,7 +82,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```Accept``` (required)
 
-  Specifies the format of the optional OperationOutcome response to the kick-off request. Currently, only application/fhir+json is supported.
+  Specifies the format of the optional OperationOutcome response to the kick-off request. Currently, only ```application/fhir+json``` is supported.
 
 - ```Prefer``` (required)
 
@@ -88,7 +92,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```_outputFormat``` (string, optional, defaults to ```application/fhir+ndjson```)
 
-  The format for the requested bulk data files to be generated. Servers MUST support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers MUST accept the full content type of ```application/fhir+ndjson``` as well as the abbreviated representations ```application/ndjson``` and ```ndjson```.
+  The format for the requested bulk data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html) defaults to `application/fhir+ndjson`. Servers SHALL support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers SHALL accept the full content type of ```application/fhir+ndjson``` as well as the abbreviated representations ```application/ndjson``` and ```ndjson```.
 
 - ```_since``` (FHIR instant type, optional)  
 
@@ -108,7 +112,7 @@ As a community, we've identified use cases for finer-grained, client-specified f
 
 To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that further restrict the results of the query.  Servers may limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).  Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
 
-*Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters.
+*Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. As the `_typeFilter` is experimental and optional, we have not yet determined expectation for `_include`, `_revinclude`, or support for any specific search parameters.
 
 *Note*: Servers may limit the data returned to a specific client in accordance with local considerations (e.g. policies or regulations).
 
@@ -189,6 +193,7 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 #### Response - Error Status
 
 - HTTP status code of ```5XX```
+- ```Content-Type header``` of ```application/json```
 - The server MUST return a FHIR OperationOutcome resource in JSON format
 - Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response MUST be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong.
 
@@ -265,3 +270,10 @@ Specifies the format of the file being requested.
 #### Response - Error
 
 - HTTP Status Code of ```4XX``` or ```5XX```
+
+## More Information
+
+- [Export](/export/index.html)
+- [Backend Services Authorization](/authorization/index.html)
+- [Operations](/operations/index.html)
+- [History](http://hl7.org/fhir/us/bulkdata/history.cfml)
