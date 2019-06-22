@@ -8,8 +8,9 @@ active: authorization
 
 This profile is intended to be used by developers of backend services (clients) that
 autonomously (or semi-autonomously) need to access resources from FHIR servers
-that have pre-authorized defined scopes of access.  This specification handles use cases complementary to the [SMART App Launch protocol](http://www.hl7.org/fhir/smart-app-launch/).  Specifically, this profile
-describes the registration-time metadata required for a client to be pre-authorized,
+that have pre-authorized defined scopes of access.  This specification handles use cases
+complementary to the [SMART App Launch protocol](http://www.hl7.org/fhir/smart-app-launch/). 
+Specifically, this profile describes the registration-time metadata required for a client to be pre-authorized,
 and the runtime process by which the client acquires an
 access token that can be used to retrieve FHIR resources.  This
 specification is not restricted to use for retrieving bulk data; it may be used
@@ -281,6 +282,11 @@ the existing SMART on FHIR scopes are not appropriate. Instead, clients SHALL us
 the same access scope as the matching user format `user/(:resourceType|*).(read|write|*)`.
 However, system scopes are associated with permissions assigned to an authorized
 software client rather than to a human end-user.
+
+There are several cases where a client might ask for data that the client cannot or will not return:
+* Client explicitly asks for data that it is not authorized to see (e.g.  a client asks for `_type=Observation` but has scopes that only permit "system/Patient.read"). In this case a server SHOULD respond with a failure to the initial request.
+* Client explicitly asks for data that the server does not support (e.g.  a client asks for `_type=Practitioner` but the server does not support exporting Practitioner data). In this case a server SHOULD respond with a failure to the initial request.
+* Client explicitly asks for data that the server supports  and that appears consistent with its access scopes -- but some additional out-of-band rules/policies/restrictions prevents the client from being authorized to see these data. In this case  the server MAY withhold certain results from the response  and MAY indicate to the client that results were withheld by including OperationOutcome information in the "error" array for the response  as a partial success.
 
 ## Authorization Server Obligations
 
