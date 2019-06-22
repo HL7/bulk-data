@@ -45,7 +45,7 @@ registered patients and synchronizes these with an external database
 * A utilization tracking system that queries an EHR every minute for
 bed and room usage and displays statistics on a wall monitor.
 
-### Additional use Cases
+### Additional Use Cases
 
 * Public health surveillance studies that do not require real-time exchange of data.
 
