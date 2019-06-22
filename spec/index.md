@@ -28,7 +28,6 @@ This use case exports all resources needed to convey a patient's healththcare fi
 ### Additional Use Cases
 * Terminology data  e.g. to allow export of all ValueSet from a terminology server.
 * Provider data to export information about an system's full Practitioner, Location, and Organization list
-* Use in training machine learning algorithms on historical data
 
 ## Resources
 * [Overview Presentation](https://docs.google.com/presentation/d/14ZHmam9hwz6-SsCG1YqUIQnJ56bvSqEatebltgEVR6c/edit?usp=sharing)
