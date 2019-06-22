@@ -373,14 +373,14 @@ the FHIR authorization server, establishing the following
 
  * JWT "issuer" URL: `bili_monitor`
  * OAuth2 `client_id`: `bili_monitor`
- * JWK identfier: `kid` value (see [example JWK](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/sample-jwks/RS384.public.json))
+ * JWK identfier: `kid` value (see [example JWK](https://raw.githubusercontent.com/HL7/bulk-data/master/resources/sample-jwks/RS384.public.json))
 
 The client protects its private key from unauthorized access, use, and modification.  
 
 At runtime, when the bilirubin monitoring service wants to
 start monitoring some bilirubin values, it needs to obtain an OAuth 2.0 access
 token with the scopes `system/*.read` and `system/CommunicationRequest.write`. To accomplish
-this (see [example](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/sample-jwks/authorization-example-jwks-and-signatures.ipynb)), the client must first generate a one-time-use authentication JWT with the following claims:
+this (see [example](https://raw.githubusercontent.com/HL7/bulk-data/master/resources/sample-jwks/authorization-example-jwks-and-signatures.md) [raw](https://raw.githubusercontent.com/HL7/bulk-data/master/resources/sample-jwks/authorization-example-jwks-and-signatures.ipynb)), the client must first generate a one-time-use authentication JWT with the following claims:
 
 ##### 1. Generate a JWT to use for client authentication:
 
