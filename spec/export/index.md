@@ -14,7 +14,7 @@ The scope of this document does NOT include:
 * Real-time data exchange
 * Data transformations that may be required by the client
 * Patient matching (although identifiers may be included in the exported FHIR resources)
-* Management of FHIR groups within the clinical system; the bulk data operation may include a valid group id, but this guide does not specify how FHIR Group resources are created and maintained within a system
+* Management of FHIR groups; the bulk data operation may include a valid group id but this guide does not specify how FHIR Group resources are created and maintained within a system
 
 ## Referenced Specifications
 
@@ -32,7 +32,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 ## Security Considerations
 
-All exchanges described herein between a client and a server MUST be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246).  Use of mutual TLS is OPTIONAL.  
+All exchanges described herein between a client and a server MUST be secured using [Transport Layer Security (TLS) Protocol Version 1.2 or a more recent version of TLS (RFC5246)](https://tools.ietf.org/html/rfc5246).  Use of mutual TLS is OPTIONAL.  
 
 With each of the requests described herein implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](../authorization/index.html).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
 
@@ -40,7 +40,9 @@ This specification does not address protection of the servers themselves from po
 
 In the bulk-data-export workflow, the file server will be a particularly attractive target for adversaries, as it holds the “holy grail” – files containing highly sensitive and valued PHI.  An adversary who successfully takes control of a file server may choose to continue to deliver files in response to client requests, so that neither the client nor the FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own devious purposes.   
 
-Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches might be used to accomplish this, not all of which would be visible at the API.   Thus, this specification does not dictate an approach at this time.  Though it offers the use of an “Expires” header to limit the time period a file will be available for client download, removal of the file from the server is left up to the implementer.  Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.   
+Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches might be used to accomplish this, not all of which would be visible at the API. Thus, this specification does not dictate an approach at this time. Though it offers the use of an “Expires” header to limit the time period a file will be available for client download, removal of the file from the server is left up to the implementer. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.   
+
+Data access control obligations can be met with a combination of in-band and out-of-band restrictions. For example, some clients are authorized to access sensitive mental health information and some aren't; this authorization is defined out-of-band but when a client requests a full data set filtering is automatically applied by the server, restricting data that the client can access. Therefore, servers may limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).
 
 Bulk data export can be a resource-intensive operation. Server developers should consider and mitigate the risk of intentional or inadvertent denial-of-service attacks (though the details are beyond the scope of this specification).
 
@@ -50,7 +52,9 @@ Bulk data export can be a resource-intensive operation. Server developers should
 
 This FHIR Operation initiates the asynchronous process of a client's request for the generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
 
-The FHIR server MUST limit the data returned to only those FHIR resources for which the client is authorized.
+The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.
+
+The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html).
 
 #### Endpoint - All Patients
 
@@ -60,7 +64,7 @@ The FHIR server MUST limit the data returned to only those FHIR resources for wh
 
 `GET [fhir base]/Group/[id]/$export`
 
-FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/stu3/group.html).
+FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/group.html).
 
 If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables  clients to discover available groups based on stable characteristics such as `Group.identifier`.
 
@@ -76,7 +80,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```Accept``` (required)
 
-  Specifies the format of the optional OperationOutcome response to the kick-off request. Currently, only application/fhir+json is supported.
+  Specifies the format of the optional OperationOutcome response to the kick-off request. Currently, only ```application/fhir+json``` is supported.
 
 - ```Prefer``` (required)
 
@@ -86,13 +90,11 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```_outputFormat``` (string, optional, defaults to ```application/fhir+ndjson```)
 
-  The format for the requested bulk data files to be generated. Servers MUST support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers MUST accept the full content type of ```application/fhir+ndjson``` as well as the abbreviated representations ```application/ndjson``` and ```ndjson```.
+  The format for the requested bulk data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html) defaults to `application/fhir+ndjson`. Servers SHALL support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers SHALL accept the full content type of ```application/fhir+ndjson``` as well as the abbreviated representations ```application/ndjson``` and ```ndjson```.
 
 - ```_since``` (FHIR instant type, optional)  
 
   Resources updated after this period will be included in the response
-
-  Note: This parameter was named ```start``` in an earlier version of this proposal
 
 - ```_type``` (string of comma-delimited FHIR resource types, optional)
 
@@ -106,9 +108,9 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions (rather than historical prescriptions), or only laboratory observations (rather than all observations). We have considered several approaches to finer-grained filtering, including FHIR's `GraphDefinition`, the Clinical Quality Language (CQL), and FHIR's REST API search parameters. We expect this will be an area of active exploration, so for the time being this document defines an experimental syntax based on search parameters that works side-by-side with the coarse-grained `_type`-based filtering.
 
-To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that further restrict the results of the query. Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
+To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that further restrict the results of the query.  Servers may limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).  Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
 
-*Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters.
+*Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. As the `_typeFilter` is experimental and optional, we have not yet determined expectation for `_include`, `_revinclude`, or support for any specific search parameters.
 
 ###### Example Request with `_typeFilter`
 
@@ -130,7 +132,7 @@ $export?
     MedicationRequest%3Fstatus%3Dcompleted%26date%3Dgt2018-07-01T00%3A00%3A00Z
 ```
 
-Note: the `Condition` resource is included in `_type` but omitted from `_typeFilter` because the client intends to request all `Condition` resources without any filters.
+Note: the `Condition` resource is included in `_type` but omitted from `_typeFilter` because the client intends to request all `Condition` resources without any filters. We have not yet determined expectation for `_include`  `_revinclude`  or support for any specific search parameters.
 
 #### Response - Success
 
@@ -185,6 +187,7 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 #### Response - Error Status
 
 - HTTP status code of ```5XX```
+- ```Content-Type header``` of ```application/json```
 - The server MUST return a FHIR OperationOutcome resource in JSON format
 - Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response MUST be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong.
 
@@ -260,3 +263,10 @@ Specifies the format of the file being requested.
 #### Response - Error
 
 - HTTP Status Code of ```4XX``` or ```5XX```
+
+## More Information
+
+- [Export](/export/index.html)
+- [Backend Services Authorization](/authorization/index.html)
+- [Operations](/operations/index.html)
+- [History](http://hl7.org/fhir/us/bulkdata/history.cfml)

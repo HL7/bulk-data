@@ -8,7 +8,7 @@ active: authorization
 
 This profile is intended to be used by developers of backend services (clients) that
 autonomously (or semi-autonomously) need to access resources from FHIR servers
-that have pre-authorized defined scopes of access.  Specifically, this profile
+that have pre-authorized defined scopes of access.  This specification handles use cases complementary to the [SMART App Launch protocol](http://www.hl7.org/fhir/smart-app-launch/).  Specifically, this profile
 describes the registration-time metadata required for a client to be pre-authorized,
 and the runtime process by which the client acquires an
 access token that can be used to retrieve FHIR resources.  This
@@ -24,6 +24,9 @@ defined set of FHIR resources.
 include access authorization.
 * The client is able to protect a private key.
 * No compelling need exists for a user to authorize the access at runtime.
+
+*Note* See Also:
+The FHIR specification includes a set of [security considerations](http://hl7.org/fhir/security.html) including security  privacy and access control. These considerations apply to diverse use cases and provide general guidance for choosing among security specifications for particular use cases.
 
 ### Examples
 
@@ -108,12 +111,10 @@ FHIR server using one of the following techniques:
   on the FHIR server for protecting the integrity of the key(s) over time, and denies the FHIR server the
   opportunity to validate the currency and integrity of the key at the time it is used.  
 
-The client SHALL be capable of generating a JSON Web Signature in accordance
-with [RFC7515](https://tools.ietf.org/html/rfc7515), using JSON Web Algorithm (JWA)
-header parameter values `RS384` and `ES384` as defined in [RFC7518](https://tools.ietf.org/html/rfc7518).  
-The FHIR authorization server SHALL be capable of validating such signatures. Over time,
-we expect recommended algorithms to evolve, so while this specification recommends algorithms
-for interoperability, it does not mandate the use of any specific algorithm.
+The client SHALL be capable of generating a JSON Web Signature in accordance with [RFC7515](https://tools.ietf.org/html/rfc7515). The client SHALL support both `RS384` and `ES384` for the JSON Web Algorithm (JWA) header parameter as defined in [RFC7518](https://tools.ietf.org/html/rfc7518).
+The FHIR authorization server SHALL be capable of validating signatures with at least one of `RS384` or `ES384`.
+Over time  best practices for asymmetric signatures are likely to evolve. While this specification mandates a baseline of support clients and servers MAY support and use additional algorithms for signature validation.
+As a reference, the signature algorithm discovery protocol `token_endpoint_auth_signing_alg_values_supported` property is defined in OpenID Connect as part of the [OAuth2 server metadata](https://tools.ietf.org/html/rfc8414).
 
 No matter how a JWK Set is communicated to the FHIR server, each JWK SHALL represent an
 asymmetric key by including `kty` and `kid` properties, with content conveyed using
@@ -152,11 +153,11 @@ client to authenticate itself to the FHIR server and to request a short-lived
 access token in a single exchange.
 
 To begin the exchange, the client SHALL use the [Transport Layer Security
-(TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) to
+(TLS) Protocol Version 1.2 or a more recent version of TLS (RFC5246)](https://tools.ietf.org/html/rfc5246) to
 authenticate the identity of the FHIR authorization server and to establish an encrypted,
 integrity-protected link for securing all exchanges between the client
 and the authorization server's token endpoint.  All exchanges described herein between the client
-and the FHIR server SHALL be secured using TLS V1.2.
+and the FHIR server SHALL be secured using TLS V1.2 or a more recent version of TLS .
 
 <div>
 <img class="sequence-diagram-raw"  src="http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgQmFja2VuZCBTZXJ2aWNlIEF1dGhvcml6YXRpb24KCm5vdGUgb3ZlciBBcHA6ICBDcmVhdGUgYW5kIHNpZ24gYXV0aGVudGljACsFIEpXVCBcbntcbiAgImlzcyI6ICJhcHBfY2xpZW50X2lkIiwAFgVzdWIAAxhleHAiOiAxNDIyNTY4ODYwLCAASAVhdWQiOiAiaHR0cHM6Ly97dG9rZW4gdXJsfQBNBiAianRpIjogInJhbmRvbS1ub24tcmV1c2FibGUtand0LWlkLTEyMyJcbn0gLS0-AIE3BndpdGggYXBwJ3MgcHJpdmF0ZSBrZXkgKFJTMzg0KQCBbBBzY29wZT1zeXN0ZW0vKi5yZWFkJlxuZ3JhbnRfdHlwZT0AgV8HY3JlZGVudGlhbHMmXG4AgXQHYXNzZXJ0aW9uACUGdXJuOmlldGY6cGFyYW1zOm9hdXRoOgCCIQYtACMJLXR5cGU6and0LWJlYXJlcgA8Ez17c2lnbmVkAIJ1FGZyb20gYWJvdmV9CgpBcHAtPkVIUgCDXAUAg2kFZXI6ICBQT1NUIACCQxNcbihTYW1lIFVSTCBhcwCCegYARgYpAIQJDABAEUlzc3VlIG5ldyAAgx0FOgCECAUiYWNjZXNzXwCDMAUiOiAic2VjcmV0LQCDQAUteHl6IixcbiJleHBpcmVzX2luIjogMzAwLFxuLi4uXG59CgCBKA8tPgCFBwVbAFAGAGMGIHJlc3BvbnNlXQ&s=default"/></div>
@@ -286,10 +287,9 @@ software client rather than to a human end-user.
 ### Signature Verification
 
 The EHR's authorization server SHALL validate the JWT according to the
-processing requirements defined in [Section 3 of RFC7523](https://tools.ietf.org/html/rfc7523#section-3).
+processing requirements defined in [Section 3 of RFC7523](https://tools.ietf.org/html/rfc7523#section-3) including validation of the signature on the JWT.
 
 In addition, the authentication server SHALL:
-* validate the signature on the JWT
 * check that the `jti` value has not been previously encountered for the given `iss` within the maximum allowed authentication JWT lifetime (e.g., 5 minutes). This check prevents replay attacks.
 * ensure that the `client_id` provided is known and matches the JWT's `iss` claim
 
