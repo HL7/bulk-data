@@ -179,6 +179,74 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 
 #### Endpoint
 
+<table class="table">
+  <thead>
+    <th>Status</th>
+    <th>Description</th>
+    <th>Example Output Response</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>In-Progress</code><br/><span class="label label-success">202 Accepted</span></td>
+      <td>This response is returned by the server when the server is still processing the $export request.</td>
+      <td>
+        ```
+          In-progress, 85% complete
+        ```
+      </td>
+    </tr>
+    <tr>
+      <td width="15%"><code>Error</code><br/><span class="label label-error">5XX Error</span></td>
+      <td width="30%">Returned by the server when the export operation fails to return one or more ndjson files and indicates the error</td>
+      <td>
+        <pre>
+          <code>
+{
+  "resourceType": "OperationOutcome",
+  "id": "1",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "timeout",
+      "details": {
+        "text": "An internal timeout has occurred"
+      }
+    }
+  ]
+}
+          </code>
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td><code>Complete</code><br/><span class="label label-success">200 ok</span></td>
+      <td>Returns the list of ndjson locations for all generated bulk data files</td>
+      <td>
+      <pre>
+        <code>
+{
+  "transactionTime": "[instant]",
+  "request" : "[base]/Patient/$export?_type=Patient,Observation",
+  "requiresAccessToken" : true,
+  "output" : [{
+    "type" : "Patient",
+    "url" : "http://serverpath2/patient.ndjson"
+  },{
+    "type" : "Observation",
+    "url" : "http://serverpath2/observation.ndjson"
+  }],
+  "error" : [{
+    "type" : "OperationOutcome",
+    "url" : "http://serverpath2/err_file_1.ndjson"
+  }]
+}
+          </code>
+        </pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 `GET [polling content location]`
 
 #### Response - In-Progress Status
