@@ -9,7 +9,7 @@ active: authorization
 This profile is intended to be used by developers of backend services (clients) that
 autonomously (or semi-autonomously) need to access resources from FHIR servers
 that have pre-authorized defined scopes of access.  This specification handles use cases
-complementary to the [SMART App Launch protocol](http://www.hl7.org/fhir/smart-app-launch/). 
+complementary to the [SMART App Launch protocol](http://www.hl7.org/fhir/smart-app-launch/).
 Specifically, this profile describes the registration-time metadata required for a client to be pre-authorized,
 and the runtime process by which the client acquires an
 access token that can be used to retrieve FHIR resources.  This
@@ -161,7 +161,7 @@ and the authorization server's token endpoint.  All exchanges described herein b
 and the FHIR server SHALL be secured using TLS V1.2 or a more recent version of TLS .
 
 <div>
-<img class="sequence-diagram-raw"  src="http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgQmFja2VuZCBTZXJ2aWNlIEF1dGhvcml6YXRpb24KCm5vdGUgb3ZlciBBcHA6ICBDcmVhdGUgYW5kIHNpZ24gYXV0aGVudGljACsFIEpXVCBcbntcbiAgImlzcyI6ICJhcHBfY2xpZW50X2lkIiwAFgVzdWIAAxhleHAiOiAxNDIyNTY4ODYwLCAASAVhdWQiOiAiaHR0cHM6Ly97dG9rZW4gdXJsfQBNBiAianRpIjogInJhbmRvbS1ub24tcmV1c2FibGUtand0LWlkLTEyMyJcbn0gLS0-AIE3BndpdGggYXBwJ3MgcHJpdmF0ZSBrZXkgKFJTMzg0KQCBbBBzY29wZT1zeXN0ZW0vKi5yZWFkJlxuZ3JhbnRfdHlwZT0AgV8HY3JlZGVudGlhbHMmXG4AgXQHYXNzZXJ0aW9uACUGdXJuOmlldGY6cGFyYW1zOm9hdXRoOgCCIQYtACMJLXR5cGU6and0LWJlYXJlcgA8Ez17c2lnbmVkAIJ1FGZyb20gYWJvdmV9CgpBcHAtPkVIUgCDXAUAg2kFZXI6ICBQT1NUIACCQxNcbihTYW1lIFVSTCBhcwCCegYARgYpAIQJDABAEUlzc3VlIG5ldyAAgx0FOgCECAUiYWNjZXNzXwCDMAUiOiAic2VjcmV0LQCDQAUteHl6IixcbiJleHBpcmVzX2luIjogMzAwLFxuLi4uXG59CgCBKA8tPgCFBwVbAFAGAGMGIHJlc3BvbnNlXQ&s=default"/></div>
+<img class="sequence-diagram-raw"  src="https://raw.githubusercontent.com/HL7/bulk-data/master/resources/documents/backend-service-authorization-diagram.png"/></div>
 
 #### Protocol details
 
