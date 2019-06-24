@@ -40,7 +40,7 @@ This specification does not address protection of the servers themselves from po
 
 In the bulk-data-export workflow, the file server will be a particularly attractive target for adversaries, as it holds the “holy grail” – files containing highly sensitive and valued PHI.  An adversary who successfully takes control of a file server may choose to continue to deliver files in response to client requests, so that neither the client nor the FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own devious purposes.   
 
-Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches might be used to accomplish this, not all of which would be visible at the API. Thus, this specification does not dictate an approach at this time. Though it offers the use of an “Expires” header to limit the time period a file will be available for client download, removal of the file from the server is left up to the implementer. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.   
+Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches might be used to accomplish this, not all of which would be visible at the API. Thus, this specification does not dictate an approach at this time. Though it offers the use of an “Expires” header to limit the time period a file will be available for client download, removal of the file from the server is left up to the implementer. We recommend that servers SHOULD not delete files from a bulk data response that a client is actively in the process of downloading regardless of the pre-specified Expires time. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.   
 
 Data access control obligations can be met with a combination of in-band and out-of-band restrictions. For example, some clients are authorized to access sensitive mental health information and some aren't; this authorization is defined out-of-band but when a client requests a full data set filtering is automatically applied by the server, restricting data that the client can access. Therefore, servers may limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).
 
@@ -62,13 +62,15 @@ The FHIR server SHALL support invocation of this operation using the [FHIR Async
 
 [View table of parameters for Patient Export](/OperationDefinition-patient-export.html)
 
+FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients.
+
 #### Endpoint - Group of Patients
 
 `GET [fhir base]/Group/[id]/$export`
 
 [View table of parameters for Group Export](/OperationDefinition-group-export.html)
 
-FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/group.html).
+FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in specified [Group](https://www.hl7.org/fhir/stu3/group.html).
 
 If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables  clients to discover available groups based on stable characteristics such as `Group.identifier`.
 
@@ -108,7 +110,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```Prefer``` (required)
 
-  Specifies whether the response is immediate or asynchronous. The header MUST be set to ```respond-async```.
+  Specifies whether the response is immediate or asynchronous. The header MUST be set to ```respond-async```[https://tools.ietf.org/html/rfc7240](https://tools.ietf.org/html/rfc7240).
 
 #### Query Parameters
 
@@ -118,7 +120,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```_since``` (FHIR instant type, optional)  
 
-  Resources updated after this period will be included in the response
+  Resources updated after this instant will be included in the response. Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied `_since time`).
 
 - ```_type``` (string of comma-delimited FHIR resource types, optional)
 
@@ -135,6 +137,8 @@ As a community, we've identified use cases for finer-grained, client-specified f
 To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that further restrict the results of the query.  Servers may limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).  Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
 
 *Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. As the `_typeFilter` is experimental and optional, we have not yet determined expectation for `_include`, `_revinclude`, or support for any specific search parameters.
+
+*Note*: Servers may limit the data returned to a specific client in accordance with local considerations (e.g. policies or regulations).
 
 ###### Example Request with `_typeFilter`
 
@@ -156,7 +160,9 @@ $export?
     MedicationRequest%3Fstatus%3Dcompleted%26date%3Dgt2018-07-01T00%3A00%3A00Z
 ```
 
-Note: the `Condition` resource is included in `_type` but omitted from `_typeFilter` because the client intends to request all `Condition` resources without any filters. We have not yet determined expectation for `_include`  `_revinclude`  or support for any specific search parameters.
+
+Note: The `Condition` resource is included in `_type` but omitted from `_typeFilter` because the client intends to request all `Condition` resources without any filters. We have not yet determined expectation for `_include`  `_revinclude`  or support for any specific search parameters.
+
 
 #### Response - Success
 
@@ -226,8 +232,8 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
   - ```transactionTime``` - a FHIR instant type that indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to (and including) this instant. Note: to properly meet these constraints, a FHIR Server might need to wait for any pending transactions to resolve in its database, before starting the export process.
   - ```request``` - the full URI of the original bulk data kick-off request
   - ```requiresAccessToken``` - boolean value of ```true``` or ```false``` indicating whether downloading the generated files requires a bearer access token. Value MUST be ```true``` if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens.   Value MAY be ```false``` for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URIs or verifiable file servers within an organization's firewall.
-  - ```output``` - array of bulk data file items with one entry for each generated file. Note: If no resources are returned from the kick-off request, the server SHOULD return an empty array.
-  - ```error``` - array of error file items following the same structure as the `output` array. Note: If no errors occurred, the server SHOULD return an empty array.  Note: Only the `OperationOutcome` resource type is currently supported, so a server MUST generate files in the same format as the bulk data output files that contain `OperationOutcome` resources.
+  - ```output``` - array of file items with one entry for each generated file. Note: If no resources are returned from the kick-off request, the server SHOULD return an empty array.
+  - ```error``` - array of error file items following the same structure as the `output` array. Errors that occurred during the export should only be included here (not in output). Note: If no errors occurred, the server SHOULD return an empty array.  Note: Only the `OperationOutcome` resource type is currently supported, so a server MUST generate files in the same format as the bulk data output files that contain `OperationOutcome` resources.
 
   Each file item SHOULD contain the following fields:
    - ```type``` - the FHIR resource type that is contained in the file. Note: Each file MUST contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY  vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response.
@@ -259,7 +265,8 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
       "error" : [{
         "type" : "OperationOutcome",
         "url" : "http://serverpath2/err_file_1.ndjson"
-      }]
+      }],
+      "extension":{"http://myserver.example.org/extra-property": true}
     }
   ```
 
