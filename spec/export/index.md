@@ -90,24 +90,6 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
   Specifies the format of the optional OperationOutcome response to the kick-off request. Currently, only ```application/fhir+json``` is supported.
 
-  **Example OperationOutcome**
-
-  ```
-  {
-    "resourceType": "OperationOutcome",
-    "id": "101",
-    "issue": [
-      {
-        "severity": "error",
-        "code": "deleted",
-        "details": {
-          "text": "The bulk data file has been deleted and is no longer available for download"
-        }
-      }
-    ]
-  }
-  ```
-
 - ```Prefer``` (required)
 
   Specifies whether the response is immediate or asynchronous. The header MUST be set to ```respond-async```[https://tools.ietf.org/html/rfc7240](https://tools.ietf.org/html/rfc7240).
@@ -220,6 +202,24 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 - ```Content-Type header``` of ```application/json```
 - The server MUST return a FHIR OperationOutcome resource in JSON format
 - Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response MUST be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong.
+
+	Example OperationOutcome response body:
+
+  ```
+  {
+    "resourceType": "OperationOutcome",
+    "id": "101",
+    "issue": [
+      {
+        "severity": "error",
+        "code": "deleted",
+        "details": {
+          "text": "The bulk data file has been deleted and is no longer available for download"
+        }
+      }
+    ]
+  }
+  ```
 
 #### Response - Complete Status
 
