@@ -32,7 +32,7 @@ The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMME
 
 ## Security Considerations
 
-All exchanges described herein between a client and a server SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 or a more recent version of TLS (RFC5246)](https://tools.ietf.org/html/rfc5246).  Use of mutual TLS is OPTIONAL.  
+All exchanges described herein between a client and a server SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS.  Use of mutual TLS is OPTIONAL.  
 
 With each of the requests described herein implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](../authorization/index.html).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
 
@@ -68,7 +68,7 @@ FHIR Operation to obtain data on all patients available.
 
 FHIR Operation to obtain data on all patients listed in a single [FHIR Group Resource](https://www.hl7.org/fhir/group.html).
 
-If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables  clients to discover available groups based on stable characteristics such as `Group.identifier`.
+If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables clients to discover available groups based on stable characteristics such as `Group.identifier`.
 
 Note: How these groups are defined is implementation specific for each FHIR system. For example, a payer may send a healthcare institution a roster file that can be imported into their EHR to create or update a FHIR group. Group membership could be based upon explicit attributes of the patient, such as: age, sex or a particular condition such as PTSD or Chronic Opioid use, or on more complex attributes, such as a recent inpatient discharge or membership in the population used to calculate a quality measure. FHIR-based group management is out of scope for the current version of this implementation guide.
 
@@ -102,11 +102,11 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
   For example  `_type=Practitioner` could be used to bulk data extract all Practitioner resources from a FHIR endpoint.
 
-  Only resources of the specified resource types(s) SHALL be included in the response. If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For non-system-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHALL be used as a point of reference for recommended resources to be returned as well as other resources outside of the patient compartment that are helpful in interpreting the patient data such as Organization and Practitioner. Servers unable to suppport `_type` should return an error and OperationOutcome so clients can re-submit a request omitting the `_type` parameter.
+  Only resources of the specified resource types(s) SHALL be included in the response. If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For non-system-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHALL be used as a point of reference for recommended resources to be returned as well as other resources outside of the patient compartment that are helpful in interpreting the patient data such as Organization and Practitioner. Servers unable to suppport `_type` SHOULD return an error and OperationOutcome so clients can re-submit a request omitting the `_type` parameter.
 
   Resource references MAY be relative URLs with the format `<resource type>/<id>`, or absolute URIs with the same structure rooted in the base URI for the server from which the export was performed. References will be resolved looking for a resource with the specified type and id within the file set.
 
-  Note: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/) If the client explicitly asks for export of resources that the bulk data server doesn't support  the server SHOULD return details via OperationOutcome in an error response to the request.
+  Note: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/) If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via OperationOutcome in an error response to the request.
 
 ##### Experimental Query Parameters
 
@@ -175,9 +175,9 @@ After a bulk data request has been started, a client MAY send a delete request t
 
 After a bulk data request has been started, the client MAY poll the URI provided in the ```Content-Location``` header.  
 
-Note: Clients SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach when polling for status. Servers SHOULD supply a [Retry-After header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) with a http date or a delay time in seconds. When provided, clients SHOULD use this information to inform the timing of future polling requests. Servers SHOULD keep an accounting of status queries received from a given client, and if a client is polling too frequently, the server SHOULD respond with a `429 Too Many Requests` status code in addition to a Retry-After header, and optionally a FHIR OperationOutcome resource with further explanation.  If excessively frequent status queries persist, the server MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP 4XX  as well as 5xx status codes may be used to identify errors as mentioned.
+Note: Clients SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach when polling for status. Servers SHOULD supply a [Retry-After header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) with a http date or a delay time in seconds. When provided, clients SHOULD use this information to inform the timing of future polling requests. Servers SHOULD keep an accounting of status queries received from a given client, and if a client is polling too frequently, the server SHOULD respond with a `429 Too Many Requests` status code in addition to a Retry-After header, and optionally a FHIR OperationOutcome resource with further explanation.  If excessively frequent status queries persist, the server MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP 4XX as well as 5xx status codes may be used to identify errors as mentioned.
 
-Note: When requesting status, the client SHOULD use an ```Accept``` header for indicating content type  ```application/json```. In the case that errors prevent the export from completing, the server SHOULD respond with  a JSON-encoded FHIR OperationOutcome resource.
+Note: When requesting status, the client SHOULD use an ```Accept``` header for indicating content type  ```application/json```. In the case that errors prevent the export from completing, the server SHOULD respond with a JSON-encoded FHIR OperationOutcome resource.
 
 #### Endpoint
 
@@ -193,7 +193,7 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 - HTTP status code of ```5XX```
 - ```Content-Type header``` of ```application/json```
 - The server SHALL return a FHIR OperationOutcome resource in JSON format
-- Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response SHALL be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong.  In the case of a partial success the server uses a 200 status code  not 5xx.
+- Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response SHALL be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong. In the case of a partial success, the server uses a 200 status code, not 5xx.
 - The choice of when to determine that an export job has failed in its entirety (error status)  vs returning a partial success (complete status) is left up to the implementer.
 
 #### Response - Complete Status
@@ -211,7 +211,7 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
   - ```error``` - array of error file items following the same structure as the `output` array. Note: If no errors occurred, the server SHOULD return an empty array.  Note: Only the `OperationOutcome` resource type is currently supported, so a server SHALL generate files in the same format as the bulk data output files that contain `OperationOutcome` resources.
 
   Each file item SHALL contain the following fields:
-   - ```type``` - the FHIR resource type that is contained in the file. Note: Each file SHALL contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY  vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response. (These rules apply only to top-level resources within the response; as always in FHIR  any resource MAY have a "contained" array that includes referenced resources of other types.)
+   - ```type``` - the FHIR resource type that is contained in the file. Note: Each file SHALL contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response. (These rules apply only to top-level resources within the response; as always in FHIR, any resource MAY have a "contained" array that includes referenced resources of other types.)
    - ```url``` - the path to the file. The format of the file SHOULD reflect that requested in the ```_outputFormat``` parameter of the initial kick-off request.
 
   Each file item MAY optionally contain the following field:
