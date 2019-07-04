@@ -16,7 +16,7 @@ specification is not restricted to use for retrieving bulk data; it may be used
 to connect to any FHIR API endpoint, including both synchronous and asynchronous
 access.
 
-#### **Use this profile** when the following conditions apply:
+### **Use this profile** when the following conditions apply:
 
 * The target FHIR server can register the client and pre-authorize access to a
 defined set of FHIR resources.
@@ -44,6 +44,10 @@ registered patients and synchronizes these with an external database
 
 * A utilization tracking system that queries an EHR every minute for
 bed and room usage and displays statistics on a wall monitor.
+
+### Additional Use Cases
+
+* Public health surveillance studies that do not require real-time exchange of data.
 
 ## Underlying Standards
 
@@ -94,8 +98,8 @@ For consistency in implementation, the client's JWK SHALL be shared with the
 FHIR server using one of the following techniques:
 
   1. URL to JWK Set (strongly preferred). This URL communicates the TLS-protected
-  endpoint where the client's public JWK Set can be found. When provided, this URL
-  SHALL match the `jku` header parameter in the client's Authorization JWT. Advantages
+  endpoint where the client's public JWK Set can be found.
+  This endpoint SHALL be accessible via TLS without authentication or authorization. Advantages
   of this approach are that
   it allows a client to rotate its own keys by updating the hosted content at the
   JWK Set URL, assures that the public key used by the FHIR server is current, and avoids the
@@ -162,7 +166,7 @@ and the FHIR server SHALL be secured using TLS V1.2 or a more recent version of 
 <div>
 <img class="sequence-diagram-raw"  src="http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgQmFja2VuZCBTZXJ2aWNlIEF1dGhvcml6YXRpb24KCm5vdGUgb3ZlciBBcHA6ICBDcmVhdGUgYW5kIHNpZ24gYXV0aGVudGljACsFIEpXVCBcbntcbiAgImlzcyI6ICJhcHBfY2xpZW50X2lkIiwAFgVzdWIAAxhleHAiOiAxNDIyNTY4ODYwLCAASAVhdWQiOiAiaHR0cHM6Ly97dG9rZW4gdXJsfQBNBiAianRpIjogInJhbmRvbS1ub24tcmV1c2FibGUtand0LWlkLTEyMyJcbn0gLS0-AIE3BndpdGggYXBwJ3MgcHJpdmF0ZSBrZXkgKFJTMzg0KQCBbBBzY29wZT1zeXN0ZW0vKi5yZWFkJlxuZ3JhbnRfdHlwZT0AgV8HY3JlZGVudGlhbHMmXG4AgXQHYXNzZXJ0aW9uACUGdXJuOmlldGY6cGFyYW1zOm9hdXRoOgCCIQYtACMJLXR5cGU6and0LWJlYXJlcgA8Ez17c2lnbmVkAIJ1FGZyb20gYWJvdmV9CgpBcHAtPkVIUgCDXAUAg2kFZXI6ICBQT1NUIACCQxNcbihTYW1lIFVSTCBhcwCCegYARgYpAIQJDABAEUlzc3VlIG5ldyAAgx0FOgCECAUiYWNjZXNzXwCDMAUiOiAic2VjcmV0LQCDQAUteHl6IixcbiJleHBpcmVzX2luIjogMzAwLFxuLi4uXG59CgCBKA8tPgCFBwVbAFAGAGMGIHJlc3BvbnNlXQ&s=default"/></div>
 
-#### Protocol details
+### Protocol details
 
 Before a client can request an access token, it SHALL generate a
 one-time-use JSON Web Token (JWT) that will be used to authenticate the client to
@@ -196,7 +200,7 @@ tools and client libraries, see https://jwt.io.
     <tr>
       <td><code>jku</code></td>
       <td><span class="label label-info">optional</span></td>
-      <td>The URL to the JWK Set containing the public key(s). When present,
+      <td>The TLS-protected URL to the JWK Set containing the public key(s) accessible without authentication or authorization. When present,
       this should match a value that the client supplied to the FHIR server at
       client registration time.  (When absent, the FHIR server SHOULD fall back on the JWK
       Set URL or the JWK Set supplied at registration time.</td>
@@ -451,10 +455,10 @@ Pragma: no-cache
 With a valid access token, a client MAY issue a FHIR API call to a FHIR resource server or other appropriate endpoint. The request MUST include an ```Authorization``` header that presents the ```access_token``` as a “Bearer” token:
 
 ```
-Authorization: Bearer {{access_token}}  
+Authorization: Bearer {access_token}  
 ```
 
-[where {{access_token}} is replaced with the actual token value]
+[where {access_token} is replaced with the actual token value]
 
 **Example Request**
 
