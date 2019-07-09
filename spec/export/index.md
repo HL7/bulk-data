@@ -196,7 +196,7 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
         <pre>
           <code>
 202 Accepted
-Date: Mon, 18 Jul 2016 16:06:00 GMT
+Date: Mon, 18 Jul 2019 16:06:00 GMT
 X-Progress: In-progress, 85% complete
           </code>
         </pre>
