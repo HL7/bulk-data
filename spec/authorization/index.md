@@ -165,7 +165,7 @@ and the authorization server's token endpoint.  All exchanges described herein b
 and the FHIR server SHALL be secured using TLS V1.2 or a more recent version of TLS .
 
 <div>
-<img class="sequence-diagram-raw"  src="https://raw.githubusercontent.com/HL7/bulk-data/master/resources/documents/backend-service-authorization-diagram.png"/></div>
+<img class="sequence-diagram-raw"  src="backend-service-authorization-diagram.png"/></div>
 
 ### Protocol details
 
