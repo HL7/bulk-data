@@ -191,11 +191,15 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
   <tbody>
     <tr>
       <td><a href="#response---in-progress-status"><code>In-Progress</code></a><br/><span class="label label-success">202 Accepted</span></td>
-      <td>This response is returned by the server when the server is still processing the $export request.</td>
+      <td>This response is returned by the server as a header when the server is still processing the $export request. The response body will be empty.</td>
       <td>
-        ```
-          In-progress, 85% complete
-        ```
+        <pre>
+          <code>
+202 Accepted
+Date: Mon, 18 Jul 2016 16:06:00 GMT
+X-Progress: In-progress, 85% complete
+          </code>
+        </pre>
       </td>
     </tr>
     <tr>
