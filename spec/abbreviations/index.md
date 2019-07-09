@@ -8,7 +8,7 @@ This page contains a list of abbreviations mentioned in this implementation guid
 
 ## Healthcare Abbreviations
 * CQL - Clinical Quality Language
-* DSTU - Draft Standard for Technical Use
+* DSTU - Draft Standard for Trial Use
 * EHR - Electronic Health Record
 * HL7 - Health Layer 7
 * IG - Implementation Guide
@@ -17,7 +17,7 @@ This page contains a list of abbreviations mentioned in this implementation guid
 * PTSD - Post Traumatic Stress Disorder
 * RIM - Reference Information Model
 * SMART - Substitutable Medical Apps, Reusable Technology
-* STU - Standard for Technical Use
+* STU - Standard for Trial Use
 
 ## External
 * API - Application Programming Interface
