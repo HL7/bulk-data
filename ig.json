@@ -34,6 +34,9 @@
     "StructureDefinition/oauth-uris": {
       "base": "StructureDefinition-oauth-uris.html"
     },
+    "CapabilityStatement/bulk-data": {
+      "base": "CapabilityStatement-bulk-data.html"
+    },
     "OperationDefinition/export": {
       "base": "OperationDefinition-export.html"
     }
