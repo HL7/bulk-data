@@ -1,7 +1,7 @@
 {
   "resourceType": "CapabilityStatement",
   "id": "bulk-data",
-  "url": "http://hl7.org/fhir/us/core/CapabilityStatement/bulk-data",
+  "url": "http://hl7.org/fhir/us/bulkdata/CapabilityStatement/bulk-data",
   "version": "1.0.0",
   "name": "BulkDataIGCapabilityStatement",
   "title": " FHIR Bulk Data Export (Flat FHIR) Implementation Guide CapabilityStatement",
