@@ -56,6 +56,8 @@ The FHIR server SHALL limit the data returned to only those FHIR resources for w
 
 The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html).
 
+For non-system-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned as well as other resources outside of the patient compartment that are helpful in interpreting the patient data such as Organization and Practitioner.
+
 #### Endpoint - All Patients
 
 `GET [fhir base]/Patient/$export`
@@ -187,6 +189,80 @@ Note: When requesting status, the client SHOULD use an ```Accept``` header for i
 
 `GET [polling content location]`
 
+**Responses**
+<table class="table">
+  <thead>
+    <th>Status</th>
+    <th>Description</th>
+    <th>Example Output Response</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="#response---in-progress-status"><code>In-Progress</code></a><br/><span class="label label-success">202 Accepted</span></td>
+      <td>This response is returned by the server as a header when the server is still processing the $export request. The response body will be empty.</td>
+      <td>
+        <pre>
+          <code>
+202 Accepted
+Date: Mon, 18 Jul 2019 16:06:00 GMT
+X-Progress: In-progress, 85% complete
+          </code>
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td width="15%"><a href="#response---error-status-1"><code>Error</code></a><br/><span class="label label-error">5XX Error</span></td>
+      <td width="30%">Returned by the server when the export operation fails to return one or more ndjson files and indicates the error.</td>
+      <td>
+        <pre>
+          <code>
+{
+  "resourceType": "OperationOutcome",
+  "id": "1",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "timeout",
+      "details": {
+        "text": "An internal timeout has occurred"
+      }
+    }
+  ]
+}
+          </code>
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td><a href="#response---complete-status"><code>Complete</code></a><br/><span class="label label-success">200 ok</span></td>
+      <td>Returns the list of ndjson locations for all generated bulk data files.</td>
+      <td>
+      <pre>
+        <code>
+{
+  "transactionTime": "[instant]",
+  "request" : "[base]/Patient/$export?_type=Patient,Observation",
+  "requiresAccessToken" : true,
+  "output" : [{
+    "type" : "Patient",
+    "url" : "http://serverpath2/patient.ndjson"
+  },{
+    "type" : "Observation",
+    "url" : "http://serverpath2/observation.ndjson"
+  }],
+  "error" : [{
+    "type" : "OperationOutcome",
+    "url" : "http://serverpath2/err_file_1.ndjson"
+  }]
+}
+          </code>
+        </pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
 #### Response - In-Progress Status
 
 - HTTP Status Code of ```202 Accepted```
@@ -280,3 +356,4 @@ Specifies the format of the file being requested.
 - [Backend Services Authorization](/authorization/index.html)
 - [Operations](/operations/index.html)
 - [History](http://hl7.org/fhir/us/bulkdata/history.cfml)
+- [Abbreviations](/abbreviations/index.html)
