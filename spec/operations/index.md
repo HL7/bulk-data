@@ -10,4 +10,4 @@ These OperationDefinitions have been defined for this implementation guide.
 * [Patient Export: export patient data from a FHIR server](../OperationDefinition-patient-export.html)
 * [Group Export: export data for groups of patients from a FHIR server](../OperationDefinition-group-export.html)
 
-
+We will define in the Bulk Data spec a cannonical URL that conforming servers can point to to declare conformance. Pointed to by `CapabilityStatement.instantiates`.
