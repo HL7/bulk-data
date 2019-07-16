@@ -377,14 +377,14 @@ the FHIR authorization server, establishing the following
 
  * JWT "issuer" URL: `bili_monitor`
  * OAuth2 `client_id`: `bili_monitor`
- * JWK identfier: `kid` value (see [example JWK](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/sample-jwks/RS384.public.json))
+ * JWK identfier: `kid` value (see [example JWK](sample-jwks/RS384.public.json))
 
 The client protects its private key from unauthorized access, use, and modification.  
 
 At runtime, when the bilirubin monitoring service wants to
 start monitoring some bilirubin values, it needs to obtain an OAuth 2.0 access
 token with the scopes `system/*.read` and `system/CommunicationRequest.write`. To accomplish
-this (see [example](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/sample-jwks/authorization-example-jwks-and-signatures.ipynb)), the client must first generate a one-time-use authentication JWT with the following claims:
+this (see [example](authorization-example-jwks-and-signatures.md) [raw](authorization-example-jwks-and-signatures.ipynb)), the client must first generate a one-time-use authentication JWT with the following claims:
 
 ##### 1. Generate a JWT to use for client authentication:
 
@@ -411,7 +411,7 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzM4NCIsImtpZCI6ImVlZTlmMTdhM2I1OThmZDg2NDE3YTk4MGI1
 ```
 
 Note: to inspect this example JWT, you can visit https://jwt.io. Paste the signed
-JWT value above into the "Encoded"  field, and paste the [sample public signing key](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/sample-jwks/RS384.public.json) (starting with the `{"kty": "RSA"` JSON object, and excluding the `{ "keys": [` JWK Set wrapping array) into the "Public Key" box.
+JWT value above into the "Encoded"  field, and paste the [sample public signing key](sample-jwks/RS384.public.json) (starting with the `{"kty": "RSA"` JSON object, and excluding the `{ "keys": [` JWK Set wrapping array) into the "Public Key" box.
 The plaintext JWT will be displayed in the "Decoded:Payload"  field, and a "Signature Verified" message will appear.
 
 ##### 3. Obtain an access token
