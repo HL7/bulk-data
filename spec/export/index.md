@@ -62,11 +62,15 @@ For non-system-level requests, the [Patient Compartment](https://www.hl7.org/fhi
 
 `GET [fhir base]/Patient/$export`
 
+[View table of parameters for Patient Export](/OperationDefinition-patient-export.html)
+
 FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients.
 
 #### Endpoint - Group of Patients
 
 `GET [fhir base]/Group/[id]/$export`
+
+[View table of parameters for Group Export](/OperationDefinition-group-export.html)
 
 FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in specified [Group](https://www.hl7.org/fhir/stu3/group.html).
 
@@ -77,6 +81,8 @@ Note: How these groups are defined is implementation specific for each FHIR syst
 #### Endpoint - System Level Export
 
 `GET [fhir base]/$export`
+
+[View table of parameters for Export](/OperationDefinition-export.html)
 
 Export data from a FHIR server whether or not it is associated with a patient. This supports use cases like backing up a server or exporting terminology data by restricting the resources returned using the ```_type``` parameter.
 
@@ -271,7 +277,26 @@ X-Progress: In-progress, 85% complete
 - HTTP status code of ```5XX```
 - ```Content-Type header``` of ```application/json```
 - The server MUST return a FHIR OperationOutcome resource in JSON format
-- Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response MUST be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong.
+
+	Example OperationOutcome response body:
+
+  ```
+  {
+    "resourceType": "OperationOutcome",
+    "id": "101",
+    "issue": [
+      {
+        "severity": "error",
+        "code": "deleted",
+        "details": {
+          "text": "The bulk data file has been deleted and is no longer available for download"
+        }
+      }
+    ]
+  }
+  ```
+
+Note: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response MUST be populated (see below) with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong.
 
 #### Response - Complete Status
 
@@ -326,6 +351,17 @@ X-Progress: In-progress, 85% complete
 ### File Request
 
 Using the URIs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated bulk data files (one or more per resource type) within the specified ```Expires``` time period. If the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the request MUST include a valid access token.  See the Security Considerations section above.  
+
+The exported data SHALL include only the most recent version of any exported resources unless the client explicitly requests different behavior in a fashion supported by the server (e.g.  via a new query parameter yet to be defined). Inclusion of the .meta information is at the discretion of the server (as it is for all FHIR interactions).
+
+Example NDJSON file:
+```
+{"id":"5c41cecf-cf81-434f-9da7-e24e5a99dbc2","name":[{"given":["Brenda"],"family":["Jackson"]}],"gender":"female","birthDate":"1956-10-14T00:00:00.000Z","resourceType":"Patient"}
+{"id":"3fabcb98-0995-447d-a03f-314d202b32f4","name":[{"given":["Bram"],"family":["Sandeep"]}],"gender":"male","birthDate":"1994-11-01T00:00:00.000Z","resourceType":"Patient"}
+{"id":"945e5c7f-504b-43bd-9562-a2ef82c244b2","name":[{"given":["Sandy"],"family":["Hamlin"]}],"gender":"female","birthDate":"1988-01-24T00:00:00.000Z","resourceType":"Patient"}
+
+```
+
 
 #### Endpoint
 

@@ -362,7 +362,9 @@ the following properties:
 To minimize risks associated with token redirection, the scope of each access token SHOULD encompass, and be limited to, the resources requested. Access tokens issued under this profile SHALL be short-lived; the `expires_in`
 value SHOULD NOT exceed `300`, which represents an expiration-time of five minutes.
 
-The authorization server’s response MUST include the HTTP “Cache-Control” response header field with a value of “no-store,” as well as the “Pragma” response header field with a value of “no-cache.”    
+The client SHOULD return a “Cache-Control” header in its JWKS response
+* The authorization server SHALL NOT cache a JWKS for longer than the client's cache-control header indicates.
+* The authorization server SHOULD cache a client's JWK Set according to the client's cache-control header; it doesn't need to retrieve it anew every time. 
 
 If an error is encountered during the authorization process, the server SHALL
 respond with the appropriate error message defined in [Section 5.2 of the OAuth 2.0 specification](https://tools.ietf.org/html/rfc6749#page-45).  The server SHOULD include an
