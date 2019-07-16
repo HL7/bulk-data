@@ -11,7 +11,7 @@
       "valueString": "C:\\work\\org.hl7.fhir.igs\\bulk-data\\spec"
     }
   ],
-  "url": "http://hl7.org/fhir/us/bulkdata/ImplementationGuide/ig",
+  "url": "http://hl7.org/fhir/bulk-data/ImplementationGuide/bulk-data",
   "version": "0.1.0",
   "name": "BulkDataAccess",
   "title": "FHIR Bulk Data Access",
