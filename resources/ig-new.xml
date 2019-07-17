@@ -38,6 +38,12 @@
       </reference>
       <name value="Definition for Patient $export"/>
     </resource>
+    <resource>
+      <reference>
+        <reference value="CapabilityStatement/bulk-data"/>
+      </reference>
+      <name value="CapabilityStatement for Bulk Data"/>
+    </resource>
     <page>
       <nameUrl value="index.html"/>
       <title value="FHIR Bulk Data Access"/>

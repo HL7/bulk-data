@@ -8,8 +8,9 @@ active: authorization
 
 This profile is intended to be used by developers of backend services (clients) that
 autonomously (or semi-autonomously) need to access resources from FHIR servers
-that have pre-authorized defined scopes of access.  This specification handles use cases complementary to the [SMART App Launch protocol](http://www.hl7.org/fhir/smart-app-launch/).  Specifically, this profile
-describes the registration-time metadata required for a client to be pre-authorized,
+that have pre-authorized defined scopes of access.  This specification handles use cases
+complementary to the [SMART App Launch protocol](http://www.hl7.org/fhir/smart-app-launch/).
+Specifically, this profile describes the registration-time metadata required for a client to be pre-authorized,
 and the runtime process by which the client acquires an
 access token that can be used to retrieve FHIR resources.  This
 specification is not restricted to use for retrieving bulk data; it may be used
@@ -26,7 +27,7 @@ include access authorization.
 * No compelling need exists for a user to authorize the access at runtime.
 
 *Note* See Also:
-The FHIR specification includes a set of [security considerations](http://hl7.org/fhir/security.html) including security  privacy and access control. These considerations apply to diverse use cases and provide general guidance for choosing among security specifications for particular use cases.
+The FHIR specification includes a set of [security considerations](http://hl7.org/fhir/security.html) including security, privacy, and access control. These considerations apply to diverse use cases and provide general guidance for choosing among security specifications for particular use cases.
 
 ### Examples
 
@@ -78,7 +79,7 @@ and carefully weighed before choosing a different course
 
 ## Registering a SMART Backend Service (communicating public keys)
 
-Before a SMART client can run against a FHIR server  the client SHALL generate
+Before a SMART client can run against a FHIR server, the client SHALL generate
 or obtain an asymmetric key pair and SHALL register its public key set with that
 FHIR server’s authorization service.  SMART does not specify a
 standards-based registration process, but we encourage FHIR service implementers to
@@ -117,7 +118,7 @@ FHIR server using one of the following techniques:
 
 The client SHALL be capable of generating a JSON Web Signature in accordance with [RFC7515](https://tools.ietf.org/html/rfc7515). The client SHALL support both `RS384` and `ES384` for the JSON Web Algorithm (JWA) header parameter as defined in [RFC7518](https://tools.ietf.org/html/rfc7518).
 The FHIR authorization server SHALL be capable of validating signatures with at least one of `RS384` or `ES384`.
-Over time  best practices for asymmetric signatures are likely to evolve. While this specification mandates a baseline of support clients and servers MAY support and use additional algorithms for signature validation.
+Over time, best practices for asymmetric signatures are likely to evolve. While this specification mandates a baseline of support clients and servers MAY support and use additional algorithms for signature validation.
 As a reference, the signature algorithm discovery protocol `token_endpoint_auth_signing_alg_values_supported` property is defined in OpenID Connect as part of the [OAuth2 server metadata](https://tools.ietf.org/html/rfc8414).
 
 No matter how a JWK Set is communicated to the FHIR server, each JWK SHALL represent an
@@ -129,7 +130,7 @@ This means that:
 * For ECDSA public keys, each JWK SHALL include `crv`, `x`, and `y` values (curve,
 x-coordinate, and y-coordinate, for EC keys)
 
-Upon registration, the client SHALL be assigned a `client_id`, which  the client SHALL use when
+Upon registration, the client SHALL be assigned a `client_id`, which the client SHALL use when
 requesting an access token.
 
 ## Obtaining an Access Token
@@ -157,14 +158,14 @@ client to authenticate itself to the FHIR server and to request a short-lived
 access token in a single exchange.
 
 To begin the exchange, the client SHALL use the [Transport Layer Security
-(TLS) Protocol Version 1.2 or a more recent version of TLS (RFC5246)](https://tools.ietf.org/html/rfc5246) to
+(TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS to
 authenticate the identity of the FHIR authorization server and to establish an encrypted,
 integrity-protected link for securing all exchanges between the client
 and the authorization server's token endpoint.  All exchanges described herein between the client
 and the FHIR server SHALL be secured using TLS V1.2 or a more recent version of TLS .
 
 <div>
-<img class="sequence-diagram-raw"  src="http://www.websequencediagrams.com/cgi-bin/cdraw?lz=dGl0bGUgQmFja2VuZCBTZXJ2aWNlIEF1dGhvcml6YXRpb24KCm5vdGUgb3ZlciBBcHA6ICBDcmVhdGUgYW5kIHNpZ24gYXV0aGVudGljACsFIEpXVCBcbntcbiAgImlzcyI6ICJhcHBfY2xpZW50X2lkIiwAFgVzdWIAAxhleHAiOiAxNDIyNTY4ODYwLCAASAVhdWQiOiAiaHR0cHM6Ly97dG9rZW4gdXJsfQBNBiAianRpIjogInJhbmRvbS1ub24tcmV1c2FibGUtand0LWlkLTEyMyJcbn0gLS0-AIE3BndpdGggYXBwJ3MgcHJpdmF0ZSBrZXkgKFJTMzg0KQCBbBBzY29wZT1zeXN0ZW0vKi5yZWFkJlxuZ3JhbnRfdHlwZT0AgV8HY3JlZGVudGlhbHMmXG4AgXQHYXNzZXJ0aW9uACUGdXJuOmlldGY6cGFyYW1zOm9hdXRoOgCCIQYtACMJLXR5cGU6and0LWJlYXJlcgA8Ez17c2lnbmVkAIJ1FGZyb20gYWJvdmV9CgpBcHAtPkVIUgCDXAUAg2kFZXI6ICBQT1NUIACCQxNcbihTYW1lIFVSTCBhcwCCegYARgYpAIQJDABAEUlzc3VlIG5ldyAAgx0FOgCECAUiYWNjZXNzXwCDMAUiOiAic2VjcmV0LQCDQAUteHl6IixcbiJleHBpcmVzX2luIjogMzAwLFxuLi4uXG59CgCBKA8tPgCFBwVbAFAGAGMGIHJlc3BvbnNlXQ&s=default"/></div>
+<img class="sequence-diagram-raw"  src="backend-service-authorization-diagram.png"/></div>
 
 ### Protocol details
 
@@ -217,7 +218,7 @@ tools and client libraries, see https://jwt.io.
     <tr>
       <td><code>iss</code></td>
       <td><span class="label label-success">required</span></td>
-      <td>Issuer of the JWT -- the client's <code>client_id</code>, as determined during registration with the FHIR  authorization server
+      <td>Issuer of the JWT -- the client's <code>client_id</code>, as determined during registration with the FHIR authorization server
         (note that this is the same as the value for the <code>sub</code> claim)</td>
     </tr>
     <tr>
@@ -285,6 +286,11 @@ the existing SMART on FHIR scopes are not appropriate. Instead, clients SHALL us
 the same access scope as the matching user format `user/(:resourceType|*).(read|write|*)`.
 However, system scopes are associated with permissions assigned to an authorized
 software client rather than to a human end-user.
+
+There are several cases where a client might ask for data that the client cannot or will not return:
+* Client explicitly asks for data that it is not authorized to see (e.g.  a client asks for `_type=Observation` but has scopes that only permit "system/Patient.read"). In this case a server SHOULD respond with a failure to the initial request.
+* Client explicitly asks for data that the server does not support (e.g.  a client asks for `_type=Practitioner` but the server does not support exporting Practitioner data). In this case a server SHOULD respond with a failure to the initial request.
+* Client explicitly asks for data that the server supports and that appears consistent with its access scopes -- but some additional out-of-band rules/policies/restrictions prevents the client from being authorized to see these data. In this case, the server MAY withhold certain results from the response, and MAY indicate to the client that results were withheld by including OperationOutcome information in the "error" array for the response as a partial success.
 
 ## Authorization Server Obligations
 

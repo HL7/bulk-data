@@ -1,0 +1,9 @@
+title Backend Service Authorization
+
+note over App:  Create and sign authentication JWT \n{\n  "iss": "app_client_id",\n  "sub": "app_client_id",\n  "exp": 1422568860, \n  "aud": "https://{token url}",\n   "jti": "random-non-reusable-jwt-id-123"\n} --> sign with app's private key (RS384)
+note over App: scope=system/*.read&\ngrant_type=client_credentials&\nclient_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&\nclient_assertion={signed authentication JWT from above}
+
+App->EHR Auth Server:  POST https://{token url}\n(Same URL as "aud" above)
+
+note over EHR Auth Server: Issue new token:\n{\n"access_token": "secret-token-xyz",\n"expires_in": 300,\n...\n}
+EHR Auth Server->App: [access token response]
