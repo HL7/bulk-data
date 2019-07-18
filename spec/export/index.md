@@ -18,12 +18,12 @@ The scope of this document does NOT include:
 
 ## Referenced Specifications
 
-* [Newline-delimited JSON](http://ndjson.org)
-* [RFC6749, The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
 * [HL7 FHIR](https://www.hl7.org/fhir/)
-* [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
+* [Newline-delimited JSON](http://ndjson.org)
 * [RFC5246, Transport Layer Security (TLS) Protocol Version 1.2](https://tools.ietf.org/html/rfc5246)
+* [RFC6749, The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
 * [RFC6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
+* [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
 
 ## Terminology
 
