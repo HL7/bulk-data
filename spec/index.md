@@ -25,8 +25,12 @@ This use case exports all resources needed for the US Core Data for Interoperabi
 
 This use case exports all resources needed to convey a patient's healththcare financial history, including Patient, ExplanationOfBenefit, Coverage, and Claim. While FHIR profiles are still being developed and standardized, see [https://bluebutton.cms.gov/developers/#core-resources](https://bluebutton.cms.gov/developers/#core-resources) for a full-fledged example.
 
+### Additional Use Cases
+* Terminology data  e.g. to allow export of all ValueSet from a terminology server.
+* Provider data to export information about an system's full Practitioner, Location, and Organization list
+
 ## Resources
 * [Overview Presentation](https://docs.google.com/presentation/d/14ZHmam9hwz6-SsCG1YqUIQnJ56bvSqEatebltgEVR6c/edit?usp=sharing)
 * [Client and Server Implementations](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/implementations.md)
 * [Discussion Group (FHIR Zulip "Bulk Data" Track)](https://chat.fhir.org/#narrow/stream/bulk.20data)
-* [Argonaut Project: Bulk Data Export Security Risk Assessment Report](https://github.com/smart-on-fhir/fhir-bulk-data-docs/raw/9c5a9dcdfcd7b986f59a102bc2b4616552fed3e4/security-risk-assessment-report.pdf)
+* [Argonaut Project: Bulk Data Export Security Risk Assessment Report](authorization/security-risk-assessment-report.pdf)

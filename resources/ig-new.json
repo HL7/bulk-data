@@ -38,6 +38,12 @@
         "reference" : "OperationDefinition/patient-export"
       },
       "name" : "Definition for Patient $export"
+    },
+    {
+      "reference" : {
+        "reference" : "CapabilityStatement/bulk-data"
+      },
+      "name" : "CapabilityStatement for Bulk Data"
     }],
     "page" : {
       "nameUrl" : "index.html",
