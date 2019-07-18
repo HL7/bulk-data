@@ -16,7 +16,7 @@ The scope of this document does NOT include:
 * Patient matching (although identifiers may be included in the exported FHIR resources)
 * Management of FHIR groups (although some bulk data operations require a FHIR Group id, this guide does not specify how Group resources are created and maintained within a system)
 
-## Referenced Specifications
+## Underlying Standards
 
 * [HL7 FHIR](https://www.hl7.org/fhir/)
 * [Newline-delimited JSON](http://ndjson.org)
