@@ -42,7 +42,7 @@ In the bulk-data-export workflow, the file server will be a particularly attract
 
 Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches might be used to accomplish this, not all of which would be visible at the API level. Thus, this specification does not dictate an approach at this time. Though it offers the use of an “Expires” header to limit the time period a file will be available for client download, removal of files is left up to the implementer. We recommend that servers SHOULD not delete files from a bulk data response that a client is actively in the process of downloading regardless of the pre-specified Expires time. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server. 
 
-Data access control obligations can be met with a combination of in-band and out-of-band restrictions. For example, some clients are authorized to access sensitive mental health information and some aren't; this authorization is defined out-of-band but when a client requests a full data set filtering is automatically applied by the server, restricting data that the client can access. Therefore, servers may limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).
+Data access control obligations can be met with a combination of in-band and out-of-band restrictions. For example, some clients are authorized to access sensitive mental health information and some aren't; this authorization is defined out-of-band but when a client requests a full data set filtering is automatically applied by the server, restricting data that the client can access. Therefore, servers may limit the data returned to a specific client in accordance with local considerations (e.g., policies or regulations).
 
 Bulk data export can be a resource-intensive operation. Server developers should consider and mitigate the risk of intentional or inadvertent denial-of-service attacks (though the details are beyond the scope of this specification).
 
@@ -104,7 +104,7 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 - ```_since``` (FHIR instant type, optional)  
 
-  Resources updated after this instant will be included in the response. Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied `_since time`).
+  Resources updated after this instant will be included in the response. Resources will be included in the response if their state has changed after the supplied time (e.g., if Resource.meta.lastUpdated is later than the supplied `_since time`).
 
 - ```_type``` (string of comma-delimited FHIR resource types, optional)
 
@@ -120,11 +120,9 @@ Export data from a FHIR server whether or not it is associated with a patient. T
 
 As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions (rather than historical prescriptions), or only laboratory observations (rather than all observations). We have considered several approaches to finer-grained filtering, including FHIR's `GraphDefinition`, the Clinical Quality Language (CQL), and FHIR's REST API search parameters. We expect this will be an area of active exploration, so for the time being this document defines an experimental syntax based on search parameters that works side-by-side with the coarse-grained `_type`-based filtering.
 
-To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that further restrict the results of the query.  Servers may limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).  Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
+To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that further restrict the results of the query.  Servers may limit the data returned to a specific client in accordance with local considerations (e.g., policies or regulations).  Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
 
 *Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. As the `_typeFilter` is experimental and optional, we have not yet determined expectation for `_include`, `_revinclude`, or support for any specific search parameters.
-
-*Note*: Servers may limit the data returned to a specific client in accordance with local considerations (e.g. policies or regulations).
 
 ###### Example Request with `_typeFilter`
 
@@ -156,7 +154,7 @@ Note: The `Condition` resource is included in `_type` but omitted from `_typeFil
 - ```Content-Location``` header with an absolute URI for subsequent status requests
 - Optionally a FHIR OperationOutcome in the body
 
-#### Response - Error (eg. unsupported search parameter)
+#### Response - Error (e.g., unsupported search parameter)
 
 - HTTP Status Code of ```4XX``` or ```5XX```
 - The body SHALL be a FHIR OperationOutcome in JSON format
