@@ -5,7 +5,7 @@ layout: default
 
 Providers and organizations accountable for managing the health of populations often need to efficiently access large volumes of information on a group of individuals. For example, a health system may want to periodically retrieve updated clinical data from an EHR to a research database, a provider may want to send clinical data on a roster of patients to their ACO to calculate quality measures, or an EHR may want to access claims data to close gaps in care. In most cases, access to these bulk-data exports is pre-authorized between the data holder and the data requester. The data exchange involves extracting a specific subset of fields from the source system, mapping the fields into a structured file format like CSV, and persisting the files in a server from which the requester can then download them into the target system. This multi-step process increases the cost of integration projects and can act as a counter-incentive to data liquidity.
 
-Existing FHIR APIs work well for accessing small amounts of data, but large exports can require hundreds of thousands of requests. These draft specifications outline a standardized, FHIR based approach for exporting bulk data from a FHIR server to a pre-authorized client.
+Existing FHIR APIs work well for accessing small amounts of data, but large exports can require hundreds of thousands of requests. These specifications outline a standardized, FHIR based approach for exporting bulk data from a FHIR server to a pre-authorized client.
 
 ## Use Cases
 
