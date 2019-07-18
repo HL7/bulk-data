@@ -14,7 +14,7 @@ The scope of this document does NOT include:
 * Real-time data exchange
 * Data transformations that may be required by the client
 * Patient matching (although identifiers may be included in the exported FHIR resources)
-* Management of FHIR groups; the bulk data operation may include a valid group id but this guide does not specify how FHIR Group resources are created and maintained within a system
+* Management of FHIR groups (although some bulk data operations require a FHIR Group id, this guide does not specify how Group resources are created and maintained within a system)
 
 ## Referenced Specifications
 
