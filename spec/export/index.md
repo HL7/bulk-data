@@ -50,7 +50,7 @@ Bulk data export can be a resource-intensive operation. Server developers should
 
 ### Bulk Data Kick-off Request
 
-This FHIR Operation initiates the asynchronous process of a client's request for the generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
+This FHIR Operation initiates the asynchronous generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
 
 The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.
 
