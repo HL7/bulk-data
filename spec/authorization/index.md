@@ -133,6 +133,26 @@ x-coordinate, and y-coordinate, for EC keys)
 Upon registration, the client SHALL be assigned a `client_id`, which the client SHALL use when
 requesting an access token.
 
+## Advertising Conformance for Backend Services
+For a server to advertise its conformance data when supporting Backend Services, it can support the Well-Known Uniform Resource Identifiers (URIs) ([RFC5785](https://tools.ietf.org/html/rfc5785)) JSON document as indicated under the [SMART App Launch Authorization Discovery](http://www.hl7.org/fhir/smart-app-launch/conformance/index.html#request) methods.
+
+Below is an example of the `/.well-known/smart-configuration` endpoint identifying `token_endpoint_auth_methods_supported` and `token_endpoint_auth_signing_alg_values_supported` (with values that SHAL include at least one of `RS384`, `ES384`) attributes for backend services. The response is a JSON document using the `application/json` mime type.
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "authorization_endpoint": "https://ehr.example.com/auth/authorize",
+  "token_endpoint": "https://ehr.example.com/auth/token",
+  "token_endpoint_auth_methods_supported": ["client_secret_basic","private_key_jwt"],
+  "token_endpoint_auth_signing_alg_values_supported": ["RS384","ES384"],
+  "registration_endpoint": "https://ehr.example.com/auth/register",
+  "scopes_supported": ["openid", "profile", "launch", "launch/patient", "patient/*.*", "user/*.*", "offline_access"],
+  "response_types_supported": ["code", "code id_token", "id_token", "refresh_token"]
+}
+```
+
 ## Obtaining an Access Token
 
 By the time a client has been registered with the FHIR server, the key
