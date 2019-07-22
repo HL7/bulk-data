@@ -99,7 +99,7 @@ Content-Type: application/json
 
 Before a SMART client can run against a FHIR server, the client SHALL generate
 or obtain an asymmetric key pair and SHALL register its public key set with that
-FHIR server’s authorization service.  SMART does not specify a
+FHIR server’s authorization service.  SMART does not require a
 standards-based registration process, but we encourage FHIR service implementers to
 consider using the [OAuth 2.0 Dynamic Client Registration
 Protocol](https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg).
@@ -192,8 +192,8 @@ Before a client can request an access token, it SHALL generate a
 one-time-use JSON Web Token (JWT) that will be used to authenticate the client to
 the FHIR authorization server. The authentication JWT SHALL include the
 following claims, and SHALL be signed with the client's private
-key (which SHOULD be an RS384 or EC384 signature). For a practical reference on JWT, as well as debugging
-tools and client libraries, see https://jwt.io.
+key (which SHOULD be an `RS384` or `EC384` signature). For a practical reference on JWT, as well as debugging
+tools and client libraries, see [https://jwt.io](https://jwt.io).
 
 <table class="table">
   <thead>
@@ -203,7 +203,7 @@ tools and client libraries, see https://jwt.io.
     <tr>
       <td><code>alg</code></td>
       <td><span class="label label-success">required</span></td>
-      <td>The JWA algorithm (e.g., `RS384`, `EC384`) used for signing the authentication JWT.
+      <td>The JWA algorithm (e.g., <code>RS384</code>, <code>EC384</code>) used for signing the authentication JWT.
       </td>
     </tr>
     <tr>
@@ -305,6 +305,9 @@ the existing SMART on FHIR scopes are not appropriate. Instead, clients SHALL us
 the same access scope as the matching user format `user/(:resourceType|*).(read|write|*)`.
 However, system scopes are associated with permissions assigned to an authorized
 software client rather than to a human end-user.
+
+
+## Enforcing Authorization
 
 There are several cases where a client might ask for data that the client cannot or will not return:
 * Client explicitly asks for data that it is not authorized to see (e.g.  a client asks for `_type=Observation` but has scopes that only permit "system/Patient.read"). In this case a server SHOULD respond with a failure to the initial request.
@@ -497,4 +500,4 @@ The server SHALL validate the access token and SHALL ensure that the token has n
 
 ## More Information
 
-- [Abbreviations](/abbreviations/index.html)
+- [Abbreviations](../abbreviations/index.html)
