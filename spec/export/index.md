@@ -195,7 +195,7 @@ When requesting status, the client SHOULD use an ```Accept``` header indicating 
   <thead>
     <th>Response Type</th>
     <th>Description</th>
-    <th>Example Headers + Body</th>
+    <th>Example Response Headers + Body</th>
   </thead>
   <tbody>
     <tr>
