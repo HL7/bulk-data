@@ -190,77 +190,68 @@ When requesting status, the client SHOULD use an ```Accept``` header indicating 
 `GET [polling content location]`
 
 **Responses**
+
 <table class="table">
   <thead>
     <th>Response Type</th>
     <th>Description</th>
-    <th>Example Header</th>
-    <th>Example Body</th>
+    <th>Example Response Headers + Body</th>
   </thead>
   <tbody>
     <tr>
-      <td><a href="#response---in-progress-status">In-Progress</a>
+      <td><a href="#response---in-progress-status">In-Progress</a></td>
       <td>Returned by the server while it is processing the $export request.</td>
-      <td><pre><code>
-Status: 202 Accepted
+      <td><pre><code>Status: 202 Accepted
 X-Progress: “50% complete”
-Retry-After: 120
-      </code></pre></td>
-      <td></td>
+Retry-After: 120</code></pre></td>
     </tr>
     <tr>
       <td><a href="#response---error-status-1">Error</a></td>
-      <td width="30%">Returned by the server if the export operation fails.</td>
-      <td><pre><code>
-Status: 500 Internal Server Error
+      <td>Returned by the server if the export operation fails.</td>
+      <td><pre><code>Status: 500 Internal Server Error
 Content-Type: application/json
-      </code></pre></td>
-      <td><pre><code>
+
 {
-  "resourceType": "OperationOutcome",
-  "id": "1",
-  "issue": [
-    {
-      "severity": "error",
-      "code": "timeout",
-      "details": {
-        "text": "An internal timeout has occurred"
-      }
-    }
-  ]
-}
-      </code></pre></td>
+&ensp;"resourceType": "OperationOutcome",
+&ensp;"id": "1",
+&ensp;"issue": [
+&ensp;&ensp;{
+&ensp;&ensp;&ensp;"severity": "error",
+&ensp;&ensp;&ensp;"code": "timeout",
+&ensp;&ensp;&ensp;"details": {
+&ensp;&ensp;&ensp;&ensp;"text": "An internal timeout has occurred"
+&ensp;&ensp;&ensp;}
+&ensp;&ensp;}
+&ensp;]
+}</code></pre></td>
     </tr>
     <tr>
-      <td><a href="#response---complete-status">Complete</a>
+      <td><a href="#response---complete-status">Complete</a></td>
       <td>Returned by the server when the export operation has completed.</td>
-      <td><pre><code>
-Status: 200 OK
+      <td><pre><code>Status: 200 OK
 Expires: Mon, 22 Jul 2019 23:59:59 GMT
 Content-Type: application/json
-      </code></pre></td>
-      <td><pre><code>
+
 {
-  "transactionTime": "[instant]",
-  "request" : "[base]/Patient/$export?_type=Patient,Observation",
-  "requiresAccessToken" : true,
-  "output" : [{
-    "type" : "Patient",
-    "url" : "http://serverpath2/patient_file_1.ndjson"
-  },{
-    "type" : "Patient",
-    "url" : "http://serverpath2/patient_file_2.ndjson"
-  },{
-    "type" : "Observation",
-    "url" : "http://serverpath2/observation_file_1.ndjson"
-  }],
-  "error" : [{
-    "type" : "OperationOutcome",
-    "url" : "http://serverpath2/err_file_1.ndjson"
-  }],
-  "extension":{"http://myserver.example.org/extra-property": true}
-}
-      </code></pre></td>
+&ensp;"transactionTime": "[instant]",
+&ensp;"request" : "[base]/Patient/$export?_type=Patient,Observation",
+&ensp;"requiresAccessToken" : true,
+&ensp;"output" : [{
+&ensp;&ensp;"type" : "Patient",
+&ensp;&ensp;"url" : "http://serverpath2/patient_file_1.ndjson"
+&ensp;},{
+&ensp;&ensp;"type" : "Patient",
+&ensp;&ensp;"url" : "http://serverpath2/patient_file_2.ndjson"
+&ensp;},{
+&ensp;&ensp;"type" : "Observation",
+&ensp;&ensp;"url" : "http://serverpath2/observation_file_1.ndjson"
+&ensp;}],
+&ensp;"error" : [{
+&ensp;&ensp;"type" : "OperationOutcome",
+&ensp;&ensp;"url" : "http://serverpath2/err_file_1.ndjson"
+&ensp;}],
+&ensp;"extension":{"http://myserver.example.org/extra-property": true}
+}</code></pre></td>
     </tr>
   </tbody>
 </table>
