@@ -14,16 +14,16 @@ The scope of this document does NOT include:
 * Real-time data exchange
 * Data transformations that may be required by the client
 * Patient matching (although identifiers may be included in the exported FHIR resources)
-* Management of FHIR groups; the bulk data operation may include a valid group id but this guide does not specify how FHIR Group resources are created and maintained within a system
+* Management of FHIR groups (although some bulk data operations require a FHIR Group id, this guide does not specify how Group resources are created and maintained within a system)
 
-## Referenced Specifications
+## Underlying Standards
 
-* [Newline-delimited JSON](http://ndjson.org)
-* [RFC6749, The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
 * [HL7 FHIR](https://www.hl7.org/fhir/)
-* [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
+* [Newline-delimited JSON](http://ndjson.org)
 * [RFC5246, Transport Layer Security (TLS) Protocol Version 1.2](https://tools.ietf.org/html/rfc5246)
+* [RFC6749, The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
 * [RFC6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
+* [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
 
 ## Terminology
 
@@ -48,13 +48,13 @@ Bulk data export can be a resource-intensive operation. Server developers should
 
 ### Bulk Data Kick-off Request
 
-This FHIR Operation initiates the asynchronous process of a client's request for the generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
+This FHIR Operation initiates the asynchronous generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
 
 The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.
 
 The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html).
 
-For non-system-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned.
+For Patient- and Group-level requests requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned.
 
 #### Endpoint - All Patients
 
@@ -74,7 +74,7 @@ FHIR Operation to obtain a detailed set of FHIR resources of diverse resource ty
 
 If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables clients to discover available groups based on stable characteristics such as `Group.identifier`.
 
-Note: How these groups are defined is specific to each FHIR system's implementation. For example, a payer may send a healthcare institution a roster file that can be imported into their EHR to create or update a FHIR group. Group membership could be based upon explicit attributes of the patient, such as age, sex or a particular condition such as PTSD or Chronic Opioid use, or on more complex attributes, such as a recent inpatient discharge or membership in the population used to calculate a quality measure. FHIR-based group management is out of scope for the current version of this implementation guide.
+Note: How these Groups are defined is specific to each FHIR system's implementation. For example, a payer may send a healthcare institution a roster file that can be imported into their EHR to create or update a FHIR group. Group membership could be based upon explicit attributes of the patient, such as age, sex or a particular condition such as PTSD or Chronic Opioid use, or on more complex attributes, such as a recent inpatient discharge or membership in the population used to calculate a quality measure. FHIR-based group management is out of scope for the current version of this implementation guide.
 
 #### Endpoint - System Level Export
 
@@ -106,19 +106,19 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 
 - ```_type``` (string of comma-delimited FHIR resource types, optional)
 
-  Only resources of the specified resource types(s) SHALL be included in the response. If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For non-system-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned. Servers unable to support `_type` SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the `_type` parameter.
+  Only resources of the specified resource types(s) SHALL be included in the response. If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned. Servers unable to support `_type` SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the `_type` parameter.
 
   Resource references MAY be relative URLs with the format `<resource type>/<id>`, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.
 
   For example  `_type=Practitioner` could be used to bulk data extract all Practitioner resources from a FHIR endpoint.
 
-  *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/) If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.
+  *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/). If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.
 
 ##### Experimental Query Parameters
 
 As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions (rather than historical prescriptions), or only laboratory observations (rather than all observations). We have considered several approaches to finer-grained filtering, including FHIR's `GraphDefinition`, the Clinical Quality Language (CQL), and FHIR's REST API search parameters. We expect this will be an area of active exploration, so for the time being this implementation guide defines an experimental syntax based on search parameters that works side-by-side with the coarse-grained `_type`-based filtering.
 
-To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that further restrict the results of the query.  Servers may further limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).  Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
+To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that further restrict the results of the query. Servers MAY further limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).  Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
 
 *Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. As the `_typeFilter` is experimental and optional, we have not yet determined expectation for `_include`, `_revinclude`, or support for any specific search parameters.
 
@@ -150,7 +150,7 @@ Note: The `Condition` resource is included in `_type` but omitted from `_typeFil
 - ```Content-Location``` header with the absolute URL of an endpoint for subsequent status requests (polling location)
 - Optionally, a FHIR OperationOutcome resource in the body
 
-#### Response - Error (eg. unsupported search parameter)
+#### Response - Error (e.g., unsupported search parameter)
 
 - HTTP Status Code of ```4XX``` or ```5XX```
 - The body SHALL be a FHIR OperationOutcome resource in JSON format
@@ -402,7 +402,7 @@ Specifies the format of the file being requested.
 
 ## More Information
 
-- [Backend Services Authorization](/authorization/index.html)
-- [Operations](/operations/index.html)
+- [Backend Services Authorization](../authorization/index.html)
+- [Operations](../operations/index.html)
 - [History](http://hl7.org/fhir/us/bulkdata/history.cfml)
-- [Abbreviations](/abbreviations/index.html)
+- [Abbreviations](../abbreviations/index.html)
