@@ -77,6 +77,24 @@ be valid reasons to ignore an item, but the full implications must be understood
 and carefully weighed before choosing a different course
 4.  MAY: This is truly optional language for an implementation; can be included or omitted as the implementer decides with no implications
 
+
+## Advertising Server Conformance with SMART Backend Services
+A server MAY advertise its conformance with SMART Backend Services, by hosting a Well-Known Uniform Resource Identifiers (URIs) ([RFC5785](https://tools.ietf.org/html/rfc5785)) JSON document as described at [SMART App Launch Authorization Discovery](http://www.hl7.org/fhir/smart-app-launch/conformance/index.html#request). If advertising support, a server's `/.well-known/smart-configuration` endpoint SHOULD include `token_endpoint`, `scopes_supported`, `token_endpoint_auth_methods_supported` (with values that include `private_key_jwt`), and `token_endpoint_auth_signing_alg_values_supported` (with values that include at least one of `RS384`, `ES384`) attributes for backend services. The response is a JSON document using the `application/json` mime type.
+
+### Example Response
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "token_endpoint": "https://ehr.example.com/auth/token",
+  "token_endpoint_auth_methods_supported": ["private_key_jwt"],
+  "token_endpoint_auth_signing_alg_values_supported": ["RS384", "ES384"],
+  "scopes_supported": ["system/*.read"],
+  "registration_endpoint": "https://ehr.example.com/auth/register"
+}
+```
+
 ## Registering a SMART Backend Service (communicating public keys)
 
 Before a SMART client can run against a FHIR server, the client SHALL generate
@@ -132,6 +150,7 @@ x-coordinate, and y-coordinate, for EC keys)
 
 Upon registration, the client SHALL be assigned a `client_id`, which the client SHALL use when
 requesting an access token.
+
 
 ## Obtaining an Access Token
 
