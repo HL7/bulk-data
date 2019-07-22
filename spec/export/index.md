@@ -212,17 +212,17 @@ Retry-After: 120</code></pre></td>
 Content-Type: application/json
 
 {
-  "resourceType": "OperationOutcome",
-  "id": "1",
-  "issue": [
-    {
-      "severity": "error",
-      "code": "timeout",
-      "details": {
-        "text": "An internal timeout has occurred"
-      }
-    }
-  ]
+&ensp;"resourceType": "OperationOutcome",
+&ensp;"id": "1",
+&ensp;"issue": [
+&ensp;&ensp;{
+&ensp;&ensp;&ensp;"severity": "error",
+&ensp;&ensp;&ensp;"code": "timeout",
+&ensp;&ensp;&ensp;"details": {
+&ensp;&ensp;&ensp;&ensp;"text": "An internal timeout has occurred"
+&ensp;&ensp;&ensp;}
+&ensp;&ensp;}
+&ensp;]
 }</code></pre></td>
     </tr>
     <tr>
@@ -233,24 +233,24 @@ Expires: Mon, 22 Jul 2019 23:59:59 GMT
 Content-Type: application/json
 
 {
-  "transactionTime": "[instant]",
-  "request" : "[base]/Patient/$export?_type=Patient,Observation",
-  "requiresAccessToken" : true,
-  "output" : [{
-    "type" : "Patient",
-    "url" : "http://serverpath2/patient_file_1.ndjson"
-  },{
-    "type" : "Patient",
-    "url" : "http://serverpath2/patient_file_2.ndjson"
-  },{
-    "type" : "Observation",
-    "url" : "http://serverpath2/observation_file_1.ndjson"
-  }],
-  "error" : [{
-    "type" : "OperationOutcome",
-    "url" : "http://serverpath2/err_file_1.ndjson"
-  }],
-  "extension":{"http://myserver.example.org/extra-property": true}
+&ensp;"transactionTime": "[instant]",
+&ensp;"request" : "[base]/Patient/$export?_type=Patient,Observation",
+&ensp;"requiresAccessToken" : true,
+&ensp;"output" : [{
+&ensp;&ensp;"type" : "Patient",
+&ensp;&ensp;"url" : "http://serverpath2/patient_file_1.ndjson"
+&ensp;},{
+&ensp;&ensp;"type" : "Patient",
+&ensp;&ensp;"url" : "http://serverpath2/patient_file_2.ndjson"
+&ensp;},{
+&ensp;&ensp;"type" : "Observation",
+&ensp;&ensp;"url" : "http://serverpath2/observation_file_1.ndjson"
+&ensp;}],
+&ensp;"error" : [{
+&ensp;&ensp;"type" : "OperationOutcome",
+&ensp;&ensp;"url" : "http://serverpath2/err_file_1.ndjson"
+&ensp;}],
+&ensp;"extension":{"http://myserver.example.org/extra-property": true}
 }</code></pre></td>
     </tr>
   </tbody>
