@@ -190,6 +190,7 @@ When requesting status, the client SHOULD use an ```Accept``` header indicating 
 `GET [polling content location]`
 
 **Responses**
+
 <table class="table">
   <thead>
     <th>Response Type</th>
