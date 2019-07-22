@@ -402,7 +402,7 @@ Specifies the format of the file being requested.
 
 ## More Information
 
-- [Backend Services Authorization](/authorization/index.html)
-- [Operations](/operations/index.html)
+- [Backend Services Authorization](../authorization/index.html)
+- [Operations](../operations/index.html)
 - [History](http://hl7.org/fhir/us/bulkdata/history.cfml)
-- [Abbreviations](/abbreviations/index.html)
+- [Abbreviations](../abbreviations/index.html)
