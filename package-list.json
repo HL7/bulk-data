@@ -12,7 +12,7 @@
        "version": "0.1.0",
        "date": "xxx",
        "desc": "STU #1 1st Ballot",
-       "path": "http://hl7.org/fhir/bulkdata/2019May",
+       "path": "http://hl7.org/fhir/us/bulkdata/2019May",
        "status": "ballot",
        "sequence": "STU1"
     }]
