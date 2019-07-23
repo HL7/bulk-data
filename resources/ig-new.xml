@@ -8,7 +8,7 @@
   <extension url="http://hl7.org/fhir/StructureDefinition/igpublisher-folder-pages">
     <valueString value="C:\work\org.hl7.fhir.igs\bulk-data\spec"/>
   </extension>
-  <url value="http://hl7.org/fhir/us/bulkdata/ImplementationGuide/ig"/>
+  <url value="http://hl7.org/fhir/bulkdata/ImplementationGuide/ig"/>
   <version value="0.1.0"/>
   <name value="BulkDataAccess"/>
   <title value="FHIR Bulk Data Access"/>
