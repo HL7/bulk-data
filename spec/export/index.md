@@ -38,9 +38,9 @@ With each of the requests described herein, implementers are encouraged to imple
 
 This implementation guide does not address protection of the servers themselves from potential compromise.  An adversary who successfully captures administrative rights to a server will have full control over that server and can use those rights to undermine the server's security protections. In the bulk-data-export workflow, the file server will be a particularly attractive target, as it holds highly sensitive and valued PHI.  An adversary who successfully takes control of a file server may choose to continue to deliver files in response to client requests, so that neither the client nor the FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own devious purposes.   
 
-Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches can be used to accomplish this, not all of which would be visible at the API level. This specification does not dictate a particular approach at this time, though it does support the use of an “Expires” header to limit the time period a file will be available for client download (removal of the file from the server is left up to the implementer). We recommend that servers SHOULD not delete files from a bulk data response that a client is actively in the process of downloading regardless of the pre-specified Expires time. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server. 
+Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches can be used to accomplish this, not all of which would be visible at the API level. This specification does not dictate a particular approach at this time, though it does support the use of an “Expires” header to limit the time period a file will be available for client download (removal of the file from the server is left up to the implementer). We recommend that servers SHOULD not delete files from a bulk data response that a client is actively in the process of downloading regardless of the pre-specified Expires time. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.
 
-Data access control obligations can be met with a combination of in-band restrictions such as OAuth scopes, and out-of-band restrictions, where servers limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations). For example, some clients are authorized to access sensitive mental health information and some aren't; this authorization is defined out-of-band, but when a client requests a full data set, filtering is automatically applied by the server, restricting the data that the client receives. 
+Data access control obligations can be met with a combination of in-band restrictions such as OAuth scopes, and out-of-band restrictions, where servers limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations). For example, some clients are authorized to access sensitive mental health information and some aren't; this authorization is defined out-of-band, but when a client requests a full data set, filtering is automatically applied by the server, restricting the data that the client receives.
 
 Bulk data export can be a resource-intensive operation. Server developers should consider and mitigate the risk of intentional or inadvertent denial-of-service attacks (though the details are beyond the scope of this specification).
 
@@ -299,36 +299,36 @@ Content-Type: application/json
 Required Fields:
 
   - ```transactionTime``` - a FHIR instant type that indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant.
-  
+
     Note: To properly meet these constraints, a FHIR Server might need to wait for any pending transactions to resolve in its database before starting the export process.
-  
+
   - ```request``` - the full URL of the original bulk data kick-off request
-  
-  - ```requiresAccessToken``` - boolean value of ```true``` or ```false``` indicating whether downloading the generated files requires a bearer access token. 
-   
+
+  - ```requiresAccessToken``` - boolean value of ```true``` or ```false``` indicating whether downloading the generated files requires a bearer access token.
+
     Value SHALL be ```true``` if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be ```false``` for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
 
   - ```output``` - array of file items with one entry for each generated file. If no resources are returned from the kick-off request, the server SHOULD return an empty array.
 
     Each file item SHALL contain the following fields:
 
-      - ```type``` - the FHIR resource type that is contained in the file. 
-      
+      - ```type``` - the FHIR resource type that is contained in the file.
+
         Each file SHALL contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response. These rules apply only to top-level resources within the response; as always in FHIR, any resource MAY have a "contained" array that includes referenced resources of other types.
-      
+
       - ```url``` - the path to the file. The format of the file SHOULD reflect that requested in the ```_outputFormat``` parameter of the initial kick-off request.
 
     Each file item MAY optionally contain the following field:
-    
+
       - ```count``` - the number of resources in the file, represented as a JSON number.  
 
 
-  - ```error``` - array of error file items following the same structure as the `output` array. 
-  
+  - ```error``` - array of error file items following the same structure as the `output` array.
+
     Errors that occurred during the export should only be included here (not in output). If no errors occurred, the server SHOULD return an empty array.  Only the `OperationOutcome` resource type is currently supported, so a server SHALL generate files in the same format as bulk data output files that contain `OperationOutcome` resources.
 
 The response body and any file item MAY optionally contain the following field:
-  
+
    - ```extension``` - To support extensions, this implementation guide reserves the name ```extension``` and will never define a field with that name, allowing server implementations to use it to provide custom behavior and information. For example, a server may choose to provide a custom extension that contains a decryption key for encrypted ndjson files. The value of an extension element SHALL be a pre-coordinated JSON object.
 
 Example response body:
