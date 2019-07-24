@@ -218,7 +218,7 @@ Retry-After: 120
 &ensp;"issue": [
 &ensp;&ensp;{
 &ensp;&ensp;&ensp;"severity": "error",
-&ensp;&ensp;&ensp;"code": "timeout",
+&ensp;&ensp;&ensp;"code": "processing",
 &ensp;&ensp;&ensp;"details": {
 &ensp;&ensp;&ensp;&ensp;"text": "An internal timeout has occurred"
 &ensp;&ensp;&ensp;}
