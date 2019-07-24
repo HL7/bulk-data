@@ -269,27 +269,6 @@ Content-Type: application/json
 - ```Content-Type``` header of ```application/json```
 - The server SHALL return a FHIR OperationOutcome resource in JSON format
 
-	Example OperationOutcome response body:
-
-  ```
-  Status: 500 Internal Server Error
-  Content-Type: application/json
-
-  {
-    "resourceType": "OperationOutcome",
-    "id": "1",
-    "issue": [
-      {
-        "severity": "error",
-        "code": "timeout",
-        "details": {
-          "text": "An internal timeout has occurred"
-        }
-      }
-    ]
-  }
-  ```
-
 *Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response body SHALL be populated with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). In the case of a partial success, the server SHALL use a 200 status code instead of 5XX. The choice of when to determine that an export job has failed in its entirety (error status) vs returning a partial success (complete status) is left up to the implementer.
 
 #### Response - Complete Status
