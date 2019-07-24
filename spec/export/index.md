@@ -210,15 +210,16 @@ Retry-After: 120</code></pre></td>
       <td>Returned by the server if the export operation fails.</td>
       <td><pre><code>Status: 500 Internal Server Error
 Content-Type: application/json
+
 {
 &ensp;"resourceType": "OperationOutcome",
-&ensp;"id": "101",
+&ensp;"id": "1",
 &ensp;"issue": [
 &ensp;&ensp;{
 &ensp;&ensp;&ensp;"severity": "error",
-&ensp;&ensp;&ensp;"code": "deleted",
+&ensp;&ensp;&ensp;"code": "timeout",
 &ensp;&ensp;&ensp;"details": {
-&ensp;&ensp;&ensp;&ensp;"text": "The bulk data file has been deleted and is no longer available for download"
+&ensp;&ensp;&ensp;&ensp;"text": "An internal timeout has occurred"
 &ensp;&ensp;&ensp;}
 &ensp;&ensp;}
 &ensp;]
@@ -273,13 +274,13 @@ Content-Type: application/json
   ```
   {
     "resourceType": "OperationOutcome",
-    "id": "101",
+    "id": "1",
     "issue": [
       {
         "severity": "error",
-        "code": "deleted",
+        "code": "timeout",
         "details": {
-          "text": "The bulk data file has been deleted and is no longer available for download"
+          "text": "An internal timeout has occurred"
         }
       }
     ]
