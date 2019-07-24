@@ -274,7 +274,6 @@ Content-Type: application/json
   ```
   Status: 500 Internal Server Error
   Content-Type: application/json
-  Retry-After: 120
 
   {
     "resourceType": "OperationOutcome",
