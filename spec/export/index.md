@@ -210,6 +210,7 @@ Retry-After: 120</code></pre></td>
       <td>Returned by the server if the export operation fails.</td>
       <td><pre><code>Status: 500 Internal Server Error
 Content-Type: application/json
+Retry-After: 120
 
 {
 &ensp;"resourceType": "OperationOutcome",
@@ -272,6 +273,10 @@ Content-Type: application/json
 	Example OperationOutcome response body:
 
   ```
+  Status: 500 Internal Server Error
+  Content-Type: application/json
+  Retry-After: 120
+
   {
     "resourceType": "OperationOutcome",
     "id": "1",
