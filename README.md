@@ -1,8 +1,6 @@
 # FHIR Bulk Data Access
 
-## Note
-
-Most content from this repository has transitioned to https://github.com/hl7/bulk-data (for source control) and will be visible at http://hl7.org/fhir/bulk-data (for online viewing, once formally published). Work-in-progress content is available at https://build.fhir.org/ig/HL7/bulk-data.
+This implementation guide defines a standardized, FHIR based approach for exporting bulk data from a FHIR server to a pre-authorized client. Content will be officially available at http://hl7.org/fhir/bulk-data (once formally published). Work-in-progress content is available at https://build.fhir.org/ig/HL7/bulk-data.
 
 ## Resources
 
