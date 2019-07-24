@@ -36,7 +36,6 @@ This use case exports all resources needed to convey a patient's healththcare fi
 * [Argonaut Project: Bulk Data Export Security Risk Assessment Report](authorization/security-risk-assessment-report.pdf)
 
 ## Additional Documentation
-* [Overview](index.html)
 * [Export](export/index.html)
 * [Backend Services Authorization](authorization/index.html)
 * [Operations](operations/index.html)
