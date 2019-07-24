@@ -105,26 +105,26 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
   </thead>
   <tbody>
     <tr>
-      <td>```_outputFormat```</td>
-      <td>Optional</td>
+      <td><code>_outputFormat</code></td>
+      <td><span class="label label-info">optional</span></td>
       <td>String</td>
-      <td>  The format for the requested bulk data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Defaults to `application/fhir+ndjson`. Servers SHALL support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers SHALL accept the full content type of ```application/fhir+ndjson``` as well as the abbreviated representations ```application/ndjson``` and ```ndjson```.</td>
+      <td>  The format for the requested bulk data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
     </tr>
     <tr>
-      <td>```_since```</td>
-      <td>Optional</td>
+      <td><code>_since</code></td>
+      <td><span class="label label-info">optional</span></td>
       <td>FHIR instant</td>
-      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied `_since time`).</td>
+      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since time</code>).</td>
     </tr>
     <tr>
-      <td>```_type```</td>
-      <td>Optional</td>
+      <td><code>_type</code></td>
+      <td><span class="label label-info">optional</span></td>
       <td>string of comma-delimited FHIR resource types</td>
-      <td>Only resources of the specified resource types(s) SHALL be included in the response. If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned. Servers unable to support `_type` SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the `_type` parameter.
+      <td>Only resources of the specified resource types(s) SHALL be included in the response. If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned. Servers unable to support <code>_type</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_type</code> parameter.
 
-      Resource references MAY be relative URLs with the format `<resource type>/<id>`, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.
+      Resource references MAY be relative URLs with the format <code><resource type>/<id></code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.
 
-      For example  `_type=Practitioner` could be used to bulk data extract all Practitioner resources from a FHIR endpoint.</td>
+      For example  <code>_type=Practitioner</code> could be used to bulk data extract all Practitioner resources from a FHIR endpoint.</td>
     </tr>
   </tbody>
 </table>
