@@ -120,10 +120,8 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_type</code></td>
       <td><span class="label label-info">optional</span></td>
       <td>string of comma-delimited FHIR resource types</td>
-      <td>Only resources of the specified resource types(s) SHALL be included in the response. If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned. Servers unable to support <code>_type</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_type</code> parameter.
-
-      Resource references MAY be relative URLs with the format <code><resource type>/<id></code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.
-
+      <td>Only resources of the specified resource types(s) SHALL be included in the response. If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For Patient- and Group-level requests, the <a href='https://www.hl7.org/fhir/compartmentdefinition-patient.html'>Patient Compartment</a> SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned. Servers unable to support <code>_type</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_type</code> parameter.<br /><br />
+      Resource references MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.<br /><br />
       For example  <code>_type=Practitioner</code> could be used to bulk data extract all Practitioner resources from a FHIR endpoint.</td>
     </tr>
   </tbody>
@@ -315,38 +313,91 @@ Content-Type: application/json
 
 Required Fields:
 
-  - ```transactionTime``` - a FHIR instant type that indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant.
-
-    Note: To properly meet these constraints, a FHIR Server might need to wait for any pending transactions to resolve in its database before starting the export process.
-
-  - ```request``` - the full URL of the original bulk data kick-off request
-
-  - ```requiresAccessToken``` - boolean value of ```true``` or ```false``` indicating whether downloading the generated files requires a bearer access token.
-
-    Value SHALL be ```true``` if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be ```false``` for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
-
-  - ```output``` - array of file items with one entry for each generated file. If no resources are returned from the kick-off request, the server SHOULD return an empty array.
-
-    Each file item SHALL contain the following fields:
-
-      - ```type``` - the FHIR resource type that is contained in the file.
-
-        Each file SHALL contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response. These rules apply only to top-level resources within the response; as always in FHIR, any resource MAY have a "contained" array that includes referenced resources of other types.
-
-      - ```url``` - the path to the file. The format of the file SHOULD reflect that requested in the ```_outputFormat``` parameter of the initial kick-off request.
-
-    Each file item MAY optionally contain the following field:
-
-      - ```count``` - the number of resources in the file, represented as a JSON number.  
-
-
-  - ```error``` - array of error file items following the same structure as the `output` array.
-
-    Errors that occurred during the export should only be included here (not in output). If no errors occurred, the server SHOULD return an empty array.  Only the `OperationOutcome` resource type is currently supported, so a server SHALL generate files in the same format as bulk data output files that contain `OperationOutcome` resources.
-
-The response body and any file item MAY optionally contain the following field:
-
-   - ```extension``` - To support extensions, this implementation guide reserves the name ```extension``` and will never define a field with that name, allowing server implementations to use it to provide custom behavior and information. For example, a server may choose to provide a custom extension that contains a decryption key for encrypted ndjson files. The value of an extension element SHALL be a pre-coordinated JSON object.
+<table class="table">
+  <thead>
+    <th>Parameters</th>
+    <th>Optionality</th>
+    <th>Type</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>alg</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>String</td>
+      <td>The JWA algorithm (e.g., <code>RS384</code>....
+      </td>
+    </tr>
+    <tr>
+      <td><code>transactionTime</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>FHIR instant</td>
+      <td>indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant.
+      <br/>
+      <br/>
+      Note: To properly meet these constraints, a FHIR Server might need to wait for any pending transactions to resolve in its database before starting the export process.
+      </td>
+    </tr>
+    <tr>
+      <td><code>request</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>String</td>
+      <td>the full URL of the original bulk data kick-off request</td>
+    </tr>
+    <tr>
+      <td><code>requiresAccessToken</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>Boolean</td>
+      <td>indicates whether downloading the generated files requires a bearer access token
+      <br/>
+      <br/>
+      Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be <code>false</code> for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
+      </td>
+    </tr>
+    <tr>
+      <td><code>output</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>Array</td>
+      <td>an array of file items with one entry for each generated file. If no resources are returned from the kick-off request, the server SHOULD return an empty array.
+      <br/>
+      <br/>
+        Each file item SHALL contain the following fields:
+        <br/>
+        <br/>
+          - <code>type</code> - the FHIR resource type that is contained in the file.
+          <br/>
+          <br/>
+            Each file SHALL contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response. These rules apply only to top-level resources within the response; as always in FHIR, any resource MAY have a "contained" array that includes referenced resources of other types.
+            <br/>
+            <br/>
+          - <code>url</code> - the path to the file. The format of the file SHOULD reflect that requested in the <code>_outputFormat</code> parameter of the initial kick-off request.
+          <br/>
+          <br/>
+        Each file item MAY optionally contain the following field:
+        <br/>
+        <br/>
+          - <code>count</code> - the number of resources in the file, represented as a JSON number.
+      </td>
+    </tr>
+    <tr>
+      <td><code>error</code></td>
+      <td><span class="label label-success">required</span></td>
+      <td>Array</td>
+      <td>array of error file items following the same structure as the <code>output</code> array.
+      <br/>
+      <br/>
+        Errors that occurred during the export should only be included here (not in output). If no errors occurred, the server SHOULD return an empty array.  Only the <code>OperationOutcome</code> resource type is currently supported, so a server SHALL generate files in the same format as bulk data output files that contain <code>OperationOutcome</code> resources.
+      </td>
+    </tr>
+    <tr>
+      <td><code>extension</code></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>JSON Object</td>
+      <td>To support extensions, this implementation guide reserves the name <code>extension</code> and will never define a field with that name, allowing server implementations to use it to provide custom behavior and information. For example, a server may choose to provide a custom extension that contains a decryption key for encrypted ndjson files. The value of an extension element SHALL be a pre-coordinated JSON object.
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 Example response body:
 
