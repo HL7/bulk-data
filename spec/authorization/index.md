@@ -310,8 +310,8 @@ software client rather than to a human end-user.
 ## Enforcing Authorization
 
 There are several cases where a client might ask for data that the client cannot or will not return:
-* Client explicitly asks for data that it is not authorized to see (e.g.  a client asks for `_type=Observation` but has scopes that only permit "system/Patient.read"). In this case a server SHOULD respond with a failure to the initial request.
-* Client explicitly asks for data that the server does not support (e.g.  a client asks for `_type=Practitioner` but the server does not support exporting Practitioner data). In this case a server SHOULD respond with a failure to the initial request.
+* Client explicitly asks for data that it is not authorized to see (e.g. in the case of an Export Operation request, a client asks for Observation resources (`_type=Observation`) but has scopes that only permit `system/Patient.read`). In this case a server SHOULD respond with a failure to the initial request.
+* Client explicitly asks for data that the server does not support (e.g. in the case of an Export Operation request, a client asks for Practitioner resources (`_type=Practitioner`) but the server does not support exporting Practitioner data). In this case a server SHOULD respond with a failure to the initial request.
 * Client explicitly asks for data that the server supports and that appears consistent with its access scopes -- but some additional out-of-band rules/policies/restrictions prevents the client from being authorized to see these data. In this case, the server MAY withhold certain results from the response, and MAY indicate to the client that results were withheld by including OperationOutcome information in the "error" array for the response as a partial success.
 
 ## Authorization Server Obligations
