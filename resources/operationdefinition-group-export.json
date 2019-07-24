@@ -47,7 +47,7 @@
       ]
     }
   ],
-  "description": "FHIR Operation to obtain data on all patients listed in a single FHIR Group Resource. If a FHIR server supports Group-level data export, it SHOULD support reading and searching for Group resource. This enables clients to discover available groups based on stable characteristics such as Group.identifier. Note: How these groups are defined is implementation specific for each FHIR system. For example, a payer may send a healthcare institution a roster file that can be imported into their EHR to create or update a FHIR group. Group membership could be based upon explicit attributes of the patient, such as: age, sex or a particular condition such as PTSD or Chronic Opioid use, or on more complex attributes, such as a recent inpatient discharge or membership in the population used to calculate a quality measure. FHIR-based group management is out of scope for the current version of this implementation guide.",
+  "description": "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in specified Group (https://www.hl7.org/fhir/group.html).",
   "code": "export",
   "resource": ["Group"],
   "system": false,
