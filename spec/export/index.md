@@ -98,7 +98,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 
 <table class="table">
   <thead>
-    <th>Parameters</th>
+    <th>Query Parameter</th>
     <th>Optionality</th>
     <th>Type</th>
     <th>Description</th>
