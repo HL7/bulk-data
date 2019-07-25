@@ -315,7 +315,7 @@ Required Fields:
 
 <table class="table">
   <thead>
-    <th>Parameters</th>
+    <th>Field</th>
     <th>Optionality</th>
     <th>Type</th>
     <th>Description</th>
