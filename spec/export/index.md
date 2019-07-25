@@ -322,13 +322,6 @@ Required Fields:
   </thead>
   <tbody>
     <tr>
-      <td><code>alg</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td>String</td>
-      <td>The JWA algorithm (e.g., <code>RS384</code>....
-      </td>
-    </tr>
-    <tr>
       <td><code>transactionTime</code></td>
       <td><span class="label label-success">required</span></td>
       <td>FHIR instant</td>
