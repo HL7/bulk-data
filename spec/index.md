@@ -34,3 +34,9 @@ This use case exports all resources needed to convey a patient's healththcare fi
 * [Client and Server Implementations](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/implementations.md)
 * [Discussion Group (FHIR Zulip "Bulk Data" Track)](https://chat.fhir.org/#narrow/stream/bulk.20data)
 * [Argonaut Project: Bulk Data Export Security Risk Assessment Report](authorization/security-risk-assessment-report.pdf)
+
+## Additional Documentation
+* [Export](export/index.html)
+* [Backend Services Authorization](authorization/index.html)
+* [Operations](operations/index.html)
+* [History](http://hl7.org/fhir/bulkdata/history.cfml)
