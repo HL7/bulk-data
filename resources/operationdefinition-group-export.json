@@ -47,7 +47,7 @@
       ]
     }
   ],
-  "description": "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in specified Group (https://www.hl7.org/fhir/group.html).",
+  "description": "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in specified [Group](https://www.hl7.org/fhir/group.html). The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html)",
   "code": "export",
   "resource": ["Group"],
   "system": false,
@@ -59,7 +59,7 @@
       "use": "in",
       "min": 0,
       "max": "1",
-      "documentation": "The format for the requested bulk data files to be generated. Servers MUST support Newline Delimited JSON, but MAY choose to support additional output formats. Servers MUST accept the full content type of application/fhir+ndjson as well as the abbreviated representations application/ndjson and ndjson. Defaults to application/fhir+ndjson.",
+      "documentation": "The format for the requested bulk data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Defaults to `application/fhir+ndjson`.",
       "type": "string"
     },
     {
