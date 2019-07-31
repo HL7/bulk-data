@@ -114,7 +114,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_since</code></td>
       <td><span class="label label-info">optional</span></td>
       <td>FHIR instant</td>
-      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since time</code>).</td>
+      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since</code> time).</td>
     </tr>
     <tr>
       <td><code>_type</code></td>
