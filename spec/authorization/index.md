@@ -414,7 +414,7 @@ start monitoring some bilirubin values, it needs to obtain an OAuth 2.0 access
 token with the scopes `system/*.read` and `system/CommunicationRequest.write`. To accomplish
 this (see [example](authorization-example-jwks-and-signatures.md) [raw](authorization-example-jwks-and-signatures.ipynb)), the client must first generate a one-time-use authentication JWT with the following claims:
 
-##### 1. Generate a JWT to use for client authentication:
+### 1. Generate a JWT to use for client authentication:
 
 ```
 {
@@ -427,7 +427,7 @@ this (see [example](authorization-example-jwks-and-signatures.md) [raw](authoriz
 ```
 
 
-##### 2. Digitally sign the claims, as specified in RFC7515.  
+### 2. Digitally sign the claims, as specified in RFC7515.  
 
 Using the client's RSA private key, with SHA-384 hashing (as specified for
 an `RS384` algorithm (`alg`) parameter value in RFC7518), the signed token
@@ -442,7 +442,7 @@ Note: to inspect this example JWT, you can visit https://jwt.io. Paste the signe
 JWT value above into the "Encoded"  field, and paste the [sample public signing key](sample-jwks/RS384.public.json) (starting with the `{"kty": "RSA"` JSON object, and excluding the `{ "keys": [` JWK Set wrapping array) into the "Public Key" box.
 The plaintext JWT will be displayed in the "Decoded:Payload"  field, and a "Signature Verified" message will appear.
 
-##### 3. Obtain an access token
+### 3. Obtain an access token
 
 The client then calls the SMART authentication server's "token endpoint" using the one-time use
 authentication JWT as its authentication mechanism:
