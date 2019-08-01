@@ -24,6 +24,7 @@ The scope of this document does NOT include:
 * [RFC6749, The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
 * [RFC6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
 * [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
+* [RFC7240, Prefer Header for HTTP](https://tools.ietf.org/html/rfc7240)
 
 ## Terminology
 
