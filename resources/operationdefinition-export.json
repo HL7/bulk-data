@@ -1,7 +1,7 @@
 {
   "resourceType": "OperationDefinition",
   "id": "export",
-  "url": "http://hl7.org/fhir/us/bulkdata/OperationDefinition/export",
+  "url": "http://hl7.org/fhir/bulkdata/OperationDefinition/export",
   "version": "1.0.0",
   "name": "BulkDataExport",
   "title": "FHIR Bulk Data Export (Flat FHIR) - System Level Export",
@@ -47,7 +47,7 @@
       ]
     }
   ],
-  "description": "Export data from a FHIR server whether or not it is associated with a patient. This supports use cases like backing up a server or exporting terminology data by restricting the resources returned using the _type parameter.",
+  "description": "Export data from a FHIR server whether or not it is associated with a patient. This supports use cases like backing up a server or exporting terminology data by restricting the resources returned using the _type parameter. The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html)",
   "code": "export",
   "base": "/",
   "system": true,
@@ -59,7 +59,7 @@
       "use": "in",
       "min": 0,
       "max": "1",
-      "documentation": "The format for the requested bulk data files to be generated. Servers MUST support Newline Delimited JSON, but MAY choose to support additional output formats. Servers MUST accept the full content type of application/fhir+ndjson as well as the abbreviated representations application/ndjson and ndjson. Defaults to application/fhir+ndjson.",
+      "documentation": "The format for the requested bulk data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Defaults to `application/fhir+ndjson`.",
       "type": "string"
     },
     {
