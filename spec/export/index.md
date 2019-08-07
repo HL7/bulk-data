@@ -276,4 +276,7 @@ Specifies the format of the file being requested.
 
 ## More Information
 
+- [Export](/export/index.html)
+- [Backend Services Authorization](/authorization/index.html)
+- [Operations](/operations/index.html)
 - [History](http://hl7.org/fhir/us/bulkdata/history.cfml)
