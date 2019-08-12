@@ -68,7 +68,7 @@
     "application/json-patch+json"
   ],
   "implementationGuide": [
-    "http://hl7.org/fhir/bulkdata/ImplementationGuide/bulk-data"
+    "http://hl7.org/fhir/bulkdata/ImplementationGuide/ig"
   ],
   "rest": [
     {
