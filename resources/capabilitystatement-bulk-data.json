@@ -4,7 +4,7 @@
   "url": "http://hl7.org/fhir/bulkdata/CapabilityStatement/bulk-data",
   "version": "1.0.0",
   "name": "BulkDataIGCapabilityStatement",
-  "title": " FHIR Bulk Data Export (Flat FHIR) Implementation Guide CapabilityStatement",
+  "title": "FHIR Bulk Data Export (Flat FHIR) Implementation Guide CapabilityStatement",
   "status": "active",
   "experimental": false,
   "date": "2019-06-04T00:00:00+00:00",
