@@ -228,17 +228,17 @@ Retry-After: 120</code></pre></td>
 Content-Type: application/json
 
 {
-&ensp;"resourceType": "OperationOutcome",
-&ensp;"id": "1",
-&ensp;"issue": [
-&ensp;&ensp;{
-&ensp;&ensp;&ensp;"severity": "error",
-&ensp;&ensp;&ensp;"code": "processing",
-&ensp;&ensp;&ensp;"details": {
-&ensp;&ensp;&ensp;&ensp;"text": "An internal timeout has occurred"
-&ensp;&ensp;&ensp;}
-&ensp;&ensp;}
-&ensp;]
+&nbsp;"resourceType": "OperationOutcome",
+&nbsp;"id": "1",
+&nbsp;"issue": [
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;"severity": "error",
+&nbsp;&nbsp;&nbsp;"code": "processing",
+&nbsp;&nbsp;&nbsp;"details": {
+&nbsp;&nbsp;&nbsp;&nbsp;"text": "An internal timeout has occurred"
+&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;}
+&nbsp;]
 }</code></pre></td>
     </tr>
     <tr>
@@ -249,24 +249,24 @@ Expires: Mon, 22 Jul 2019 23:59:59 GMT
 Content-Type: application/json
 
 {
-&ensp;"transactionTime": "[instant]",
-&ensp;"request" : "[base]/Patient/$export?_type=Patient,Observation",
-&ensp;"requiresAccessToken" : true,
-&ensp;"output" : [{
-&ensp;&ensp;"type" : "Patient",
-&ensp;&ensp;"url" : "http://serverpath2/patient_file_1.ndjson"
-&ensp;},{
-&ensp;&ensp;"type" : "Patient",
-&ensp;&ensp;"url" : "http://serverpath2/patient_file_2.ndjson"
-&ensp;},{
-&ensp;&ensp;"type" : "Observation",
-&ensp;&ensp;"url" : "http://serverpath2/observation_file_1.ndjson"
-&ensp;}],
-&ensp;"error" : [{
-&ensp;&ensp;"type" : "OperationOutcome",
-&ensp;&ensp;"url" : "http://serverpath2/err_file_1.ndjson"
-&ensp;}],
-&ensp;"extension":{"http://myserver.example.org/extra-property": true}
+&nbsp;"transactionTime": "[instant]",
+&nbsp;"request" : "[base]/Patient/$export?_type=Patient,Observation",
+&nbsp;"requiresAccessToken" : true,
+&nbsp;"output" : [{
+&nbsp;&nbsp;"type" : "Patient",
+&nbsp;&nbsp;"url" : "http://serverpath2/patient_file_1.ndjson"
+&nbsp;},{
+&nbsp;&nbsp;"type" : "Patient",
+&nbsp;&nbsp;"url" : "http://serverpath2/patient_file_2.ndjson"
+&nbsp;},{
+&nbsp;&nbsp;"type" : "Observation",
+&nbsp;&nbsp;"url" : "http://serverpath2/observation_file_1.ndjson"
+&nbsp;}],
+&nbsp;"error" : [{
+&nbsp;&nbsp;"type" : "OperationOutcome",
+&nbsp;&nbsp;"url" : "http://serverpath2/err_file_1.ndjson"
+&nbsp;}],
+&nbsp;"extension":{"http://myserver.example.org/extra-property": true}
 }</code></pre></td>
     </tr>
   </tbody>
