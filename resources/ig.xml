@@ -2,7 +2,7 @@
 <!--Hidden IG for de facto IG publishing-->
 <ImplementationGuide xmlns="http://hl7.org/fhir">
   <id value="ig"/>
-  <url value="http://hl7.org/fhir/bulkdata/ImplementationGuide/ig"/>
+  <url value="http://hl7.org/fhir/uv/bulkdata/ImplementationGuide/ig"/>
   <name value="BulkDataAccess"/>
   <title value="FHIR Bulk Data Access"/>
   <status value="active"/>
