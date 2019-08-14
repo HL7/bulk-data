@@ -1,5 +1,5 @@
 {
-  "canonicalBase": "http://hl7.org/fhir/bulkdata",
+  "canonicalBase": "http://hl7.org/fhir/uv/bulkdata",
   "extraTemplates": [
     "inline"
   ],
@@ -26,7 +26,7 @@
       "resources"
     ],
     "specification": "http://hl7.org/fhir",
-    "history": "http://hl7.org/fhir/bulkdata/history.cfml",
+    "history": "http://hl7.org/fhir/uv/bulkdata/history.cfml",
     "temp": "temp",
     "txCache": "txCache"
   },
