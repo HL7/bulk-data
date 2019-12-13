@@ -1,5 +1,5 @@
 {
-  "canonicalBase": "http://hl7.org/fhir/bulkdata",
+  "canonicalBase": "http://hl7.org/fhir/uv/bulkdata",
   "extraTemplates": [
     "inline"
   ],
@@ -12,10 +12,10 @@
       "template-base": "sd.html"
     }
   },
-  "fixed-business-version": "0.1.0",
+  "fixed-business-version": "1.0.0",
   "license": "CC0-1.0",
   "status": "draft",
-  "npm-name": "hl7.fhir.us.bulkdata",
+  "npm-name": "hl7.fhir.uv.bulkdata",
   "paths": {
     "output": "output",
     "pages": [
@@ -26,7 +26,7 @@
       "resources"
     ],
     "specification": "http://hl7.org/fhir",
-    "history": "http://hl7.org/fhir/bulkdata/history.cfml",
+    "history": "http://hl7.org/fhir/uv/bulkdata/history.cfml",
     "temp": "temp",
     "txCache": "txCache"
   },

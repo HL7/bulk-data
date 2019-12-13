@@ -1,10 +1,10 @@
 {
   "resourceType": "CapabilityStatement",
   "id": "bulk-data",
-  "url": "http://hl7.org/fhir/bulk-data/CapabilityStatement/bulk-data",
+  "url": "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data",
   "version": "1.0.0",
   "name": "BulkDataIGCapabilityStatement",
-  "title": " FHIR Bulk Data Export (Flat FHIR) Implementation Guide CapabilityStatement",
+  "title": "FHIR Bulk Data Export (Flat FHIR) Implementation Guide CapabilityStatement",
   "status": "active",
   "experimental": false,
   "date": "2019-06-04T00:00:00+00:00",
@@ -68,7 +68,7 @@
     "application/json-patch+json"
   ],
   "implementationGuide": [
-    "http://hl7.org/fhir/bulk-data/ImplementationGuide/bulk-data"
+    "http://hl7.org/fhir/uv/bulkdata/ImplementationGuide/ig"
   ],
   "rest": [
     {

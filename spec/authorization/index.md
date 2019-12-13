@@ -190,7 +190,7 @@ Before a client can request an access token, it SHALL generate a
 one-time-use JSON Web Token (JWT) that will be used to authenticate the client to
 the FHIR authorization server. The authentication JWT SHALL include the
 following claims, and SHALL be signed with the client's private
-key (which SHOULD be an `RS384` or `EC384` signature). For a practical reference on JWT, as well as debugging
+key (which SHOULD be an `RS384` or `ES384` signature). For a practical reference on JWT, as well as debugging
 tools and client libraries, see [https://jwt.io](https://jwt.io).
 
 <table class="table">
@@ -201,7 +201,7 @@ tools and client libraries, see [https://jwt.io](https://jwt.io).
     <tr>
       <td><code>alg</code></td>
       <td><span class="label label-success">required</span></td>
-      <td>The JWA algorithm (e.g., <code>RS384</code>, <code>EC384</code>) used for signing the authentication JWT.
+      <td>The JWA algorithm (e.g., <code>RS384</code>, <code>ES384</code>) used for signing the authentication JWT.
       </td>
     </tr>
     <tr>

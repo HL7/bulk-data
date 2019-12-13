@@ -121,7 +121,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_type</code></td>
       <td><span class="label label-info">optional</span></td>
       <td>string of comma-delimited FHIR resource types</td>
-      <td>Only resources of the specified resource types(s) SHALL be included in the response. If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For Patient- and Group-level requests, the <a href='https://www.hl7.org/fhir/compartmentdefinition-patient.html'>Patient Compartment</a> SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned. Servers unable to support <code>_type</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_type</code> parameter.<br /><br />
+      <td>The response SHALL only include resources of the specified resource types(s). If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For Patient- and Group-level requests, the <a href='https://www.hl7.org/fhir/compartmentdefinition-patient.html'>Patient Compartment</a> SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned. Servers unable to support <code>_type</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_type</code> parameter.<br /><br />
       Resource references MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.<br /><br />
       For example  <code>_type=Practitioner</code> could be used to bulk data extract all Practitioner resources from a FHIR endpoint.</td>
     </tr>
@@ -228,17 +228,17 @@ Retry-After: 120</code></pre></td>
 Content-Type: application/json
 
 {
-&ensp;"resourceType": "OperationOutcome",
-&ensp;"id": "1",
-&ensp;"issue": [
-&ensp;&ensp;{
-&ensp;&ensp;&ensp;"severity": "error",
-&ensp;&ensp;&ensp;"code": "processing",
-&ensp;&ensp;&ensp;"details": {
-&ensp;&ensp;&ensp;&ensp;"text": "An internal timeout has occurred"
-&ensp;&ensp;&ensp;}
-&ensp;&ensp;}
-&ensp;]
+&nbsp;"resourceType": "OperationOutcome",
+&nbsp;"id": "1",
+&nbsp;"issue": [
+&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;"severity": "error",
+&nbsp;&nbsp;&nbsp;"code": "processing",
+&nbsp;&nbsp;&nbsp;"details": {
+&nbsp;&nbsp;&nbsp;&nbsp;"text": "An internal timeout has occurred"
+&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;}
+&nbsp;]
 }</code></pre></td>
     </tr>
     <tr>
@@ -249,24 +249,24 @@ Expires: Mon, 22 Jul 2019 23:59:59 GMT
 Content-Type: application/json
 
 {
-&ensp;"transactionTime": "[instant]",
-&ensp;"request" : "[base]/Patient/$export?_type=Patient,Observation",
-&ensp;"requiresAccessToken" : true,
-&ensp;"output" : [{
-&ensp;&ensp;"type" : "Patient",
-&ensp;&ensp;"url" : "http://serverpath2/patient_file_1.ndjson"
-&ensp;},{
-&ensp;&ensp;"type" : "Patient",
-&ensp;&ensp;"url" : "http://serverpath2/patient_file_2.ndjson"
-&ensp;},{
-&ensp;&ensp;"type" : "Observation",
-&ensp;&ensp;"url" : "http://serverpath2/observation_file_1.ndjson"
-&ensp;}],
-&ensp;"error" : [{
-&ensp;&ensp;"type" : "OperationOutcome",
-&ensp;&ensp;"url" : "http://serverpath2/err_file_1.ndjson"
-&ensp;}],
-&ensp;"extension":{"http://myserver.example.org/extra-property": true}
+&nbsp;"transactionTime": "[instant]",
+&nbsp;"request" : "[base]/Patient/$export?_type=Patient,Observation",
+&nbsp;"requiresAccessToken" : true,
+&nbsp;"output" : [{
+&nbsp;&nbsp;"type" : "Patient",
+&nbsp;&nbsp;"url" : "http://serverpath2/patient_file_1.ndjson"
+&nbsp;},{
+&nbsp;&nbsp;"type" : "Patient",
+&nbsp;&nbsp;"url" : "http://serverpath2/patient_file_2.ndjson"
+&nbsp;},{
+&nbsp;&nbsp;"type" : "Observation",
+&nbsp;&nbsp;"url" : "http://serverpath2/observation_file_1.ndjson"
+&nbsp;}],
+&nbsp;"error" : [{
+&nbsp;&nbsp;"type" : "OperationOutcome",
+&nbsp;&nbsp;"url" : "http://serverpath2/err_file_1.ndjson"
+&nbsp;}],
+&nbsp;"extension":{"http://myserver.example.org/extra-property": true}
 }</code></pre></td>
     </tr>
   </tbody>
@@ -438,5 +438,5 @@ Specifies the format of the file being requested.
 
 - [Backend Services Authorization](../authorization/index.html)
 - [Operations](../operations/index.html)
-- [History](http://hl7.org/fhir/us/bulkdata/history.cfml)
+- [History](http://hl7.org/fhir/uv/bulkdata/history.cfml)
 - [Abbreviations](../abbreviations/index.html)
