@@ -1,14 +1,25 @@
 {
-  "package-id" : "hl7.fhir.us.bulkdata",
+  "package-id" : "hl7.fhir.uv.bulkdata",
   "title" : "FHIR Bulk Data Access (Flat FHIR)",
-  "canonical" : "http://hl7.org/fhir/bulkdata",
+  "canonical" : "http://hl7.org/fhir/uv/bulkdata",
   "list" : [{
     "version" : "current",
     "date" : "n/a",
     "desc" : "Continuous Integration Build (latest in version control)",
     "path" : "https://build.fhir.org/ig/HL7/bulk-data",
     "status" : "ci-build"
-  }, {
+  }, 
+  {
+      "version": "1.0.0",
+      "date": "2019-08-20",
+      "desc": "STU 1",
+      "path": "http://hl7.org/fhir/uv/bulkdata/STU1",
+      "sequence": "STU 1 (FHIR R4)",
+      "fhirversion": "4.0.0",
+      "status": "trial-use",
+	    "current": true
+    },
+    {
        "version": "0.1.0",
        "date": "xxx",
        "desc": "STU #1 1st Ballot",
