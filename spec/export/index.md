@@ -369,6 +369,9 @@ Required Fields:
       <td><span class="label label-info">optional</span></td>
       <td>JSON Object</td>
       <td>To support extensions, this implementation guide reserves the name <code>extension</code> and will never define a field with that name, allowing server implementations to use it to provide custom behavior and information. For example, a server may choose to provide a custom extension that contains a decryption key for encrypted ndjson files. The value of an extension element SHALL be a pre-coordinated JSON object.
+      <br/>
+      <br/>
+      Note: In addition to extensions being supported on the root object level, extensions may also be included within the fields above (e.g., in the 'output' object).
       </td>
     </tr>
   </tbody>
