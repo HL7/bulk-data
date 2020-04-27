@@ -337,6 +337,10 @@ Content-Type: application/json
 &nbsp;&nbsp;"type" : "Observation",
 &nbsp;&nbsp;"url" : "http://serverpath2/observation_file_1.ndjson"
 &nbsp;}],
+&nbsp;"deleted" : [{
+&nbsp;&nbsp;"type" : "Bundle",
+&nbsp;&nbsp;"url" : "http://serverpath2/del_file_1.ndjson"
+&nbsp;}],
 &nbsp;"error" : [{
 &nbsp;&nbsp;"type" : "OperationOutcome",
 &nbsp;&nbsp;"url" : "http://serverpath2/err_file_1.ndjson"
@@ -382,7 +386,7 @@ Required Fields:
       <td><code>transactionTime</code></td>
       <td><span class="label label-success">required</span></td>
       <td>FHIR instant</td>
-      <td>indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant.
+      <td>Indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant.
       <br/>
       <br/>
       Note: To properly meet these constraints, a FHIR Server might need to wait for any pending transactions to resolve in its database before starting the export process.
@@ -392,13 +396,13 @@ Required Fields:
       <td><code>request</code></td>
       <td><span class="label label-success">required</span></td>
       <td>String</td>
-      <td>the full URL of the original bulk data kick-off request</td>
+      <td>The full URL of the original bulk data kick-off request</td>
     </tr>
     <tr>
       <td><code>requiresAccessToken</code></td>
       <td><span class="label label-success">required</span></td>
       <td>Boolean</td>
-      <td>indicates whether downloading the generated files requires a bearer access token
+      <td>Indicates whether downloading the generated files requires a bearer access token
       <br/>
       <br/>
       Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be <code>false</code> for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
@@ -408,7 +412,7 @@ Required Fields:
       <td><code>output</code></td>
       <td><span class="label label-success">required</span></td>
       <td>Array</td>
-      <td>an array of file items with one entry for each generated file. If no resources are returned from the kick-off request, the server SHOULD return an empty array.
+      <td>An array of file items with one entry for each generated file. If no resources are returned from the kick-off request, the server SHOULD return an empty array.
       <br/>
       <br/>
         Each file item SHALL contain the following fields:
@@ -430,10 +434,37 @@ Required Fields:
       </td>
     </tr>
     <tr>
+      <td><code>deleted</code></td>
+      <td><span class="label label-success">optional</span></td>
+      <td>Array</td>
+      <td>An array of deleted file items following the same structure as the <code>output</code> array.
+      <br/>
+      <br/>
+        When a <code>_since</code> timestamp is supplied in the export request, this array SHALL be populated with output files containing FHIR Transaction Bundles that indicate which FHIR resources would have been returned, but have been deleted subsequent to that date. If no resources have been deleted or the <code>_since</code> parameter was not supplied, the server MAY omit this key or MAY return an empty array.
+      <br/>
+      <br/>
+        Each line in the output file SHALL contain a FHIR Bundle with a type of <code>transaction</code> which SHALL contain one or more entry items that reflect a deleted resource. In each entry, the <code>fullUrl</code>, <code>request.url</code>, and <code>request.method</code> elements SHALL be populated. The <code>request.method</code> element SHALL be set to <code>DELETE</code>.
+      <br/>
+      <br/>
+        Example deleted resource bundle (represents one line in output file):
+      <pre><code>{
+&nbsp;"resourceType": "Bundle",
+&nbsp;"id": "bundle-transaction",
+&nbsp;"meta": {"lastUpdated: "2020-04-27T02:56:00Z},
+&nbsp;"type": "transaction",
+&nbsp;"entry":[{
+&nbsp;&nbsp;"fullUrl": "[base]/Patient/123",
+&nbsp;&nbsp;"request": {"method": "DELETE", "url": "Patient/123"}
+&nbsp;&nbsp;...
+&nbsp;}]
+}</code></pre>
+      </td>
+    </tr>
+    <tr>
       <td><code>error</code></td>
       <td><span class="label label-success">required</span></td>
       <td>Array</td>
-      <td>array of error file items following the same structure as the <code>output</code> array.
+      <td>Array of error file items following the same structure as the <code>output</code> array.
       <br/>
       <br/>
         Errors that occurred during the export should only be included here (not in output). If no errors occurred, the server SHOULD return an empty array.  Only the <code>OperationOutcome</code> resource type is currently supported, so a server SHALL generate files in the same format as bulk data output files that contain <code>OperationOutcome</code> resources.
@@ -468,6 +499,10 @@ Example response body:
     },{
       "type" : "Observation",
       "url" : "http://serverpath2/observation_file_1.ndjson"
+    }],
+    "deleted": [{
+      "type" : "Bundle",
+      "url" : "http://serverpath2/del_file_1.ndjson"      
     }],
     "error" : [{
       "type" : "OperationOutcome",
