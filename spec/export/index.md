@@ -55,7 +55,9 @@ The FHIR server SHALL limit the data returned to only those FHIR resources for w
 
 The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html).
 
-For Patient- and Group-level requests requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned.
+For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned.
+
+Binary Resources associated with individual patients SHALL be serialized as DocumentReference Resources with the content.attachment element populated as described in the [Attachments](#attachments) section below. Binary Resources not associated with an individual patient MAY be included in a System Level export.
 
 #### Endpoint - All Patients
 
@@ -403,7 +405,7 @@ Example response body:
 ```
 
 ---
-### File Request
+### Output File Request
 
 Using the URLs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated bulk data files (one or more per resource type) within the time period specified in the ```Expires``` header (if present). If the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the request SHALL include a valid access token.  See the Security Considerations section above.  
 
@@ -436,6 +438,15 @@ Specifies the format of the file being requested.
 #### Response - Error
 
 - HTTP Status Code of ```4XX``` or ```5XX```
+
+#### Attachments
+
+If resources in an output file contain elements of the type ```Attachment```, servers SHALL populate the ```Attachment.contentType``` code as well as either the ```data``` element or the ```url``` element. The ```url``` element SHALL be an absolute url that can be de-referenced to the attachment's content.
+
+When the ```url``` element is populated with an absolute URL and the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the url location must be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the ```url``` element is populated and the ```requiresAccessToken``` field in the Complete Status body is set to ```false```, the url location must be accessible by a client without an access token. 
+
+Note that if a server copies files to the bulk data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the ```Attachment.url``` element when generating the FHIR bulk data output files.
+
 
 ## More Information
 
