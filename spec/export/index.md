@@ -53,7 +53,7 @@ This FHIR Operation initiates the asynchronous generation of data to which the c
 
 The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.
 
-The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html).
+The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
 For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned.
 
@@ -63,7 +63,7 @@ References in the resources returned MAY be relative URLs with the format <code>
 
 #### Endpoint - All Patients
 
-`GET [fhir base]/Patient/$export`
+`[fhir base]/Patient/$export`
 
 [View table of parameters for Patient Export](../OperationDefinition-patient-export.html)
 
@@ -71,7 +71,7 @@ FHIR Operation to obtain a detailed set of FHIR resources of diverse resource ty
 
 #### Endpoint - Group of Patients
 
-`GET [fhir base]/Group/[id]/$export`
+`[fhir base]/Group/[id]/$export`
 
 [View table of parameters for Group Export](../OperationDefinition-group-export.html)
 
@@ -83,7 +83,7 @@ Note: How these Groups are defined is specific to each FHIR system's implementat
 
 #### Endpoint - System Level Export
 
-`GET [fhir base]/$export`
+`[fhir base]/$export`
 
 [View table of parameters for Export](../OperationDefinition-export.html)
 
@@ -122,7 +122,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>FHIR instant</td>
-      <td>Resources SHALL be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since</code> time).</td>
+      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since</code> time). In the case of a Group level export, servers MAY return additional resources if the resource belongs to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server).</td>
     </tr>
     <tr>
       <td><code>_type</code></td>
@@ -135,8 +135,56 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.<br /><br />
       For example <code>_type=Observation</code> could be used to filter a given export response to return only Observation resources.</td>
     </tr>
+    <tr>
+      <td><code>patient</code></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>string of comma-delimited FHIR <a href="https://www.hl7.org/fhir/search.html#reference" target="_blank">reference search parameters</a></td>
+      <td>Not applicable to system level export requests. When provided, the server SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a client requests patients who do are not present on the server (or in the case of a group level export, who are not members of the group), the server SHOULD return details via an OperationOutcome resource in an error response to the request.
+      </td>
+    </tr>
+    <tr>
+      <td><code>_elements</code></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>string of comma-delimited FHIR Elements</td>
+      <td>When provided, the server SHOULD only include the listed elements in the resources returned. Elements should be of the form `[resource type].[element name]` (eg. `Patient.id`) or `[element name]` (eg. `id`) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable.
+      </td>
+    </tr>
   </tbody>
 </table>
+
+  *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/). If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.
+
+#### Group Membership Request Pattern
+
+To obtain an new and updated resources for patients in a group, as well as all data for patients who have joined the group since a prior query, a client can use following pattern:
+
+- Initial Query (eg. on 1/1/2020):
+
+  1. Client submits a group export request:
+
+      `[baseurl]\Group\[id]\$export`
+
+  2. Client retrieves response data
+  3. Client retains a list of the patient ids returned
+  4. Client retains the transactionTime value from the response
+
+- Subsequent Queries (eg. on 2/1/2020):
+  1. Client submits a group export request to obtain a patient list:
+
+      `[baseurl]\Group\[id]\$export?_type=Patient&_elements=id`
+
+  2. Client retains a list of patient ids returned
+  3. Client compares response to patient ids from first query request and identifies new patient ids
+  4. Client submits a group export request for patients who are new members of the group: 
+
+      `[baseurl]\Group\[id]\$export?patient=[new1,new2,...]`
+    
+  5. Client submits a group export request for updated group data: 
+
+      `[baseurl]\Group\[id]\$export?_since=[initial transaction time]`
+
+  6. Client retains the transactionTime value from the response.
+  * Note that data returned in step 4 may overlap with data returned in step 5.
 
 ##### Experimental Query Parameters
 
