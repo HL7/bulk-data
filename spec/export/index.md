@@ -114,13 +114,15 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_outputFormat</code></td>
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
+      <td><span class="label label-info">required</span></td>
       <td>String</td>
-      <td>  The format for the requested bulk data files to be generated as per <a href="http://hl7.org/fhir/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
+      <td>The format for the requested bulk data files to be generated as per <a href="http://hl7.org/fhir/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
     </tr>
     <tr>
       <td><code>_since</code></td>
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
+      <td><span class="label label-info">required</span></td>
       <td>FHIR instant</td>
       <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since</code> time). In the case of a Group level export, servers MAY return additional resources if the resource belongs to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server).</td>
     </tr>
@@ -138,15 +140,19 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
     <tr>
       <td><code>patient</code></td>
       <td><span class="label label-info">optional</span></td>
+      <td><span class="label label-info">optional</span></td>
       <td>string of comma-delimited FHIR <a href="https://www.hl7.org/fhir/search.html#reference" target="_blank">reference search parameters</a></td>
-      <td>Not applicable to system level export requests. When provided, the server SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a client requests patients who do are not present on the server (or in the case of a group level export, who are not members of the group), the server SHOULD return details via an OperationOutcome resource in an error response to the request.
+      <td>Not applicable to system level export requests. When provided, the server SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a client requests patients who do are not present on the server (or in the case of a group level export, who are not members of the group), the server SHOULD return details via an OperationOutcome resource in an error response to the request.<br /><br />
+      Servers unable to support <code>patient</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>patient</code> parameter.
       </td>
     </tr>
     <tr>
       <td><code>_elements</code></td>
       <td><span class="label label-info">optional</span></td>
+      <td><span class="label label-info">optional</span></td>
       <td>string of comma-delimited FHIR Elements</td>
-      <td>When provided, the server SHOULD only include the listed elements in the resources returned. Elements should be of the form `[resource type].[element name]` (eg. `Patient.id`) or `[element name]` (eg. `id`) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable.
+      <td>When provided, the server SHOULD only include the listed elements in the resources returned. Elements should be of the form <code>[resource type].[element name]</code> (eg. <code>Patient.id</code>) or <code>[element name]</code> (eg. <code>id</code>) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable..<br /><br />
+      Servers unable to support <code>_elements</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_elements</code> parameter.
       </td>
     </tr>
   </tbody>
@@ -160,31 +166,32 @@ To obtain an new and updated resources for patients in a group, as well as all d
 
 - Initial Query (eg. on 1/1/2020):
 
-  1. Client submits a group export request:
+  - Client submits a group export request:
 
-      `[baseurl]\Group\[id]\$export`
+    `[baseurl]/Group/[id]$export`
 
-  2. Client retrieves response data
-  3. Client retains a list of the patient ids returned
-  4. Client retains the transactionTime value from the response
+  - Client retrieves response data
+  - Client retains a list of the patient ids returned
+  - Client retains the transactionTime value from the response
 
 - Subsequent Queries (eg. on 2/1/2020):
-  1. Client submits a group export request to obtain a patient list:
+  - Client submits a group export request to obtain a patient list:
 
-      `[baseurl]\Group\[id]\$export?_type=Patient&_elements=id`
+    `[baseurl]/Group/[id]/$export?_type=Patient&_elements=id`
 
-  2. Client retains a list of patient ids returned
-  3. Client compares response to patient ids from first query request and identifies new patient ids
-  4. Client submits a group export request for patients who are new members of the group: 
+  - Client retains a list of patient ids returned
+  - Client compares response to patient ids from first query request and identifies new patient ids
+  - Client submits a group export request for patients who are new members of the group: 
 
-      `[baseurl]\Group\[id]\$export?patient=[new1,new2,...]`
+    `[baseurl]/Group/[id]/$export?patient=[new1,new2,...]`
     
-  5. Client submits a group export request for updated group data: 
+  - Client submits a group export request for updated group data: 
 
-      `[baseurl]\Group\[id]\$export?_since=[initial transaction time]`
+    `[baseurl]/Group/[id]/$export?_since=[initial transaction time]`
+    
+    Note that data returned from this request may overlap with that returned from the prior step.
 
-  6. Client retains the transactionTime value from the response.
-  * Note that data returned in step 4 may overlap with data returned in step 5.
+  - Client retains the transactionTime value from the response.
 
 ##### Experimental Query Parameters
 
