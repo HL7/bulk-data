@@ -57,6 +57,8 @@ The FHIR server SHALL support invocation of this operation using the [FHIR Async
 
 For Patient- and Group-level requests requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned.
 
+References in the resources returned MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.
+
 #### Endpoint - All Patients
 
 `GET [fhir base]/Patient/$export`
@@ -100,35 +102,39 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 <table class="table">
   <thead>
     <th>Query Parameter</th>
-    <th>Optionality</th>
+    <th>Optionality for Server</th>
+    <th>Optionality for Client</th>
     <th>Type</th>
     <th>Description</th>
   </thead>
   <tbody>
     <tr>
       <td><code>_outputFormat</code></td>
+      <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>String</td>
-      <td>  The format for the requested bulk data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
+      <td>  The format for the requested bulk data files to be generated as per <a href="http://hl7.org/fhir/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
     </tr>
     <tr>
       <td><code>_since</code></td>
+      <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>FHIR instant</td>
-      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since</code> time).</td>
+      <td>Resources SHALL be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since</code> time).</td>
     </tr>
     <tr>
       <td><code>_type</code></td>
       <td><span class="label label-info">optional</span></td>
+      <td><span class="label label-info">optional</span></td>
       <td>string of comma-delimited FHIR resource types</td>
-      <td>The response SHALL only include resources of the specified resource types(s). If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization. For Patient- and Group-level requests, the <a href='https://www.hl7.org/fhir/compartmentdefinition-patient.html'>Patient Compartment</a> SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned. Servers unable to support <code>_type</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_type</code> parameter.<br /><br />
-      Resource references MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.<br /><br />
-      For example  <code>_type=Practitioner</code> could be used to bulk data extract all Practitioner resources from a FHIR endpoint.</td>
+      <td>The response SHALL be filtered to only include resources of the specified resource types(s).<br /><br />
+      If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the <a href="http://www.fhir.org/guides/argonaut/r2/">Argonaut Implementation Guide</a>. For Patient- and Group-level requests, the <a href='https://www.hl7.org/fhir/compartmentdefinition-patient.html'>Patient Compartment</a> SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned.<br /><br />
+      Servers unable to support <code>_type</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_type</code> parameter.
+      If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.<br /><br />
+      For example  <code>_type=Observation</code> could be used to bulk data extract all Observation resources from a FHIR endpoint.</td>
     </tr>
   </tbody>
 </table>
-
-  *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/). If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.
 
 ##### Experimental Query Parameters
 
