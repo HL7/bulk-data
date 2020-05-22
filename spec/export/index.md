@@ -131,7 +131,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the <a href="http://www.fhir.org/guides/argonaut/r2/">Argonaut Implementation Guide</a>. For Patient- and Group-level requests, the <a href='https://www.hl7.org/fhir/compartmentdefinition-patient.html'>Patient Compartment</a> SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned.<br /><br />
       Servers unable to support <code>_type</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_type</code> parameter.
       If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.<br /><br />
-      For example  <code>_type=Observation</code> could be used to bulk data extract all Observation resources from a FHIR endpoint.</td>
+      For example <code>_type=Observation</code> could be used to filter a given export response to return only Observation resources.</td>
     </tr>
   </tbody>
 </table>
