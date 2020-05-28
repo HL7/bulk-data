@@ -148,10 +148,11 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
     </tr>
     <tr>
       <td><code>_elements</code></td>
-      <td><span class="label label-info">optional</span></td>
+      <td><span class="label label-info">optional, exparimental</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>string of comma-delimited FHIR Elements</td>
-      <td>When provided, the server SHOULD only include the listed elements in the resources returned. Elements should be of the form <code>[resource type].[element name]</code> (eg. <code>Patient.id</code>) or <code>[element name]</code> (eg. <code>id</code>) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable..<br /><br />
+      <td>When provided, the server SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements should be of the form <code>[resource type].[element name]</code> (eg. <code>Patient.id</code>) or <code>[element name]</code> (eg. <code>id</code>) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable..<br /><br />
+        Servers are not obliged to return just the requested elements. Servers SHOULD always return mandatory elements whether they are requested or not. Servers SHOULD mark the resources with the tag SUBSETTED to ensure that the incomplete resource is not actually used to overwrite a complete resource.<br/><br/>
       Servers unable to support <code>_elements</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_elements</code> parameter.
       </td>
     </tr>
@@ -168,7 +169,7 @@ To obtain an new and updated resources for patients in a group, as well as all d
 
   - Client submits a group export request:
 
-    `[baseurl]/Group/[id]$export`
+    `[baseurl]/Group/[id]/$export`
 
   - Client retrieves response data
   - Client retains a list of the patient ids returned
