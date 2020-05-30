@@ -114,7 +114,6 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_outputFormat</code></td>
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
-      <td><span class="label label-info">required</span></td>
       <td>String</td>
       <td>The format for the requested bulk data files to be generated as per <a href="http://hl7.org/fhir/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
     </tr>
@@ -122,7 +121,6 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_since</code></td>
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
-      <td><span class="label label-info">required</span></td>
       <td>FHIR instant</td>
       <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since</code> time). In the case of a Group level export, servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server).</td>
     </tr>
@@ -194,7 +192,7 @@ To obtain an new and updated resources for patients in a group, as well as all d
 
   - Client retains the transactionTime value from the response.
 
-##### Experimental Query Parameters
+#### Experimental Query Parameters
 
 As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions (rather than historical prescriptions), or only laboratory observations (rather than all observations). We have considered several approaches to finer-grained filtering, including FHIR's `GraphDefinition`, the Clinical Quality Language (CQL), and FHIR's REST API search parameters. We expect this will be an area of active exploration, so for the time being this implementation guide defines an experimental syntax based on search parameters that works side-by-side with the coarse-grained `_type`-based filtering.
 
@@ -202,7 +200,7 @@ To request finer-grained filtering, a client MAY supply a `_typeFilter` paramete
 
 *Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. As the `_typeFilter` is experimental and optional, we have not yet determined expectation for `_include`, `_revinclude`, or support for any specific search parameters.
 
-###### Example Request with `_typeFilter`
+##### Example Request with `_typeFilter`
 
 The following is an export request for `MedicationRequest` resources and `Condition` resources, where the client would further like to restrict `MedicationRequests` to requests that are `active`, or else `completed` after July 1, 2018. This can be accomplished with two subqueries joined together with a comma for a logical "or":
 
