@@ -180,9 +180,22 @@ To obtain an new and updated resources for patients in a group, as well as all d
 
   - Client retains a list of patient ids returned
   - Client compares response to patient ids from first query request and identifies new patient ids
-  - Client submits a group export request for patients who are new members of the group: 
+  - Client submits a group export request via POST for patients who are new members of the group: 
 
-    `[baseurl]/Group/[id]/$export?patient=[new1,new2,...]`
+    ```
+    POST [baseurl]/Group/[id]/$export
+    
+    {"resourceType" : "Parameters",
+      "parameter" : [{
+        "name" : "patient",
+        "valueReference" : {reference: "Patient/123"}
+      },{
+        "name" : "patient",
+        "valueReference" : {reference: "Patient/456"}
+      ...
+      }]
+    }
+    ```
     
   - Client submits a group export request for updated group data: 
 
