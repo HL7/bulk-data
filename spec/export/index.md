@@ -453,7 +453,6 @@ Required Fields:
 &nbsp;"meta": {"lastUpdated: "2020-04-27T02:56:00Z},
 &nbsp;"type": "transaction",
 &nbsp;"entry":[{
-&nbsp;&nbsp;"fullUrl": "[base]/Patient/123",
 &nbsp;&nbsp;"request": {"method": "DELETE", "url": "Patient/123"}
 &nbsp;&nbsp;...
 &nbsp;}]
