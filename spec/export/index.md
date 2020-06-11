@@ -53,7 +53,7 @@ This FHIR Operation initiates the asynchronous generation of data to which the c
 
 The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.
 
-The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html).
+The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
 For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned.
 
@@ -63,7 +63,7 @@ References in the resources returned MAY be relative URLs with the format <code>
 
 #### Endpoint - All Patients
 
-`GET [fhir base]/Patient/$export`
+`[fhir base]/Patient/$export`
 
 [View table of parameters for Patient Export](../OperationDefinition-patient-export.html)
 
@@ -71,7 +71,7 @@ FHIR Operation to obtain a detailed set of FHIR resources of diverse resource ty
 
 #### Endpoint - Group of Patients
 
-`GET [fhir base]/Group/[id]/$export`
+`[fhir base]/Group/[id]/$export`
 
 [View table of parameters for Group Export](../OperationDefinition-group-export.html)
 
@@ -83,7 +83,7 @@ Note: How these Groups are defined is specific to each FHIR system's implementat
 
 #### Endpoint - System Level Export
 
-`GET [fhir base]/$export`
+`[fhir base]/$export`
 
 [View table of parameters for Export](../OperationDefinition-export.html)
 
@@ -115,14 +115,14 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>String</td>
-      <td>  The format for the requested bulk data files to be generated as per <a href="http://hl7.org/fhir/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
+      <td>The format for the requested bulk data files to be generated as per <a href="http://hl7.org/fhir/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
     </tr>
     <tr>
       <td><code>_since</code></td>
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>FHIR instant</td>
-      <td>Resources SHALL be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since</code> time).</td>
+      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since</code> time). In the case of a Group level export, servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server).</td>
     </tr>
     <tr>
       <td><code>_type</code></td>
@@ -135,10 +135,77 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.<br /><br />
       For example <code>_type=Observation</code> could be used to filter a given export response to return only Observation resources.</td>
     </tr>
+    <tr>
+      <td><code>_elements</code></td>
+      <td><span class="label label-info">optional, experimental</span></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>string of comma-delimited FHIR Elements</td>
+      <td>When provided, the server SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements should be of the form <code>[resource type].[element name]</code> (eg. <code>Patient.id</code>) or <code>[element name]</code> (eg. <code>id</code>) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable..<br /><br />
+        Servers are not obliged to return just the requested elements. Servers SHOULD always return mandatory elements whether they are requested or not. Servers SHOULD mark the resources with the tag SUBSETTED to ensure that the incomplete resource is not actually used to overwrite a complete resource.<br/><br/>
+      Servers unable to support <code>_elements</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_elements</code> parameter.
+      </td>
+    </tr>
+    <tr>
+      <td><code>patient</code><br/>(POST requests only)</td>
+      <td><span class="label label-info">optional</span></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>FHIR Reference</td>
+      <td>Not applicable to system level export requests. When provided, the server SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a client requests patients who are not present on the server (or in the case of a group level export, who are not members of the group), the server SHOULD return details via an OperationOutcome resource in an error response to the request.<br /><br />
+      Servers unable to support <code>patient</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>patient</code> parameter.
+      </td>
+    </tr>
   </tbody>
 </table>
 
-##### Experimental Query Parameters
+  *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/). If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.
+
+#### Group Membership Request Pattern
+
+To obtain an new and updated resources for patients in a group, as well as all data for patients who have joined the group since a prior query, a client can use following pattern:
+
+- Initial Query (eg. on 1/1/2020):
+
+  - Client submits a group export request:
+
+    `[baseurl]/Group/[id]/$export`
+
+  - Client retrieves response data
+  - Client retains a list of the patient ids returned
+  - Client retains the transactionTime value from the response
+
+- Subsequent Queries (eg. on 2/1/2020):
+  - Client submits a group export request to obtain a patient list:
+
+    `[baseurl]/Group/[id]/$export?_type=Patient&_elements=id`
+
+  - Client retains a list of patient ids returned
+  - Client compares response to patient ids from first query request and identifies new patient ids
+  - Client submits a group export request via POST for patients who are new members of the group: 
+
+    ```
+    POST [baseurl]/Group/[id]/$export
+    
+    {"resourceType" : "Parameters",
+      "parameter" : [{
+        "name" : "patient",
+        "valueReference" : {reference: "Patient/123"}
+      },{
+        "name" : "patient",
+        "valueReference" : {reference: "Patient/456"}
+      ...
+      }]
+    }
+    ```
+    
+  - Client submits a group export request for updated group data: 
+
+    `[baseurl]/Group/[id]/$export?_since=[initial transaction time]`
+    
+    Note that data returned from this request may overlap with that returned from the prior step.
+
+  - Client retains the transactionTime value from the response.
+
+#### Experimental Query Parameters
 
 As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions (rather than historical prescriptions), or only laboratory observations (rather than all observations). We have considered several approaches to finer-grained filtering, including FHIR's `GraphDefinition`, the Clinical Quality Language (CQL), and FHIR's REST API search parameters. We expect this will be an area of active exploration, so for the time being this implementation guide defines an experimental syntax based on search parameters that works side-by-side with the coarse-grained `_type`-based filtering.
 
@@ -146,7 +213,7 @@ To request finer-grained filtering, a client MAY supply a `_typeFilter` paramete
 
 *Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. As the `_typeFilter` is experimental and optional, we have not yet determined expectation for `_include`, `_revinclude`, or support for any specific search parameters.
 
-###### Example Request with `_typeFilter`
+##### Example Request with `_typeFilter`
 
 The following is an export request for `MedicationRequest` resources and `Condition` resources, where the client would further like to restrict `MedicationRequests` to requests that are `active`, or else `completed` after July 1, 2018. This can be accomplished with two subqueries joined together with a comma for a logical "or":
 
