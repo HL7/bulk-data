@@ -154,6 +154,22 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       Servers unable to support <code>patient</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>patient</code> parameter.
       </td>
     </tr>
+    <tr>
+      <td><code>includeAssociatedData</code><br/></td>
+      <td><span class="label label-info">optional, experimental</span></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>string of comma delimited values</td>
+      <td>When provided, server SHALL return a pre-defined set of metadata associated with the request.<br /><br />
+      Servers unable to support the requested <code>includeAssociatedData</code> values SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those values. <br /><br />
+      Clients MAY include one or more of the following values. If multiple conflicting values are included, the server SHALL apply the least restrictive value (value that will return the largest dataset).
+      <ul>
+        <li><code>AllProvenanceResources</code>: Default if no includeAssociatedValue value relevant to provenance is specified. Patient level export will include all Provenance resources in the Patient Compartment. System level export will include all Provenance resources.</li>
+        <li><code>LatestProvenanceResources</code>: Export will include the most recent Provenance resources associated with each of the non-provenance resources being returned. Other Provenance resources will not be returned.</li>
+        <li><code>RelevantProvenanceResources</code>: Export will include all Provenance resources associated with each of the non-provenance resources being returned.</li>
+        <li><code>_[custom value]</code>: Servers MAY define and support custom values that are prefixed with an underscore (eg. <code>_myCustomPreset</code>).</li>
+      </ul>
+      </td>
+    </tr>
   </tbody>
 </table>
 
