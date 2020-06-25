@@ -363,9 +363,9 @@ Content-Type: application/json
 - ```Content-Type``` header of ```application/json```
 - The server SHALL return a FHIR OperationOutcome resource in JSON format
 
-*Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response body SHALL be populated with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). In the case of a partial success, the server SHALL use a 200 status code instead of 4XX or 5XX. The choice of when to determine that an export job has failed in its entirety (error status) vs returning a partial success (complete status) is left up to the implementer.
+In the case of a polling failure that does not indicate failure of the export job, a server SHOULD use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the OperationOutcome ```issue.code``` to indicate to the client that it should retry the request at a later time.
 
-In the case of a polling failure that does not indicate failure of the export job, a server SHALL use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the OperationOutcome ```issue.code``` to indicate to the client that it should retry the request at a later time.  
+*Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response body SHALL be populated with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). In the case of a partial success, the server SHALL use a 200 status code instead of 4XX or 5XX. The choice of when to determine that an export job has failed in its entirety (error status) vs returning a partial success (complete status) is left up to the implementer.
 
 #### Response - Complete Status
 
