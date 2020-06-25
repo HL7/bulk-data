@@ -251,7 +251,7 @@ If a server wants to prevent a client from beginning a new export before an in-p
 ---
 ### Bulk Data Delete Request
 
-After a bulk data request has been started, a client MAY send a delete request to the URL provided in the ```Content-Location``` header to cancel the request.    
+After a bulk data request has been started, a client MAY send a DELETE request to the URL provided in the ```Content-Location``` header to cancel the request.  If the request has been completed, a server MAY use the request as a signal that a client is done retrieving files and that it is safe for the sever to remove those from storage. Following the delete request, when subsequent requests are made to the polling location, the server SHALL return a 404 error and an associated FHIR OperationOutcome in JSON format.
 
 #### Endpoint
 
