@@ -163,7 +163,6 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       Servers unable to support the requested <code>includeAssociatedData</code> values SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those values. <br /><br />
       Clients MAY include one or more of the following values. If multiple conflicting values are included, the server SHALL apply the least restrictive value (value that will return the largest dataset).
       <ul>
-        <li><code>AllProvenanceResources</code>: Default if no includeAssociatedValue value relevant to provenance is specified. Patient level export will include all Provenance resources in the Patient Compartment. System level export will include all Provenance resources.</li>
         <li><code>LatestProvenanceResources</code>: Export will include the most recent Provenance resources associated with each of the non-provenance resources being returned. Other Provenance resources will not be returned.</li>
         <li><code>RelevantProvenanceResources</code>: Export will include all Provenance resources associated with each of the non-provenance resources being returned.</li>
         <li><code>_[custom value]</code>: Servers MAY define and support custom values that are prefixed with an underscore (eg. <code>_myCustomPreset</code>).</li>
@@ -174,6 +173,8 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 </table>
 
   *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/). If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.
+
+  If an <code>includeAssociatedValue</code> value relevant to provenance is not specified, or if this parameter is not supported by a server, the server SHALL include all available Provenance resources in the Patient Compartment in a patient level export request, and all available Provenance resources in a system level export request unless a specific resource set is specified using the <code>_type</code> parameter and this set does not include Provenance.
 
 #### Group Membership Request Pattern
 
