@@ -159,8 +159,8 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional, experimental</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>string of comma delimited values</td>
-      <td>When provided, server SHALL return a pre-defined set of metadata associated with the request.<br /><br />
-      Servers unable to support the requested <code>includeAssociatedData</code> values SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those values. <br /><br />
+      <td>When provided, server with support for the parameter and requested values SHALL return a pre-defined set of metadata associated with the request.<br /><br />
+      Servers unable to support the requested <code>includeAssociatedData</code> values SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those values (for example, if a server does not retain provenance data). <br /><br />
       Clients MAY include one or more of the following values. If multiple conflicting values are included, the server SHALL apply the least restrictive value (value that will return the largest dataset).
       <ul>
         <li><code>LatestProvenanceResources</code>: Export will include the most recent Provenance resources associated with each of the non-provenance resources being returned. Other Provenance resources will not be returned.</li>
