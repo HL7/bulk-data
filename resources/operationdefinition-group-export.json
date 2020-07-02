@@ -7,7 +7,7 @@
   "title": "FHIR Bulk Data Export (Flat FHIR) - System Level Export",
   "status": "active",
   "kind": "operation",
-  "date": "2019-02-15",
+  "date": "2020-07-02",
   "publisher": "SMART Health IT",
   "contact": [
     {
