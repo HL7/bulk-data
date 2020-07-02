@@ -111,8 +111,7 @@ a JWK Set, as defined in
 protect the associated private key from unauthorized disclosure
 and corruption.
 
-For consistency in implementation, the client's JWK SHALL be shared with the
-FHIR server using one of the following techniques:
+For consistency in implementation, servers SHALL support registration of client JWKs using both of the following techniques (clients SHALL choose one of these methods at registration time):
 
   1. URL to JWK Set (strongly preferred). This URL communicates the TLS-protected
   endpoint where the client's public JWK Set can be found.
