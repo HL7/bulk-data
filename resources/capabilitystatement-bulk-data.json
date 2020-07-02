@@ -7,7 +7,7 @@
   "title": "FHIR Bulk Data Export (Flat FHIR) Implementation Guide CapabilityStatement",
   "status": "active",
   "experimental": false,
-  "date": "2019-06-04T00:00:00+00:00",
+  "date": "2019-06-04",
   "publisher": "SMART Health IT",
   "contact": [
     {
@@ -86,7 +86,7 @@
                 }
               ],
               "name": "group-export",
-              "definition": "OperationDefinition/GroupLevelExport"
+              "definition": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export"
             }
           ]
         },
@@ -101,16 +101,13 @@
                 }
               ],
               "name": "patient-export",
-              "definition": "OperationDefinition/PatientLevelExport"
+              "definition": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/patient-export"
             }
           ]
         }
       ],
       "security": {
-        "description": "1. See the [Authorization Guide](authorization/index.html) section for requirements and recommendations.\n1. This specification describes requirements for requesting an access token
-        through the use of an OAuth 2.0 client credentials flow, with a [JWT
-        assertion](https://tools.ietf.org/html/rfc7523) as the
-        client's authentication mechanism."
+        "description": "1. See the [Authorization Guide](authorization/index.html) section for requirements and recommendations.\n1. This specification describes requirements for requesting an access token through the use of an OAuth 2.0 client credentials flow, with a [JWT assertion](https://tools.ietf.org/html/rfc7523) as the client's authentication mechanism."
       },
       "operation": [
         {
@@ -121,7 +118,7 @@
             }
           ],
           "name": "export",
-          "definition": "OperationDefinition/BulkDataExport"
+          "definition": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/export"
         }
       ]
     }
