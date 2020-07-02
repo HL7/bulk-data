@@ -1,5 +1,6 @@
 {
   "canonicalBase": "http://hl7.org/fhir/uv/bulkdata",
+  "title": "Bulk Data",
   "extraTemplates": [
     "inline"
   ],
