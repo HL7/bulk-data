@@ -7,7 +7,7 @@
   "title": "FHIR Bulk Data Export (Flat FHIR) Implementation Guide CapabilityStatement",
   "status": "active",
   "experimental": false,
-  "date": "2020-07-02T00:00:00+00:00",
+  "date": "2020-07-02",
   "publisher": "SMART Health IT",
   "contact": [
     {
@@ -107,10 +107,7 @@
         }
       ],
       "security": {
-        "description": "1. See the [Authorization Guide](authorization/index.html) section for requirements and recommendations.\n1. This specification describes requirements for requesting an access token
-        through the use of an OAuth 2.0 client credentials flow, with a [JWT
-        assertion](https://tools.ietf.org/html/rfc7523) as the
-        client's authentication mechanism."
+        "description": "1. See the [Authorization Guide](authorization/index.html) section for requirements and recommendations.\n1. This specification describes requirements for requesting an access token through the use of an OAuth 2.0 client credentials flow, with a [JWT assertion](https://tools.ietf.org/html/rfc7523) as the client's authentication mechanism."
       },
       "operation": [
         {
