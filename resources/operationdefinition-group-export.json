@@ -2,12 +2,12 @@
   "resourceType": "OperationDefinition",
   "id": "group-export",
   "url": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "GroupLevelExport",
   "title": "FHIR Bulk Data Export (Flat FHIR) - System Level Export",
   "status": "active",
   "kind": "operation",
-  "date": "2019-02-15",
+  "date": "2020-07-02",
   "publisher": "SMART Health IT",
   "contact": [
     {
