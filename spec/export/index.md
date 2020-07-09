@@ -174,7 +174,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 
   *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/). If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.
 
-  If an <code>includeAssociatedValue</code> value relevant to provenance is not specified, or if this parameter is not supported by a server, the server SHALL include all available Provenance resources in the Patient Compartment in a patient level export request, and all available Provenance resources in a system level export request unless a specific resource set is specified using the <code>_type</code> parameter and this set does not include Provenance.
+  If an <code>includeAssociatedValue</code> value relevant to provenance is not specified, or if this parameter is not supported by a server, the server SHALL include all available Provenance resources whose `Provenance.target` is a resource in the Patient compartment in a patient level export request, and all available Provenance resources in a system level export request unless a specific resource set is specified using the <code>_type</code> parameter and this set does not include Provenance.
 
 #### Group Membership Request Pattern
 
