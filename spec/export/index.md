@@ -131,8 +131,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td>string of comma-delimited FHIR resource types</td>
       <td>The response SHALL be filtered to only include resources of the specified resource types(s).<br /><br />
       If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the <a href="http://www.fhir.org/guides/argonaut/r2/">Argonaut Implementation Guide</a>. For Patient- and Group-level requests, the <a href='https://www.hl7.org/fhir/compartmentdefinition-patient.html'>Patient Compartment</a> SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) may also be returned.<br /><br />
-      Servers unable to support <code>_type</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_type</code> parameter.
-      If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request.<br /><br />
+      Servers unable to support <code>_type</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_type</code> parameter. If the client explicitly asks for export of resources that the bulk data server doesn't support, the server SHOULD return details via an OperationOutcome resource in an error response to the request. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.<br /><br />
       For example <code>_type=Observation</code> could be used to filter a given export response to return only Observation resources.</td>
     </tr>
     <tr>
@@ -140,9 +139,9 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional, experimental</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>string of comma-delimited FHIR Elements</td>
-      <td>When provided, the server SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements should be of the form <code>[resource type].[element name]</code> (eg. <code>Patient.id</code>) or <code>[element name]</code> (eg. <code>id</code>) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable..<br /><br />
-        Servers are not obliged to return just the requested elements. Servers SHOULD always return mandatory elements whether they are requested or not. Servers SHOULD mark the resources with the tag SUBSETTED to ensure that the incomplete resource is not actually used to overwrite a complete resource.<br/><br/>
-      Servers unable to support <code>_elements</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_elements</code> parameter.
+      <td>When provided, the server SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements should be of the form <code>[resource type].[element name]</code> (eg. <code>Patient.id</code>) or <code>[element name]</code> (eg. <code>id</code>) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable.<br /><br />
+      Servers are not obliged to return just the requested elements. Servers SHOULD always return mandatory elements whether they are requested or not. Servers SHOULD mark the resources with the tag SUBSETTED to ensure that the incomplete resource is not actually used to overwrite a complete resource.<br/><br/>
+      Servers unable to support <code>_elements</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>_elements</code> parameter. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
       </td>
     </tr>
     <tr>
@@ -151,7 +150,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional</span></td>
       <td>FHIR Reference</td>
       <td>Not applicable to system level export requests. When provided, the server SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a client requests patients who are not present on the server (or in the case of a group level export, who are not members of the group), the server SHOULD return details via an OperationOutcome resource in an error response to the request.<br /><br />
-      Servers unable to support <code>patient</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>patient</code> parameter.
+      Servers unable to support <code>patient</code> SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the <code>patient</code> parameter. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
       </td>
     </tr>
     <tr>
@@ -160,7 +159,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional</span></td>
       <td>string of comma delimited values</td>
       <td>When provided, server with support for the parameter and requested values SHALL return a pre-defined set of metadata associated with the request.<br /><br />
-      Servers unable to support the requested <code>includeAssociatedData</code> values SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those values (for example, if a server does not retain provenance data). <br /><br />
+      Servers unable to support the requested <code>includeAssociatedData</code> values SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those values (for example, if a server does not retain provenance data). When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.<br /><br />
       Clients MAY include one or more of the following values. If multiple conflicting values are included, the server SHALL apply the least restrictive value (value that will return the largest dataset).
       <ul>
         <li><code>LatestProvenanceResources</code>: Export will include the most recent Provenance resources associated with each of the non-provenance resources being returned. Other Provenance resources will not be returned.</li>
