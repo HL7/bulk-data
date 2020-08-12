@@ -556,6 +556,16 @@ When the ```url``` element is populated with an absolute URL and the ```requires
 
 Note that if a server copies files to the bulk data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the ```Attachment.url``` element when generating the FHIR bulk data output files.
 
+## Server Capability Documentation
+
+This implementation guide is structured to support a wide variety of bulk data export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers should ensure their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
+
+- Does the server restrict responses to a specific "profile" like US Core, USCDI, or Blue Button?
+- Are additional supporting resources such as `Practitioner` or `Organization` included in the export and under what circumstances?
+- Does the server support system-wide (or all-patients, or Group-level) export? What parameters are supported for each request type? Note that this should also be captured in the server's CapabilityStatement.
+- What `outputFormat` values does this server support?
+- In the case of a Group level export, does the `_since` parameter return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time?
+- What `includeAssociatedData` values does this server support?
 
 ## More Information
 
