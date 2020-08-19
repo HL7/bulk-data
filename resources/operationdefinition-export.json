@@ -53,7 +53,7 @@
     "use": "in",
     "min": 0,
     "max": "1",
-    "documentation": "Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied `_since` time). In the case of a Group level export, servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server).",
+    "documentation": "Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied `_since` time).",
     "type": "instant"
   },{
     "name": "_type",

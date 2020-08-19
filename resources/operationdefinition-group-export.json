@@ -53,7 +53,7 @@
     "use": "in",
     "min": 0,
     "max": "1",
-    "documentation": "Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied `_since` time). In the case of a Group level export, servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server).",
+    "documentation": "Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied `_since` time). Servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server).",
     "type": "instant"
   },{
     "name": "_type",
@@ -70,7 +70,7 @@
     "documentation": "String of comma-delimited FHIR Elements. The server SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements should be of the form `[resource type].[element name]` (eg. `Patient.id`) or `[element name]` (eg. `id`) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable.\n\nServers are not obliged to return just the requested elements. Servers SHOULD always return mandatory elements whether they are requested or not. Servers SHOULD mark the resources with the tag SUBSETTED to ensure that the incomplete resource is not actually used to overwrite a complete resource.",
     "type": "string"
   },{
-    "name": "Patient",
+    "name": "patient",
     "use": "in",
     "min": 0,
     "max": "*",
