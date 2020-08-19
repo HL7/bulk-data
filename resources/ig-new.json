@@ -3,23 +3,30 @@
   "id" : "ig",
   "extension" : [{
     "url" : "http://hl7.org/fhir/StructureDefinition/igpublisher-folder-resource",
-    "valueString" : "C:\\work\\org.hl7.fhir.igs\\bulk-data\\resources"
+    "valueString" : "/data/resources"
   },
   {
     "url" : "http://hl7.org/fhir/StructureDefinition/igpublisher-folder-pages",
-    "valueString" : "C:\\work\\org.hl7.fhir.igs\\bulk-data\\spec"
+    "valueString" : "/data/spec"
   }],
   "url" : "http://hl7.org/fhir/uv/bulkdata/ImplementationGuide/ig",
-  "version" : "0.1.0",
+  "version" : "1.2.0",
   "name" : "BulkDataAccess",
   "title" : "FHIR Bulk Data Access",
   "status" : "active",
   "experimental" : false,
   "publisher" : "FHIR Project",
-  "packageId" : "hl7.fhir.us.bulkdata",
+  "jurisdiction" : [{
+    "coding" : [{
+      "system" : "http://unstats.un.org/unsd/methods/m49/m49.htm",
+      "code" : "001",
+      "display" : "world"
+    }]
+  }],
+  "packageId" : "hl7.fhir.uv.bulkdata",
   "license" : "CC0-1.0",
-  "fhirVersion" : ["4.0.0",
-  "4.0.0"],
+  "fhirVersion" : ["4.0.1",
+  "4.0.1"],
   "definition" : {
     "resource" : [{
       "reference" : {
@@ -44,6 +51,18 @@
         "reference" : "CapabilityStatement/bulk-data"
       },
       "name" : "CapabilityStatement for Bulk Data"
+    },
+    {
+      "reference" : {
+        "reference" : "CodeSystem/include-associated-data"
+      },
+      "name" : "CodeSystem includeAssociatedData"
+    },
+    {
+      "reference" : {
+        "reference" : "ValueSet/include-associated-data"
+      },
+      "name" : "ValueSet includeAssociatedData"
     }],
     "page" : {
       "nameUrl" : "index.html",
@@ -55,16 +74,12 @@
       "value" : "version"
     },
     {
-      "code" : "generate-json",
-      "value" : "true"
+      "code" : "generate",
+      "value" : "xml"
     },
     {
-      "code" : "generate-xml",
-      "value" : "true"
-    },
-    {
-      "code" : "generate-turtle",
-      "value" : "true"
+      "code" : "generate",
+      "value" : "JSON"
     }]
   }
 }

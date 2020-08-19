@@ -8,3 +8,14 @@ This implementation guide defines a standardized, FHIR based approach for export
 * [Client and Server Implementations](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/e2ab3d9e8eb5a5e0e0a96c2d026d32860007c2a4/implementations.md)
 * [Argonaut Project: Bulk Data Export Security Risk Assessment Report](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/e2ab3d9e8eb5a5e0e0a96c2d026d32860007c2a4/security-risk-assessment-report.pdf)
 * [Discussion Group (FHIR Zulip "Bulk Data" Track)](https://chat.fhir.org/login/#narrow/stream/bulk.20data)
+
+## Build
+To build a local copy of this IG:
+
+```
+git clone https://github.com/HL7/bulk-data.git 
+```
+
+```
+docker run --rm -it -v bulk-data:/data kidsfirstdrc/fhir-ig-publisher:latest -ig /data/ig.json
+```

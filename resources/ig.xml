@@ -9,7 +9,14 @@
   <experimental value="false"/>
   <publisher value="FHIR Project"/>
   <packageId value="hl7.fhir.us.bulkdata"/>
-  <fhirVersion value="4.0.0"/>
+  <fhirVersion value="4.0.1"/>
+  <jurisdiction>
+    <coding>
+      <system value="http://unstats.un.org/unsd/methods/m49/m49.htm" />
+      <code value="001" />
+      <display value="world" />
+    </coding>
+  </jurisdiction>
   <definition>
     <resource>
       <reference>
@@ -34,6 +41,18 @@
         <reference value="CapabilityStatement/bulk-data"/>
       </reference>
       <name value="CapabilityStatement for Bulk Data"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="CodeSystem/include-associated-data"/>
+      </reference>
+      <name value="CodeSystem includeAssociatedData"/>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="ValueSet/include-associated-data"/>
+      </reference>
+      <name value="ValueSet includeAssociatedData"/>
     </resource>
     <page>
       <nameUrl value="index.html"/>
