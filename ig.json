@@ -1,5 +1,6 @@
 {
   "canonicalBase": "http://hl7.org/fhir/uv/bulkdata",
+  "title": "Bulk Data",
   "extraTemplates": [
     "inline"
   ],
@@ -31,14 +32,20 @@
     "txCache": "txCache"
   },
   "resources": {
-    "StructureDefinition/oauth-uris": {
-      "base": "StructureDefinition-oauth-uris.html"
-    },
     "CapabilityStatement/bulk-data": {
       "base": "CapabilityStatement-bulk-data.html"
     },
     "OperationDefinition/export": {
       "base": "OperationDefinition-export.html"
+    },
+    "OperationDefinition/export-group-export": {
+      "base": "OperationDefinition-group-export.html"
+    },
+    "ValueSet/include-associated-data": {
+      "base": "ValueSet-include-associated-data.html"
+    },
+    "CodeSystem/include-associated-data": {
+      "base": "CodeSystem-include-associated-data.html"
     }
   },
   "source": "ig.xml",

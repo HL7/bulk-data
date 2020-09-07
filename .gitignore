@@ -21,3 +21,7 @@ temp/
 my_notes/
 txCache/
 input-cache/
+resources/ig-new.json
+resources/ign-new.xml
+resources/ig-validation-parameters.json
+resources/ig-expansion-parameters.json
