@@ -74,7 +74,7 @@
     "use": "in",
     "min": 0,
     "max": "1",
-    "documentation": "Experimental. Server with support for the requested values SHALL return a pre-defined set of metadata associated with the request",
+    "documentation": "Experimental. Servers with support for the requested values SHALL return or omit a pre-defined set of FHIR resources associated with the request.",
     "type": "code",
     "binding": {
       "strength": "extensible",
