@@ -19,3 +19,8 @@ push-nb.sh
 qa/
 temp/
 my_notes/
+txCache/
+resources/ig-new.json
+resources/ign-new.xml
+resources/ig-validation-parameters.json
+resources/ig-expansion-parameters.json

@@ -1,0 +1,50 @@
+{
+  "resourceType": "CodeSystem",
+  "id": "include-associated-data",
+  "url": "http://hl7.org/fhir/uv/bulkdata/CodeSystem/include-associated-data",
+  "version": "1.2.0",
+  "name": "IncludeAssociatedData",
+  "title": "IncludeAssociatedData",
+  "status": "active",
+  "date": "2020-08-16",
+  "publisher": "SMART Health IT",
+  "contact": [{
+    "name": "Dan Gottlieb",
+    "telecom": [{
+      "system": "email",
+      "value": "daniel.gottlieb@childrens.harvard.edu"
+    }]
+  },{
+    "name": "Josh Mandel",
+    "telecom": [{
+      "system": "email",
+      "value": "joshua.mandel@childrens.harvard.edu"
+    }]
+  },{
+    "name": "Vlad Ignatov",
+    "telecom": [{
+      "system": "email",
+      "value": "vladimir.ignatov@childrens.harvard.edu"
+    }]
+  }],
+  "jurisdiction": [{
+    "coding": [{
+        "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+        "code": "001",
+        "display": "World"
+      }]
+  }],
+  "description" : "Metadata include options for Bulk Data Access Export Operation includeAssociatedData parameter",
+  "caseSensitive" : true,
+  "valueSet": "http://hl7.org/fhir/uv/bulkdata/ValueSet/include-associated-data",
+  "content" : "complete",
+  "concept" : [{
+    "code" : "LatestProvenanceResources",
+    "display" : "LatestProvenanceResources",
+    "definition" : "Export will include the most recent Provenance resources associated with each of the non-provenance resources being returned. Other Provenance resources will not be returned."
+  },{
+    "code" : "RelevantProvenanceResources",
+    "display" : "RelevantProvenanceResources",
+    "definition" : "Export will include all Provenance resources associated with each of the non-provenance resources being returned."
+  }]
+}
