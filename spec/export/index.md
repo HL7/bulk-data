@@ -122,7 +122,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>FHIR instant</td>
-      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied <code>_since</code> time). In the case of a Group level export, servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server). For Patient- and Group-level requests, servers MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated.</td>
+      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if <code>Resource.meta.lastUpdated</code> is later than the supplied <code>_since</code> time). In the case of a Group level export, servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server). For Patient- and Group-level requests, servers MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated.</td>
     </tr>
     <tr>
       <td><code>_type</code></td>
