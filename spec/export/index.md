@@ -173,7 +173,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional, experimental</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>string of comma delimited FHIR REST queries</td>
-      <td>When provided, servers with support for the parameter and requested search queries SHALL filter the data in the response to only include resources that meet the specified criteria. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. <a href="#">See details below</a>.<br /><br />
+      <td>When provided, servers with support for the parameter and requested search queries SHALL filter the data in the response to only include resources that meet the specified criteria. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. <a href="#_typefilter-experimental-query-parameter">See details below</a>.<br /><br />
       Servers unable to support the requested <code>_typeFilter</code> queries SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those queries. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.<br /><br />
       </td>
     </tr>
