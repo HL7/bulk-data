@@ -168,6 +168,16 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       </ul>
       </td>
     </tr>
+    <tr>
+      <td><code>_typeFilter</code><br/></td>
+      <td><span class="label label-info">optional, experimental</span></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>string of comma delimited FHIR REST queries</td>
+      <td>When provided, servers with support for the parameter and requested search queries SHALL filter the data in the response to only include resources that meet the specified criteria. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. <a href="#_typefilter-experimental-query-parameter">See details below</a>.<br /><br />
+      Servers unable to support the requested <code>_typeFilter</code> queries SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those queries. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.<br /><br />
+      </td>
+    </tr>
+    </tr>
   </tbody>
 </table>
 
@@ -221,15 +231,15 @@ To obtain an new and updated resources for patients in a group, as well as all d
 
   - Client retains the transactionTime value from the response.
 
-#### Experimental Query Parameters
+#### `_typeFilter` Experimental Query Parameter
 
-As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions (rather than historical prescriptions), or only laboratory observations (rather than all observations). We have considered several approaches to finer-grained filtering, including FHIR's `GraphDefinition`, the Clinical Quality Language (CQL), and FHIR's REST API search parameters. We expect this will be an area of active exploration, so for the time being this implementation guide defines an experimental syntax based on search parameters that works side-by-side with the coarse-grained `_type`-based filtering.
+As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions rather than historical prescriptions, or only laboratory observations rather than all observations. 
 
-To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that further restrict the results of the query. Servers MAY further limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations).  Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
+To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that restrict the results of the export. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
 
-*Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. As the `_typeFilter` is experimental and optional, we have not yet determined expectation for `_include`, `_revinclude`, or support for any specific search parameters.
+*Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. 
 
-##### Example Request with `_typeFilter`
+##### Example Request
 
 The following is an export request for `MedicationRequest` resources and `Condition` resources, where the client would further like to restrict `MedicationRequests` to requests that are `active`, or else `completed` after July 1, 2018. This can be accomplished with two subqueries joined together with a comma for a logical "or":
 
