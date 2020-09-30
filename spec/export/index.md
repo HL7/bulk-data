@@ -587,6 +587,7 @@ Note that if a server copies files to the bulk data output endpoint or proxies r
 This implementation guide is structured to support a wide variety of bulk data export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers should ensure their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
 
 - Does the server restrict responses to a specific "profile" like US Core, USCDI, or Blue Button?
+- What approach does the server take to divide datasets into multiple files (eg. single file per the resource type, limit file size to 100MB, limit number of resources per file to 100,000)?
 - Are additional supporting resources such as `Practitioner` or `Organization` included in the export and under what circumstances?
 - Does the server support system-wide (or all-patients, or Group-level) export? What parameters are supported for each request type? Note that this should also be captured in the server's CapabilityStatement.
 - What `outputFormat` values does this server support?
