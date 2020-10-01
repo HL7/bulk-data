@@ -424,7 +424,7 @@ Required Fields:
       <td><code>request</code></td>
       <td><span class="label label-success">required</span></td>
       <td>String</td>
-      <td>The full URL of the original bulk data kick-off request</td>
+      <td>The full URL of the original bulk data kick-off request. In the case of a POST request, this URL will not include the request parameters. Note: this field may be removed in a future version of this IG.</td>
     </tr>
     <tr>
       <td><code>requiresAccessToken</code></td>
@@ -491,10 +491,12 @@ Required Fields:
       <td><code>error</code></td>
       <td><span class="label label-success">required</span></td>
       <td>Array</td>
-      <td>Array of error file items following the same structure as the <code>output</code> array.
+      <td>Array of message file items following the same structure as the <code>output</code> array.
       <br/>
       <br/>
-        Errors that occurred during the export should only be included here (not in output). If no errors occurred, the server SHOULD return an empty array.  Only the <code>OperationOutcome</code> resource type is currently supported, so a server SHALL generate files in the same format as bulk data output files that contain <code>OperationOutcome</code> resources.
+        Error, warning, and information messages related to the export should be included here (not in output). If there are no relevant messages, the server SHOULD return an empty array. Only the <code>OperationOutcome</code> resource type is currently supported, so a server SHALL generate files in the same format as bulk data output files that contain <code>OperationOutcome</code> resources.<br/><br/>
+        If the request contained invalid or unsupported parameters along with a <code>Prefer: handling=lenient</code> header and the server processed the request, the server SHOULD include an OperationOutcome resource for each of these parameters.
+        <br/><br/>Note: this field may be renamed in a future version of this IG to reflect the inclusion of <code>OperationOutcome</code> resources with severity levels other than error.
       </td>
     </tr>
     <tr>
