@@ -44,7 +44,7 @@
     "mode": "server",
     "documentation": "These FHIR Operations initiate the generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.\n\nThe FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.\n\nThe FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).",
     "resource": [{
-      "type": "group",
+      "type": "Group",
       "operation": [{
         "extension": [{
           "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
@@ -55,7 +55,7 @@
         "documentation": "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in specified [Group](https://www.hl7.org/fhir/group.html).\n\nIf a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables clients to discover available groups based on stable characteristics such as `Group.identifier`.\n\nThe [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned."
       }]
     },{
-      "type": "patient",
+      "type": "Patient",
       "operation": [{
         "extension": [{
           "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
