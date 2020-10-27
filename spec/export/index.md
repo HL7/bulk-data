@@ -386,8 +386,8 @@ Content-Type: application/json
 #### Response - Error Status
 
 - HTTP status code of ```4XX``` or ```5XX```
-- ```Content-Type``` header of ```application/json```
-- The server SHALL return a FHIR OperationOutcome resource in JSON format
+- `Content-Type` header of `application/fhir+json` when body is a FHIR `OperationOutcome` resource
+- The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON format. If this is not possible (for example, the infrastructure layer returning the error is not FHIR aware), the server MAY return an error message in another format and include a corresponding value for the `Content-Type` header.
 
 In the case of a polling failure that does not indicate failure of the export job, a server SHOULD use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the OperationOutcome ```issue.code``` to indicate to the client that it should retry the request at a later time.
 
