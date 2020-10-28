@@ -68,11 +68,6 @@
       <title value="FHIR Bulk Data Access"/>
       <generation value="html"/>
     </page>
-    <page>
-      <nameUrl value="changelog.html"/>
-      <title value="FHIR Bulk Data Access - Change Log"/>
-      <generation value="html"/>
-    </page>
     <parameter>
       <code value="apply"/>
       <value value="version"/>
