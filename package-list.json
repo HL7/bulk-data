@@ -10,14 +10,23 @@
     "status" : "ci-build"
   }, 
   {
-      "version": "1.0.0",
+    "version": "1.5.0",
+    "date": "2020-08-16",
+    "desc": "STU 1",
+    "path": "http://hl7.org/fhir/uv/bulkdata/STU1",
+    "sequence": "STU 1 (FHIR R4)",
+    "fhirversion": "4.0.1",
+    "status": "trial-use",
+    "current": true
+  },
+  {
+      "version": "1.0.1",
       "date": "2019-08-20",
       "desc": "STU 1",
       "path": "http://hl7.org/fhir/uv/bulkdata/STU1",
       "sequence": "STU 1 (FHIR R4)",
       "fhirversion": "4.0.0",
-      "status": "trial-use",
-	    "current": true
+      "status": "trial-use"
     },
     {
        "version": "0.1.0",
