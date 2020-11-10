@@ -40,4 +40,5 @@ This use case exports all resources needed to convey a patient's healththcare fi
 * [Export](export/index.html)
 * [Backend Services Authorization](authorization/index.html)
 * [Operations](operations/index.html)
+* [Change Log](changelog/index.html)
 * [History](http://hl7.org/fhir/uv/bulkdata/history.cfml)
