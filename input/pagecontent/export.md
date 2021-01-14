@@ -171,7 +171,6 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       Servers unable to support the requested <code>_typeFilter</code> queries SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those queries. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.<br /><br />
       </td>
     </tr>
-    </tr>
   </tbody>
 </table>
 
