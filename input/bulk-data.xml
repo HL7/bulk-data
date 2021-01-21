@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Start by finding all references to "myig" and updating to appropriate text for your IG, including changing realm -->
+<ImplementationGuide xmlns="http://hl7.org/fhir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hl7.org/fhir ../input-cache/schemas/R5/fhir-single.xsd">
+  <id value="hl7.fhir.uv.bulkdata"/>
+  <url value="https://hl7.org/fhir/uv/bulkdata/ImplementationGuide/hl7.fhir.uv.bulkdata" />
+  <version value="1.5.0"/>
+  <name value="BulkDataAccessIG"/>
+  <title value="Bulk Data Access IG"/>
+  <status value="draft"/>
+  <experimental value="false"/>
+  <publisher value="HL7 International - FHIR Infrastructure Work Group"/>
+  <contact>
+    <telecom>
+      <system value="url"/>
+      <value value="https://www.hl7.org/Special/committees/fiwg/index.cfm"/>
+    </telecom>
+  </contact>
+  <description value="FHIR based approach for exporting large data sets from a FHIR server to a client application"/>
+  <jurisdiction>
+    <coding>
+      <system value="http://unstats.un.org/unsd/methods/m49/m49.htm"/>
+      <code value="001"/>
+    </coding>
+  </jurisdiction>
+  <packageId value="hl7.fhir.uv.bulkdata"/>
+  <license value="CC0-1.0"/>
+  <fhirVersion value="4.0.1"/>
+  <definition>
+    <resource>
+      <reference>
+        <reference value="CapabilityStatement/bulk-data" />
+      </reference>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="OperationDefinition/export" />
+      </reference>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="OperationDefinition/group-export" />
+      </reference>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="OperationDefinition/patient-export" />
+      </reference>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="ValueSet/include-associated-data" />
+      </reference>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="CodeSystem/include-associated-data" />
+      </reference>
+    </resource>
+    <page>
+      <nameUrl value="toc.html"/>
+      <title value="Table of Contents"/>
+      <generation value="html"/>
+      <page>
+        <nameUrl value="index.html"/>
+        <title value="Bulk Data IG Home Page"/>
+        <generation value="markdown"/>
+      </page>
+      <page>
+        <nameUrl value="export.html"/>
+        <title value="Bulk Data Export"/>
+        <generation value="markdown"/>
+      </page>
+      <page>
+        <nameUrl value="authorization.html"/>
+        <title value="SMART Backend Services Authorization"/>
+        <generation value="markdown"/>
+      </page>
+      <page>
+        <nameUrl value="abbreviations.html"/>
+        <title value="Bulk Data Abbreviations"/>
+        <generation value="markdown"/>
+      </page>
+      <page>
+        <nameUrl value="changes.html"/>
+        <title value="IG Change History"/>
+        <generation value="markdown"/>
+      </page>
+      <page>
+        <nameUrl value="downloads.html"/>
+        <title value="Downloads"/>
+        <generation value="html"/>
+      </page>
+      <!-- <page>
+        <nameUrl value="operations.html"/>
+        <title value="Bulk Data Export Operations"/>
+        <generation value="markdown"/>
+      </page> -->
+    </page>
+    <parameter>
+      <code value="copyrightyear"/>
+      <value value="2020"/>
+    </parameter>
+    <parameter>
+      <code value="releaselabel"/>
+      <value value="CI Build"/>
+    </parameter>
+    <!-- <parameter>
+      <code value="find-other-resources"/>
+      <value value="true"/>
+    </parameter> -->
+    <parameter>
+      <code value="path-resource"/>
+      <value value="input\history"/>
+    </parameter>
+    <parameter>
+      <code value="path-liquid"/>
+      <value value="templates\liquid"/>
+    </parameter>
+    <parameter>
+      <code value="excludexml"/>
+      <value value="true"/>
+    </parameter>
+    <parameter>
+      <code value="excludettl"/>
+      <value value="true"/>
+    </parameter>
+    <parameter>
+      <code value="excludemap"/>
+      <value value="true"/>
+    </parameter>
+  </definition>
+</ImplementationGuide>

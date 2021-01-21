@@ -1,0 +1,13 @@
+{
+  "name": "hl7.smart.template",
+  "version": "0.0.1",
+  "type": "fhir.template",
+  "license": "CC0-1.0",
+  "description": "HL7 SMART joint Template - for use with HL7/SMART jointly published FHIR IGs",
+  "author": "http://hl7.org/fhir",
+  "canonical": "http://github.com/HL7/ig-template-smart",
+  "base": "hl7.fhir.template",
+  "dependencies": {
+    "hl7.fhir.template": "current"
+  }
+}
