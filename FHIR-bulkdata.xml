@@ -21,6 +21,7 @@
 <page key="abbreviations" name="Bulk Data Abbreviations"/>
 <page key="export" name="Bulk Data Export"/>
 <page key="index" name="Bulk Data IG Home Page"/>
+<page key="bulk-publish" name="Bulk Data Publish"/>
 <page key="downloads" name="Downloads"/>
 <page key="changes" name="IG Change History"/>
 <page key="authorization" name="SMART Backend Services Authorization"/>
