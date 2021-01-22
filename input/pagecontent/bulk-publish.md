@@ -2,7 +2,10 @@
 
 This implementation guide is intended to be used by developers of backend services (clients) and data providers (servers) that aim to interoperate by sharing large FHIR datasets. The guide defines the application programming interfaces (APIs) through which a client may retrieve pre-generated FHIR bulk-data files from a server. These files may be provided at an open endpoint, or may require the client to authenticate and authorize access to retrieve the data.
 
-In contrast to the FHIR bulk data export operation ($export), the publish operation ($bulk-publish) returns a static set of pre-generated bulk data files and does not provide a mechanism for a client to retrieve a filtered subset of the available data. Expected use cases include publication of provider directories by payor organizations and healthcare organizations, and publication of formulary information by payors.
+In contrast to the FHIR bulk data [export operation ($export)](./export.html), the publish operation ($bulk-publish) returns a static manifest and set of pre-generated bulk data files and does not provide a mechanism for a client to retrieve a filtered subset of the available data. Systems that dynamically manage information about individual patients should use the export operation and not the bulk-publish operation. Systems that return infrequently updated reference information may wish to use the bulk-publish operation instead of the export operation to reduce the complexity and cost involved in hosting and providing this information. 
+
+Expected use cases include publication of provider directories by payor organizations and healthcare organizations, and publication of formulary information by payors.
+
 
 ### Underlying Standards
 
@@ -38,7 +41,7 @@ FHIR Operation to obtain a set of FHIR resources of diverse resource types perta
 
 If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables clients to discover available groups based on stable characteristics such as `Group.identifier`.
 
-Note: How these Groups are defined is specific to each FHIR system's implementation. Group membership could be based upon explicit attributes of the patient, such as age, sex or a particular condition such as PTSD or Chronic Opioid use, or on more complex attributes, such as a recent inpatient discharge or membership in the population used to calculate a quality measure. FHIR-based group management is out of scope for the current version of this implementation guide.
+Note: How these Groups are defined is specific to each FHIR system's implementation. For example, Group membership could be based upon explicit attributes of the dataset, such as provider participation in a provider network. FHIR-based group management is out of scope for the current version of this implementation guide.
 
 ##### Endpoint - Data relating to all patients
 
@@ -153,35 +156,35 @@ Example response body:
 
 ```json
   {
-    "transactionTime": "[instant]",
-    "request" : "[base]/Patient/$export?_type=Patient,Observation",
+    "transactionTime": "2021-01-01T00:00:00Z",
+    "request" : "http://example.com/pd/Group/network-1/$bulk-publish",
     "requiresAccessToken" : true,
     "output" : [{
-	  "type" : "Patient",
-	  "url" : "http://serverpath2/patient_file_1.ndjson",
+	  "type" : "Practitioner",
+	  "url" : "http://example.com/pd/Group/network-1/practitioner_file_1.ndjson",
 	  "extension" : {
 		  "format" : "application/fhir+ndjson"
 	  }
     },{
-      "type" : "Patient",
-	  "url" : "http://serverpath2/patient_file_2.ndjson",
+      "type" : "Practitioner",
+	  "url" : "http://example.com/pd/Group/network-1/practitioner_file_2.ndjson",
 	  "extension" : {
         "format" : "application/fhir+ndjson"
 	  }
     },{
-      "type" : "Observation",
-	  "url" : "http://serverpath2/observation_file_1.ndjson",
+      "type" : "Organization",
+	  "url" : "http://example.com/pd/Group/network-1/organization_file_1.ndjson",
+	   "extension" : {
+	      "format" : "application/fhir+ndjson"
+		}
+	},{
+      "type" : "Location",
+	  "url" : "http://example.com/pd/Group/network-1/location_file_1.ndjson",
 	   "extension" : {
 	      "format" : "application/fhir+ndjson"
 	    }
     }],
-    "error" : [{
-      "type" : "OperationOutcome",
-	  "url" : "http://serverpath2/err_file_1.ndjson",
-	  "extension" : {
-	    "format" : "application/fhir+ndjson"
-	  }
-    }]
+    "error" : []
   }
 ```
 
