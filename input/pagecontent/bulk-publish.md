@@ -39,7 +39,7 @@ References in the resources returned MAY be relative URLs with the format <code>
 
 FHIR Operation to obtain a set of FHIR resources of diverse resource types pertaining to to the set of patients in the specified [Group](https://www.hl7.org/fhir/group.html).
 
-If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables clients to discover available groups based on stable characteristics such as `Group.identifier`.
+If a FHIR server supports Group-level data export, it SHOULD support listing the available `Group` resources. This enables clients to discover  groups based on stable characteristics such as `Group.identifier`.
 
 Note: How these Groups are defined is specific to each FHIR system's implementation. For example, Group membership could be based upon explicit attributes of the dataset, such as provider participation in a provider network. FHIR-based group management is out of scope for the current version of this implementation guide.
 
