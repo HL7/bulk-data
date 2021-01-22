@@ -343,28 +343,28 @@ Expires: Mon, 22 Jul 2019 23:59:59 GMT
 Content-Type: application/json
 
 {
-&nbsp;"transactionTime": "[instant]",
-&nbsp;"request" : "[base]/Patient/$export?_type=Patient,Observation",
+&nbsp;"transactionTime": "2021-01-01T00:00:00Z",
+&nbsp;"request" : "https://example.com/fhir/Patient/$export?_type=Patient,Observation",
 &nbsp;"requiresAccessToken" : true,
 &nbsp;"output" : [{
 &nbsp;&nbsp;"type" : "Patient",
-&nbsp;&nbsp;"url" : "http://serverpath2/patient_file_1.ndjson"
+&nbsp;&nbsp;"url" : "https://example.com/output/patient_file_1.ndjson"
 &nbsp;},{
 &nbsp;&nbsp;"type" : "Patient",
-&nbsp;&nbsp;"url" : "http://serverpath2/patient_file_2.ndjson"
+&nbsp;&nbsp;"url" : "https://example.com/output/patient_file_2.ndjson"
 &nbsp;},{
 &nbsp;&nbsp;"type" : "Observation",
-&nbsp;&nbsp;"url" : "http://serverpath2/observation_file_1.ndjson"
+&nbsp;&nbsp;"url" : "https://example.com/output/observation_file_1.ndjson"
 &nbsp;}],
 &nbsp;"deleted" : [{
 &nbsp;&nbsp;"type" : "Bundle",
-&nbsp;&nbsp;"url" : "http://serverpath2/del_file_1.ndjson"
+&nbsp;&nbsp;"url" : "https://example.com/output/del_file_1.ndjson"
 &nbsp;}],
 &nbsp;"error" : [{
 &nbsp;&nbsp;"type" : "OperationOutcome",
-&nbsp;&nbsp;"url" : "http://serverpath2/err_file_1.ndjson"
+&nbsp;&nbsp;"url" : "https://example.com/output/err_file_1.ndjson"
 &nbsp;}],
-&nbsp;"extension":{"http://myserver.example.org/extra-property": true}
+&nbsp;"extension":{"https://example.com/extra-property": true}
 }</code></pre></td>
     </tr>
   </tbody>
@@ -509,28 +509,28 @@ Example response body:
 
 ```json
   {
-    "transactionTime": "[instant]",
-    "request" : "[base]/Patient/$export?_type=Patient,Observation",
+    "transactionTime": "2021-01-01T00:00:00Z",
+    "request" : "https://example.com/fhir/Patient/$export?_type=Patient,Observation",
     "requiresAccessToken" : true,
     "output" : [{
       "type" : "Patient",
-      "url" : "http://serverpath2/patient_file_1.ndjson"
+      "url" : "https://example.com/output/patient_file_1.ndjson"
     },{
       "type" : "Patient",
-      "url" : "http://serverpath2/patient_file_2.ndjson"
+      "url" : "https://example.com/output/patient_file_2.ndjson"
     },{
       "type" : "Observation",
-      "url" : "http://serverpath2/observation_file_1.ndjson"
+      "url" : "https://example.com/output/observation_file_1.ndjson"
     }],
     "deleted": [{
       "type" : "Bundle",
-      "url" : "http://serverpath2/del_file_1.ndjson"      
+      "url" : "https://example.com/output/del_file_1.ndjson"      
     }],
     "error" : [{
       "type" : "OperationOutcome",
-      "url" : "http://serverpath2/err_file_1.ndjson"
+      "url" : "https://example.com/output/err_file_1.ndjson"
     }],
-    "extension":{"http://myserver.example.org/extra-property": true}
+    "extension":{"https://example.com/extra-property": true}
   }
 ```
 
