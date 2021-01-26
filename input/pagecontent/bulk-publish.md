@@ -29,25 +29,10 @@ All exchanges described herein between a client and a server SHALL be secured us
 
 #### Manifest Request
 
-Binary Resources MAY be serialized as DocumentReference Resources with the content.attachment element populated as described in the [Attachments](#attachments) section below.
-
-References in the resources returned MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.
-
-##### Endpoint - Data relating to a group of patients
-
-`[fhir base]/Group/[id]/$bulk-publish`
-
-FHIR Operation to obtain a set of FHIR resources of diverse resource types pertaining to to the set of patients in the specified [Group](https://www.hl7.org/fhir/group.html).
-
-If a FHIR server supports Group-level data export, it SHOULD support listing the available `Group` resources. This enables clients to discover  groups based on stable characteristics such as `Group.identifier`.
-
-Note: How these Groups are defined is specific to each FHIR system's implementation. For example, Group membership could be based upon explicit attributes of the dataset, such as provider participation in a provider network. FHIR-based group management is out of scope for the current version of this implementation guide.
-
-##### Endpoint - Data relating to all patients
+Request for fully static or periodically updated dataset in FHIR format. 
 
 `[fhir base]/$bulk-publish`
 
-Publish fully static or periodically updated data in FHIR format. 
 
 ##### Response - Error
 
@@ -96,7 +81,7 @@ Required Fields:
       <td>Indicates whether downloading the generated files requires a bearer access token
       <br/>
       <br/>
-      Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be <code>false</code> for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
+      Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens.
       </td>
     </tr>
     <tr>
@@ -127,7 +112,6 @@ Required Fields:
           - <code>count</code> - the number of resources in the file, represented as a JSON number.
       </td>
     </tr>
-
     <tr>
       <td><code>error</code></td>
       <td><span class="label label-success">required</span></td>
@@ -157,29 +141,29 @@ Example response body:
 ```json
   {
     "transactionTime": "2021-01-01T00:00:00Z",
-    "request" : "http://example.com/pd/Group/network-1/$bulk-publish",
+    "request" : "http://example.com/pd/$bulk-publish",
     "requiresAccessToken" : true,
     "output" : [{
 	  "type" : "Practitioner",
-	  "url" : "http://example.com/pd/Group/network-1/practitioner_file_1.ndjson",
+	  "url" : "http://example.com/pd/practitioner_file_1.ndjson",
 	  "extension" : {
 		  "format" : "application/fhir+ndjson"
 	  }
     },{
       "type" : "Practitioner",
-	  "url" : "http://example.com/pd/Group/network-1/practitioner_file_2.ndjson",
+	  "url" : "http://example.com/pd/practitioner_file_2.ndjson",
 	  "extension" : {
         "format" : "application/fhir+ndjson"
 	  }
     },{
       "type" : "Organization",
-	  "url" : "http://example.com/pd/Group/network-1/organization_file_1.ndjson",
+	  "url" : "http://example.com/pd/organization_file_1.ndjson",
 	   "extension" : {
 	      "format" : "application/fhir+ndjson"
 		}
 	},{
       "type" : "Location",
-	  "url" : "http://example.com/pd/Group/network-1/location_file_1.ndjson",
+	  "url" : "http://example.com/pd/location_file_1.ndjson",
 	   "extension" : {
 	      "format" : "application/fhir+ndjson"
 	    }
@@ -194,6 +178,10 @@ Example response body:
 Using the URLs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated bulk data files (one or more per resource type) within the time period specified in the ```Expires``` header (if present). If the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the request SHALL include a valid access token.  See the Security Considerations section above.  
 
 The exported data SHALL include only the most recent version of any exported resources unless the client explicitly requests different behavior in a fashion supported by the server (e.g.  via a new query parameter yet to be defined). Inclusion of the .meta information is at the discretion of the server (as it is for all FHIR interactions).
+
+Binary Resources MAY be serialized as DocumentReference Resources with the content.attachment element populated as described in the [Attachments](#attachments) section below.
+
+References in the resources returned MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.
 
 Example NDJSON output file:
 ```
