@@ -31,7 +31,9 @@ All exchanges described herein between a client and a server SHALL be secured us
 
 Request for fully static or periodically updated dataset in FHIR format. 
 
-`[fhir base]/$bulk-publish`
+GET `[fhir base]/$bulk-publish`
+
+- A client MAY include an `_since` parameter with a value that is a [FHIR instant](https://www.hl7.org/fhir/datatypes.html#instant). If this parameter is provided, the server MAY restrict the FHIR resources included in the response to only those that have been created or modified after the supplied time (e.g., `Resource.meta.lastUpdated` is later).
 
 
 ##### Response - Error
@@ -62,7 +64,7 @@ Required Fields:
       <td><code>transactionTime</code></td>
       <td><span class="label label-success">required</span></td>
       <td>FHIR instant</td>
-      <td>Indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant.
+      <td>Indicates the server's time when the bulk data files included in the manifest were generated. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant.
       <br/>
       <br/>
       Note: To properly meet these constraints, a FHIR Server might need to wait for any pending transactions to resolve in its database before generating the export files.
@@ -141,29 +143,29 @@ Example response body:
 ```json
   {
     "transactionTime": "2021-01-01T00:00:00Z",
-    "request" : "http://example.com/pd/$bulk-publish",
+    "request" : "https://example.com/pd/$bulk-publish",
     "requiresAccessToken" : true,
     "output" : [{
 	  "type" : "Practitioner",
-	  "url" : "http://example.com/pd/practitioner_file_1.ndjson",
+	  "url" : "https://example.com/pd/practitioner_file_1.ndjson",
 	  "extension" : {
 		  "format" : "application/fhir+ndjson"
 	  }
     },{
       "type" : "Practitioner",
-	  "url" : "http://example.com/pd/practitioner_file_2.ndjson",
+	  "url" : "https://example.com/pd/practitioner_file_2.ndjson",
 	  "extension" : {
         "format" : "application/fhir+ndjson"
 	  }
     },{
       "type" : "Organization",
-	  "url" : "http://example.com/pd/organization_file_1.ndjson",
+	  "url" : "https://example.com/pd/organization_file_1.ndjson",
 	   "extension" : {
 	      "format" : "application/fhir+ndjson"
 		}
 	},{
       "type" : "Location",
-	  "url" : "http://example.com/pd/location_file_1.ndjson",
+	  "url" : "https://example.com/pd/location_file_1.ndjson",
 	   "extension" : {
 	      "format" : "application/fhir+ndjson"
 	    }
