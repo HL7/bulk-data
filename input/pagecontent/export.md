@@ -49,6 +49,8 @@ The FHIR server SHALL limit the data returned to only those FHIR resources for w
 
 The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
+A client MAY repeat kick-off parameters that accept comma delimited values multiple times in a kick-off request. The server SHALL treat the values provided as if they were comma delimited values within a single instance of the parameter.
+
 For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
 
 Binary Resources associated with individual patients SHALL be serialized as DocumentReference Resources with the content.attachment element populated as described in the [Attachments](#attachments) section below. Binary Resources not associated with an individual patient MAY be included in a System Level export.
@@ -168,8 +170,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional</span></td>
       <td>string of comma delimited FHIR REST queries</td>
       <td>When provided, servers with support for the parameter and requested search queries SHALL filter the data in the response to only include resources that meet the specified criteria. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. <a href="#_typefilter-experimental-query-parameter">See details below</a>.<br /><br />
-      Servers unable to support the requested <code>_typeFilter</code> queries SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those queries. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.<br /><br />
-      A client MAY repeat this parameter multiple times. When repeated, the server SHALL treat the repeated values as if they were comma delimited values within a single `_typeFilter` parameter.
+      Servers unable to support the requested <code>_typeFilter</code> queries SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those queries. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
       </td>
     </tr>
   </tbody>
