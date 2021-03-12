@@ -3,7 +3,7 @@
 	h4:before {content: none}
 </style>
 
-### Current Draft - v1.5.0
+### Current Draft - v1.1.0
 
 #### Export Kickoff Request
 * Permitted server support for kickoff requests via HTTP `POST` of a Parameters Resource

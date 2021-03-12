@@ -3,7 +3,7 @@
 <ImplementationGuide xmlns="http://hl7.org/fhir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hl7.org/fhir ../input-cache/schemas/R5/fhir-single.xsd">
   <id value="hl7.fhir.uv.bulkdata"/>
   <url value="https://hl7.org/fhir/uv/bulkdata/ImplementationGuide/hl7.fhir.uv.bulkdata" />
-  <version value="1.5.0"/>
+  <version value="1.1.0"/>
   <name value="BulkDataAccessIG"/>
   <title value="Bulk Data Access IG"/>
   <status value="draft"/>
