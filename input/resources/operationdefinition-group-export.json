@@ -2,7 +2,7 @@
   "resourceType": "OperationDefinition",
   "id": "group-export",
   "url": "https://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export",
-  "version": "1.5.0",
+  "version": "1.1.0",
   "name": "GroupLevelExport",
   "title": "FHIR Bulk Data Group Level Export",
   "status": "active",
