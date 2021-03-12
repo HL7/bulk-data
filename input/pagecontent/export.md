@@ -169,6 +169,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td>string of comma delimited FHIR REST queries</td>
       <td>When provided, servers with support for the parameter and requested search queries SHALL filter the data in the response to only include resources that meet the specified criteria. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. <a href="#_typefilter-experimental-query-parameter">See details below</a>.<br /><br />
       Servers unable to support the requested <code>_typeFilter</code> queries SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those queries. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.<br /><br />
+      A client MAY repeat this parameter multiple times. When repeated, the server SHALL treat the repeated values as if they were comma delimited values within a single `_typeFilter` parameter.
       </td>
     </tr>
   </tbody>
@@ -228,7 +229,7 @@ To obtain an new and updated resources for patients in a group, as well as all d
 
 As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions rather than historical prescriptions, or only laboratory observations rather than all observations. 
 
-To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that restrict the results of the export. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`.
+To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that restrict the results of the export. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`. A client MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When repeated, the server SHALL treat the repeated values as if they were comma delimited values within a single `_typeFilter` parameter.
 
 *Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. 
 
