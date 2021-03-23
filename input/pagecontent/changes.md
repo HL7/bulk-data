@@ -8,6 +8,7 @@
 #### Export Kickoff Request
 * Permitted server support for kickoff requests via HTTP `POST` of a Parameters Resource
 * Documented required and optional status of kickoff parameters for server implementors
+* Documented guidance on use and interpretation of repeated parameters
 * Expanded definition of `_since` parameter in Group level kickoff requests to permit servers to return resources that have an earlier `lastUpdated` date for patients that were added to the group after the supplied date
 * Clarified which resources should be returned in scenarios where `_type` is populated 
 * Added optional `_elements` kickoff parameter to filter resource data elements in the response
