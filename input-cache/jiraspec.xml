@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<specification gitUrl="https://github.com/HL7/bulk-data" url="http://hl7.org/fhir/uv/bulkdata" ciUrl="http://build.fhir.org/ig/HL7/bulk-data-export" defaultWorkgroup="fhir-i" defaultVersion="1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/specification.xsd">
+<specification gitUrl="https://github.com/HL7/bulk-data" url="http://hl7.org/fhir/uv/bulkdata" ciUrl="http://build.fhir.org/ig/HL7/bulk-data" defaultWorkgroup="fhir-i" defaultVersion="1.0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/specification.xsd">
   <version code="2.0.0"/>
-  <version code="1.0.0"/>
+  <version code="1.1.0"/>  
+  <version code="1.5.0" deprecated="true"/>
+  <version code="1.0.1"/>
+  <version code="1.0.0" deprecated="true"/>
   <version code="0.1" deprecated="true"/>
   <artifactPageExtension value="-definitions"/>
   <artifactPageExtension value="-examples"/>
