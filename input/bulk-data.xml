@@ -102,7 +102,7 @@
     </parameter>
     <parameter>
       <code value="releaselabel"/>
-      <value value="1.1.0/>
+      <value value="STU 2 Ballot"/>
     </parameter>
     <!-- <parameter>
       <code value="find-other-resources"/>
