@@ -21,3 +21,7 @@ Thumbs.db
 # backup files #
 ################
 *.bak
+
+# FHIR validator #
+################
+validator_cli.jar

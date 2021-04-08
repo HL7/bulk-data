@@ -1,3 +1,13 @@
 == Suppressed Messages ==
+
 # update and merged PR #192 into JIRA-Spec-Artifacts  master March 30, 2021
-WARNING: The jira specification file appears to be out of date with the versions, artifacts and pages currently defined in the IG. A proposed revised file to be reviewed and, if appropriate, submitted as a pull request against the XML folder in https://github.com/HL7/JIRA-Spec-Artifacts. To see the differences, perform a file compare on 'template/jira-current.xml' (a normalized view of what is in Github) and 'template/jira-new.xml' (reflects current IG content)
+WARNING: The jira specification file appears to be out of date with the versions, artifacts and pages currently defined in the IG.  A proposed revised file to be reviewed and, if appropriate, submitted as a pull request against the XML folder in https://github.com/HL7/JIRA-Spec-Artifacts.  To see the differences, perform a file compare on 'template/jira-current.xml' (a normalized view of what is in Github) and 'template/jira-new.xml' (reflects current IG content)
+
+# validated
+INFORMATION: ImplementationGuide/hl7.fhir.uv.bulkdata: ImplementationGuide: Validate resource against profile http://hl7.org/fhir/StructureDefinition/ImplementationGuide
+INFORMATION: CapabilityStatement/bulk-data: CapabilityStatement: Validate resource against profile http://hl7.org/fhir/StructureDefinition/CapabilityStatement
+INFORMATION: CodeSystem/include-associated-data: CodeSystem: Validate resource against profile http://hl7.org/fhir/StructureDefinition/CodeSystem
+INFORMATION: OperationDefinition/export: OperationDefinition: Validate resource against profile http://hl7.org/fhir/StructureDefinition/OperationDefinition
+INFORMATION: OperationDefinition/group-export: OperationDefinition: Validate resource against profile http://hl7.org/fhir/StructureDefinition/OperationDefinition
+INFORMATION: OperationDefinition/patient-export: OperationDefinition: Validate resource against profile http://hl7.org/fhir/StructureDefinition/OperationDefinition
+INFORMATION: ValueSet/include-associated-data: ValueSet: Validate resource against profile http://hl7.org/fhir/StructureDefinition/ValueSet
