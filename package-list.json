@@ -2,6 +2,7 @@
     "package-id" : "hl7.fhir.uv.bulkdata",
     "title" : "FHIR Bulk Data Access (Flat FHIR)",
     "canonical" : "http://hl7.org/fhir/uv/bulkdata",
+    "category": "EHR Access",
     "list" : [{
       "version" : "current",
       "date" : "n/a",
