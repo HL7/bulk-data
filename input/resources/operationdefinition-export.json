@@ -1,7 +1,7 @@
 {
   "resourceType": "OperationDefinition",
   "id": "export",
-  "url": "https://hl7.org/fhir/uv/bulkdata/OperationDefinition/export",
+  "url": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/export",
   "version": "1.1.0",
   "name": "BulkDataExport",
   "title": "FHIR Bulk Data System Level Export",
@@ -77,7 +77,7 @@
     "type": "code",
     "binding": {
       "strength": "extensible",
-      "valueSet": "https://hl7.org/fhir/uv/bulkdata/ValueSet/include-associated-data"
+      "valueSet": "http://hl7.org/fhir/uv/bulkdata/ValueSet/include-associated-data"
     }    
   },{
       "name": "_typeFilter",
