@@ -319,21 +319,15 @@ In addition, the authentication server SHALL:
 To resolve a key to verify signatures, a server SHALL follow this algorithm:
 
 <ol>
-  <li>If the <code>jku</code> header is present, verify that the <code>jku</code> is whitelisted (i.e., that it
-    matches the value supplied at registration time for the specified <code>client_id</code>).
+  <li>If the <code>jku</code> header is present, verify that the <code>jku</code> is whitelisted (i.e., that it matches the value supplied at registration time for the specified <code>client_id</code>).
     <ol type="a">
       <li>If the <code>jku</code> header is not whitelisted, the signature verification fails.</li>
       <li>If the <code>jku</code> header is whitelisted, create a set of potential keys by dereferencing the <code>jku</code> URL. Proceed to step 3.</li>
     </ol>
   </li>
-  <li> If <code>jku</code> is absent, create a set of potential key sources consisting of: all keys found by dereferencing the registration-time JWK Set URL (if any) + any keys supplied in the registration-time JWK Set (if any). Proceed to step 3.</li>
-  <li> Filter the potential keys to retain only those where the <code>kid</code> matches the value supplied in the client's JWK header, and the <code>kty</code> is consistent with the signature algorithm used for the JWT (e.g., <code>RSA</code> for a JWT using an RSA-based signature, or <code>EC</code> for a JWT using an EC-based signature).</li>
-  <li> Attempt to verify the JWK using each key in the potential keys list.
-    <ol type="a">
-      <li> If any attempt succeeds, the signature verification succeeds.</li>
-      <li> If all attempts fail, the signature verification fails.</li>
-    </ol>
-  </li>
+  <li>If the <code>jku</code> header is absent, create a set of potential key sources consisting of all keys found in the registration-time JWKS or found by dereferencing the registration-time JWK Set URL. Proceed to step 3.</li>
+  <li>Identify a set of candidate keys by filtering the potential keys to identify the single key where the <code>kid</code> matches the value supplied in the client's JWT header, and the <code>kty</code> is consistent with the signature algorithm supplied in the client's JWT header (e.g., <code>RSA</code> for a JWT using an RSA-based signature, or <code>EC</code> for a JWT using an EC-based signature). If no keys match, or more than one key matches, the verification fails.</li>
+  <li>Attempt to verify the JWK using the key identified in step 3.</li>
 </ol>
 
 If an error is encountered during the authentication process, the server SHALL
