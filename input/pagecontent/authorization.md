@@ -327,6 +327,8 @@ To resolve a key to verify signatures, a server SHALL follow this algorithm:
   <li>Attempt to verify the JWK using the key identified in step 3.</li>
 </ol>
 
+To retrieve the keys from a JWKS URL in step 1 or step 2, a FHIR authorization server issues a HTTP GET request that URL to obtain a JWKS response. For example, if a client has registered a JWKS URL of https://client.example.com/path/to/jwks.json, the server retrieves the client's JWKS with a GET request for that URL, including a header of `Accept: application/json`.
+
 If an error is encountered during the authentication process, the server SHALL
 respond with an `invalid_client` error as defined by
 the [OAuth 2.0 specification](https://tools.ietf.org/html/rfc6749#section-5.2).
