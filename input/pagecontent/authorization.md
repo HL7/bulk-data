@@ -105,7 +105,7 @@ a JWK Set, as defined in
 protect the associated private key from unauthorized disclosure
 and corruption.
 
-For consistency in implementation, servers SHALL support registration of client JWKs using both of the following techniques (clients SHALL choose one of these methods at registration time):
+For consistency in implementation, servers SHALL support registration of client JWKs using both of the following techniques (clients SHALL choose a server-supported method at registration time):
 
   1. URL to JWK Set (strongly preferred). This URL communicates the TLS-protected
   endpoint where the client's public JWK Set can be found.
@@ -211,10 +211,7 @@ tools and client libraries, see [https://jwt.io](https://jwt.io).
     <tr>
       <td><code>jku</code></td>
       <td><span class="label label-info">optional</span></td>
-      <td>The TLS-protected URL to the JWK Set containing the public key(s) accessible without authentication or authorization. When present,
-      this should match a value that the client supplied to the FHIR server at
-      client registration time.  (When absent, the FHIR server SHOULD fall back on the JWK
-      Set URL or the JWK Set supplied at registration time.</td>
+      <td>The TLS-protected URL to the JWK Set containing the public key(s) accessible without authentication or authorization. When present, this SHALL match the JWKS URL value that the client supplied to the FHIR server at client registration time. When absent, the FHIR server SHOULD fall back on the JWK Set URL or the JWK Set supplied at registration time. See <a href="#signature-verification">Signature Verification</a> for details.</td>
     </tr>
   </tbody>
 </table>
@@ -319,7 +316,7 @@ In addition, the authentication server SHALL:
 To resolve a key to verify signatures, a server SHALL follow this algorithm:
 
 <ol>
-  <li>If the <code>jku</code> header is present, verify that the <code>jku</code> is whitelisted (i.e., that it matches the value supplied at registration time for the specified <code>client_id</code>).
+  <li>If the <code>jku</code> header is present, verify that the <code>jku</code> is whitelisted (i.e., that it matches the JWKS URL value supplied at registration time for the specified <code>client_id</code>).
     <ol type="a">
       <li>If the <code>jku</code> header is not whitelisted, the signature verification fails.</li>
       <li>If the <code>jku</code> header is whitelisted, create a set of potential keys by dereferencing the <code>jku</code> URL. Proceed to step 3.</li>
