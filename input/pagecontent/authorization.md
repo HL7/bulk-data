@@ -252,7 +252,7 @@ tools and client libraries, see [https://jwt.io](https://jwt.io).
   </tbody>
 </table>
 
-After generating an authentication JWT, the client requests a new access token
+After generating an authentication JWT, the client requests an access token
 via HTTP `POST` to the FHIR authorization server's token endpoint URL, using
 content-type `application/x-www-form-urlencoded` with the following parameters:
 
