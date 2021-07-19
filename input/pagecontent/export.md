@@ -33,7 +33,7 @@ With each of the requests described herein, implementers are encouraged to imple
 
 This implementation guide does not address protection of the servers themselves from potential compromise.  An adversary who successfully captures administrative rights to a server will have full control over that server and can use those rights to undermine the server's security protections. In the bulk-data-export workflow, the file server will be a particularly attractive target, as it holds highly sensitive and valued PHI.  An adversary who successfully takes control of a file server may choose to continue to deliver files in response to client requests, so that neither the client nor the FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own devious purposes.   
 
-Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches can be used to accomplish this, not all of which would be visible at the API level. This specification does not dictate a particular approach at this time, though it does support the use of an `Expires` header to limit the time period a file will be available for client download (removal of the file from the server is left up to the implementer). We recommend that servers SHOULD not delete files from a bulk data response that a client is actively in the process of downloading regardless of the pre-specified Expires time. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.
+Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches can be used to accomplish this, not all of which would be visible at the API level. This specification does not dictate a particular approach at this time, though it does support the use of an `Expires` header to limit the time period a file will be available for client download (removal of the file from the server is left up to the server implementer). We recommend that servers SHOULD not delete files from a bulk data response that a client is actively in the process of downloading regardless of the pre-specified Expires time. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.
 
 Data access control obligations can be met with a combination of in-band restrictions such as OAuth scopes, and out-of-band restrictions, where servers limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations). The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized. Implementers SHOULD incorporate technology that preserves and respects an individual's wishes to share their data with desired privacy protections. For example, some clients are authorized to access sensitive mental health information and some aren't; this authorization is defined out-of-band, but when a client requests a full data set, filtering is automatically applied by the server, restricting the data that the client receives.
 
@@ -375,24 +375,24 @@ Content-Type: application/json
 
 ##### Response - In-Progress Status
 
-- HTTP Status Code of ```202 Accepted```
-- Optionally, the server MAY return an ```X-Progress``` header with a text description of the status of the request that's less than 100 characters. The format of this description is at the server's discretion and may be a percentage complete value, or a more general status such as "in progress". The client MAY parse the description, display it to the user, or log it.
+- HTTP Status Code of `202 Accepted`
+- Optionally, the server MAY return an `X-Progress` header with a text description of the status of the request that's less than 100 characters. The format of this description is at the server's discretion and may be a percentage complete value, or a more general status such as "in progress". The client MAY parse the description, display it to the user, or log it.
 
 ##### Response - Error Status
 
-- HTTP status code of ```4XX``` or ```5XX```
+- HTTP status code of `4XX` or `5XX`
 - `Content-Type` header of `application/fhir+json` when body is a FHIR `OperationOutcome` resource
 - The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON format. If this is not possible (for example, the infrastructure layer returning the error is not FHIR aware), the server MAY return an error message in another format and include a corresponding value for the `Content-Type` header.
 
-In the case of a polling failure that does not indicate failure of the export job, a server SHOULD use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the OperationOutcome ```issue.code``` to indicate to the client that it should retry the request at a later time.
+In the case of a polling failure that does not indicate failure of the export job, a server SHOULD use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the OperationOutcome `issue.code` to indicate to the client that it should retry the request at a later time.
 
-*Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response body SHALL be populated with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). In the case of a partial success, the server SHALL use a 200 status code instead of 4XX or 5XX. The choice of when to determine that an export job has failed in its entirety (error status) vs returning a partial success (complete status) is left up to the implementer.
+*Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response body SHALL be populated with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). In the case of a partial success, the server SHALL use a 200 status code instead of 4XX or 5XX.  The choice of when to determine that an export job has failed in its entirety (error status) vs. returning a partial success (complete status) is left up to the server implementer.
 
 ##### Response - Complete Status
 
-- HTTP status of ```200 OK```
-- ```Content-Type``` header of ```application/json```
-- The server MAY return an ```Expires``` header indicating when the files listed will no longer be available for access.
+- HTTP status of `200 OK`
+- `Content-Type` header of `application/json`
+- The server SHOULD return an `Expires` header indicating when the files listed will no longer be available for access.
 - A body containing a JSON object providing metadata, and links to the generated bulk data files.  The files SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
 
 Required Fields:
