@@ -51,7 +51,7 @@ As discussed in the Privacy and Security Considerations section above, servers w
 
 The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
-A client MAY repeat kick-off parameters that accept comma delimited values multiple times in a kick-off request. The server SHALL treat the values provided as if they were comma delimited values within a single instance of the parameter.
+A client MAY repeat kick-off parameters that accept comma delimited values multiple times in a kick-off request. The server SHALL treat the values provided as if they were comma delimited values within a single instance of the parameter. Note that we will be soliciting feedback on the use of comma delimited values within parameters, and depending on the response may consider deprecating this input approach in favor of repeating parameters in a future version of this IG.
 
 For Patient-level requests and Group-level requests associated with groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
 
