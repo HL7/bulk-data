@@ -103,13 +103,13 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 
 ##### Headers
 
-- ```Accept``` (string, required)
+- `Accept` (string)
 
-  Specifies the format of the optional OperationOutcome resource response to the kick-off request. Currently, only ```application/fhir+json``` is supported.
+  Specifies the format of the optional OperationOutcome resource response to the kick-off request. Currently, only `application/fhir+json` is supported. A client SHOULD provide this header. If omitted, a server MAY return an error or MAY process the request as if `application/fhir+json` was supplied.
 
-- ```Prefer``` (string, required)
+- `Prefer` (string)
 
-  Specifies whether the response is immediate or asynchronous. The header SHALL be set to ```respond-async``` [https://tools.ietf.org/html/rfc7240](https://tools.ietf.org/html/rfc7240).
+  Specifies whether the response is immediate or asynchronous. Currently, only a value of <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> is supported. A client SHOULD provide this header. If omitted, a server MAY return an error or MAY process the request as if respond-async was supplied.
 
 ##### Query Parameters
 
