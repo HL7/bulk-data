@@ -43,6 +43,20 @@ Bulk data export can be a resource-intensive operation. Server developers should
 
 Note that this Implementation Guide builds on the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html), and in some places may extend the pattern.
 
+#### Roles
+
+There are two primary roles involved in a bulk data transaction:
+
+  1. **Bulk Data Provider** - system that provides bulk data. Consists of:
+
+      a. **Authorization Server** - issues access tokens in response to valid token requests from client
+
+      b. **FHIR Server** - accepts kickoff request and provides job status and completion manifest
+
+      c. **Output File Server** - returns FHIR bulk data files and attachments in response to urls in the completion manifest. This may be built into the FHIR Server, or may be independently hosted.
+
+  2. **Bulk Data Client** - system requesting and receiving access tokens and bulk data files
+
 #### Bulk Data Kick-off Request
 
 This FHIR Operation initiates the asynchronous generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
