@@ -439,7 +439,7 @@ Required Fields:
       <td><code>requiresAccessToken</code></td>
       <td><span class="label label-success">required</span></td>
       <td>Boolean</td>
-      <td>Indicates whether downloading the generated files requires a bearer access token
+      <td>Indicates whether downloading the generated files requires the same authorization mechanism as the $export operation itself
       <br/>
       <br/>
       Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be <code>false</code> for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
@@ -589,7 +589,7 @@ Specifies the format of the file being requested.
 
 If resources in an output file contain elements of the type `Attachment`, servers SHOULD populate the `Attachment.contentType` code as well as either the `data` element or the `url` element. When populated, the `url` element SHALL be an absolute url that can be de-referenced to the attachment's content.
 
-When the `url` element is populated with an absolute URL and the `requiresAccessToken` field in the Complete Status body is set to `true`, the url location must be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the `url` element is populated and the `requiresAccessToken` field in the Complete Status body is set to ```false```, the url location must be accessible by a client without an access token. 
+When the `url` element is populated with an absolute URL and the `requiresAccessToken` field in the Complete Status body is set to `true`, the url location must be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the `url` element is populated and the `requiresAccessToken` field in the Complete Status body is set to `false`, the url location must be accessible by a client without an access token. 
 
 Note that if a server copies files to the bulk data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the `Attachment.url` element when generating the FHIR bulk data output files.
 
