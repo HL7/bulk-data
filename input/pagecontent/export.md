@@ -53,7 +53,7 @@ A client MAY repeat kick-off parameters that accept comma delimited values multi
 
 For Patient-level requests and Group-level requests associated with groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
 
-Binary Resources associated with individual patients SHALL be serialized as DocumentReference Resources with the content.attachment element populated as described in the [Attachments](#attachments) section below. Binary Resources not associated with an individual patient MAY be included in a System Level export.
+Binary Resources whose content is associated with an individual patient SHALL be serialized as DocumentReference Resources with the content.attachment element populated as described in the [Attachments](#attachments) section below. Binary Resources not associated with an individual patient MAY be included in a System Level export.
 
 References in the resources returned MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.
 
@@ -573,11 +573,11 @@ Specifies the format of the file being requested.
 
 ##### Attachments
 
-If resources in an output file contain elements of the type ```Attachment```, servers SHALL populate the ```Attachment.contentType``` code as well as either the ```data``` element or the ```url``` element. The ```url``` element SHALL be an absolute url that can be de-referenced to the attachment's content.
+If resources in an output file contain elements of the type `Attachment`, servers SHOULD populate the `Attachment.contentType` code as well as either the `data` element or the `url` element. When populated, the `url` element SHALL be an absolute url that can be de-referenced to the attachment's content.
 
-When the ```url``` element is populated with an absolute URL and the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the url location must be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the ```url``` element is populated and the ```requiresAccessToken``` field in the Complete Status body is set to ```false```, the url location must be accessible by a client without an access token. 
+When the `url` element is populated with an absolute URL and the `requiresAccessToken` field in the Complete Status body is set to `true`, the url location must be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the `url` element is populated and the `requiresAccessToken` field in the Complete Status body is set to ```false```, the url location must be accessible by a client without an access token. 
 
-Note that if a server copies files to the bulk data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the ```Attachment.url``` element when generating the FHIR bulk data output files.
+Note that if a server copies files to the bulk data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the `Attachment.url` element when generating the FHIR bulk data output files.
 
 ### Server Capability Documentation
 
