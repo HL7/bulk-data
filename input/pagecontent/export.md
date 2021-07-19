@@ -1,6 +1,6 @@
 ### Audience and Scope
 
-This implementation guide is intended to be used by developers of backend services (clients) and FHIR Resource Servers (e.g., EHR systems, data warehouses, and other clinical and administrative systems) that aim to interoperate by sharing large FHIR datasets.  The guide defines the application programming interfaces (APIs) through which an authenticated and authorized client may request a bulk-data export from a server, receive status information regarding progress in the generation of the requested files, and retrieve these files.  It also includes recommendations regarding the FHIR resources that might be exposed through the export interface.  
+This implementation guide is intended to be used by developers of backend services (clients) and FHIR Resource Servers (e.g., EHR systems, data warehouses, and other clinical and administrative systems) that aim to interoperate by sharing large FHIR datasets. The guide defines the application programming interfaces (APIs) through which an authenticated and authorized client may request a bulk-data export from a server, receive status information regarding progress in the generation of the requested files, and retrieve these files.  It also includes recommendations regarding the FHIR resources that might be exposed through the export interface.  
 
 The scope of this document does NOT include:
 
@@ -23,7 +23,7 @@ The scope of this document does NOT include:
 ### Terminology
 
 This profile inherits terminology from the standards referenced above.
-The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in RFC2119.
+The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in [RFC2119]([https://tools.ietf.org/html/rfc2119).
 
 ### Privacy and Security Considerations
 
@@ -41,7 +41,7 @@ Bulk data export can be a resource-intensive operation. Server developers should
 
 ### Request Flow
 
-Note that this Implementation Guide builds on the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html), and in some places may extend the pattern.
+This implementation guide builds on the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html), and in some places may extend the pattern.
 
 #### Roles
 
@@ -198,7 +198,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 
 ##### Group Membership Request Pattern
 
-To obtain an new and updated resources for patients in a group, as well as all data for patients who have joined the group since a prior query, a client can use following pattern:
+To obtain new and updated resources for patients in a group, as well as all data for patients who have joined the group since a prior query, a client can use following pattern:
 
 - Initial Query (eg. on 1/1/2020):
 
@@ -247,8 +247,6 @@ To obtain an new and updated resources for patients in a group, as well as all d
 As a community, we've identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions rather than historical prescriptions, or only laboratory observations rather than all observations. 
 
 To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that restrict the results of the export. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`. A client MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When repeated, the server SHALL treat the repeated values as if they were comma delimited values within a single `_typeFilter` parameter.
-
-*Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. 
 
 ##### Example Request
 
@@ -553,7 +551,7 @@ Example response body:
 ```
 
 ---
-#### Output File Request
+#### Bulk Data Output File Request
 
 Using the URLs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated bulk data files (one or more per resource type) within the time period specified in the ```Expires``` header (if present). If the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the request SHALL include a valid access token.  See the Security Considerations section above.  
 
