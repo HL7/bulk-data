@@ -4,7 +4,7 @@ This implementation guide is intended to be used by developers of backend servic
 
 The scope of this document does NOT include:
 
-* A legal framework for sharing data between partners, including Business Associate Agreements, Service Level Agreements, and Data Use Agreements
+* A legal framework for sharing data between partners, including Business Associate Agreements, Service Level Agreements, and Data Use Agreements, though these may be required for some use cases.
 * Real-time data exchange
 * Data transformations that may be required by the client
 * Patient matching (although identifiers may be included in the exported FHIR resources)
