@@ -463,7 +463,7 @@ Required Fields:
       <td>An array of deleted file items following the same structure as the <code>output</code> array.
       <br/>
       <br/>
-        When a <code>_since</code> timestamp is supplied in the export request, this array SHALL be populated with output files containing FHIR Transaction Bundles that indicate which FHIR resources would have been returned, but have been deleted subsequent to that date. If no resources have been deleted or the <code>_since</code> parameter was not supplied, the server MAY omit this key or MAY return an empty array.
+        The ability to convey deleted resources is important in cases when a server may have previously exported data and wishes to indicate that these data should be removed from downstream systems. When a <code>_since</code> timestamp is supplied in the export request, this array SHOULD be populated with output files containing FHIR Transaction Bundles that indicate which FHIR resources would have been returned, but have been deleted subsequent to that date. If no resources have been deleted, or the <code>_since</code> parameter was not supplied, or the server has other reasons to avoid exposing these data, the server MAY omit this key or MAY return an empty array. 
       <br/>
       <br/>
         Each line in the output file SHALL contain a FHIR Bundle with a type of <code>transaction</code> which SHALL contain one or more entry items that reflect a deleted resource. In each entry, the <code>request.url</code> and <code>request.method</code> elements SHALL be populated. The <code>request.method</code> element SHALL be set to <code>DELETE</code>.
