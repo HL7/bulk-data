@@ -41,13 +41,15 @@ Bulk data export can be a resource-intensive operation. Server developers should
 
 ### Request Flow
 
+Note that this Implementation Guide builds on the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html), and in some places may extend the pattern.
+
 #### Bulk Data Kick-off Request
 
 This FHIR Operation initiates the asynchronous generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
 
 As discussed in the Privacy and Security Considerations section above, servers will limit the data returned to only those FHIR resources for which the client is authorized.
 
-The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
+The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
 A client MAY repeat kick-off parameters that accept comma delimited values multiple times in a kick-off request. The server SHALL treat the values provided as if they were comma delimited values within a single instance of the parameter.
 
@@ -111,7 +113,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>String</td>
-      <td>The format for the requested bulk data files to be generated as per <a href="http://hl7.org/fhir/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
+      <td>The format for the requested bulk data files to be generated as per <a href="http://hl7.org/fhir/R4/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
     </tr>
     <tr>
       <td><code>_since</code></td>
@@ -272,7 +274,7 @@ If a server wants to prevent a client from beginning a new export before an in-p
 ---
 #### Bulk Data Delete Request
 
-After a bulk data request has been started, a client MAY send a DELETE request to the URL provided in the ```Content-Location``` header to cancel the request.  If the request has been completed, a server MAY use the request as a signal that a client is done retrieving files and that it is safe for the sever to remove those from storage. Following the delete request, when subsequent requests are made to the polling location, the server SHALL return a 404 error and an associated FHIR OperationOutcome in JSON format.
+After a bulk data request has been started, a client MAY send a DELETE request to the URL provided in the `Content-Location` header to cancel the request as described in the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html).  If the request has been completed, a server MAY use the request as a signal that a client is done retrieving files and that it is safe for the sever to remove those from storage. Following the delete request, when subsequent requests are made to the polling location, the server SHALL return a 404 error and an associated FHIR OperationOutcome in JSON format.
 
 ##### Endpoint
 
@@ -291,7 +293,7 @@ After a bulk data request has been started, a client MAY send a DELETE request t
 ---
 #### Bulk Data Status Request
 
-After a bulk data request has been started, the client MAY poll the status URL provided in the ```Content-Location``` header.  
+After a bulk data request has been started, the client MAY poll the status URL provided in the ```Content-Location``` header as described in the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html).
 
 Clients SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach when polling for status. Servers SHOULD supply a [Retry-After header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) with a with a delay time in seconds (e.g., `120` to represent two minutes) or a http-date (e.g., `Fri, 31 Dec 1999 23:59:59 GMT`). When provided, clients SHOULD use this information to inform the timing of future polling requests. Servers SHOULD keep an accounting of status queries received from a given client, and if a client is polling too frequently, the server SHOULD respond with a `429 Too Many Requests` status code in addition to a Retry-After header, and optionally a FHIR OperationOutcome resource with further explanation.  If excessively frequent status queries persist, the server MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP `4XX` as well as `5XX` status codes may be used to identify errors as mentioned.
 
