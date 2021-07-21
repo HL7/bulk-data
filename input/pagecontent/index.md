@@ -28,7 +28,7 @@ This use case exports all resources needed to convey a patient's healthcare fina
 * Terminology data, e.g., to export all CodeSystem and ValueSet resources from a terminology server
 * Provider data to export information about a system's full Practitioner, Location, and Organization list
 * Public health surveillance systems that do not require real-time exchange of data (e.g., aggregate situational awareness data reporting)
-* Electronic case reporting of filtered line line data
+* Electronic Case Reporting (data from initial export may be filtered or summarized before submitting)
 
 ### Resources
 * [Overview Presentation](https://docs.google.com/presentation/d/14ZHmam9hwz6-SsCG1YqUIQnJ56bvSqEatebltgEVR6c/edit?usp=sharing)
