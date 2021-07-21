@@ -49,9 +49,9 @@ There are two primary roles involved in a bulk data transaction:
 
   1. **Bulk Data Provider** - system that provides bulk data. Consists of:
 
-      a. **Authorization Server** - issues access tokens in response to valid token requests from client
+      a. **FHIR Authorization Server** - issues access tokens in response to valid token requests from client
 
-      b. **FHIR Server** - accepts kickoff request and provides job status and completion manifest
+      b. **FHIR Resource Server** - accepts kickoff request and provides job status and completion manifest
 
       c. **Output File Server** - returns FHIR bulk data files and attachments in response to urls in the completion manifest. This may be built into the FHIR Server, or may be independently hosted.
 
@@ -439,7 +439,7 @@ Required Fields:
       <td><code>requiresAccessToken</code></td>
       <td><span class="label label-success">required</span></td>
       <td>Boolean</td>
-      <td>Indicates whether downloading the generated files requires the same authorization mechanism as the $export operation itself
+      <td>Indicates whether downloading the generated files requires the same authorization mechanism as the <code>$export</code> operation itself
       <br/>
       <br/>
       Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be <code>false</code> for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
@@ -477,7 +477,7 @@ Required Fields:
       <td>An array of deleted file items following the same structure as the <code>output</code> array.
       <br/>
       <br/>
-        The ability to convey deleted resources is important in cases when a server may have previously exported data and wishes to indicate that these data should be removed from downstream systems. When a <code>_since</code> timestamp is supplied in the export request, this array SHOULD be populated with output files containing FHIR Transaction Bundles that indicate which FHIR resources would have been returned, but have been deleted subsequent to that date. If no resources have been deleted, or the <code>_since</code> parameter was not supplied, or the server has other reasons to avoid exposing these data, the server MAY omit this key or MAY return an empty array. Resources that appear in the 'deleted' section of an export manifest SHALL NOT appear in the 'output' section of the manifest.
+        The ability to convey deleted resources is important in cases when a server may have previously exported data and wishes to indicate that these data should be removed from downstream systems. When a <code>_since</code> timestamp is supplied in the export request, this array SHOULD be populated with output files containing FHIR Transaction Bundles that indicate which FHIR resources match the kickoff request criteria, but have been deleted subsequent to the <code>_since</code> date. If no resources have been deleted, or the <code>_since</code> parameter was not supplied, or the server has other reasons to avoid exposing these data, the server MAY omit this key or MAY return an empty array. Resources that appear in the 'deleted' section of an export manifest SHALL NOT appear in the 'output' section of the manifest.
       <br/>
       <br/>
         Each line in the output file SHALL contain a FHIR Bundle with a type of <code>transaction</code> which SHALL contain one or more entry items that reflect a deleted resource. In each entry, the <code>request.url</code> and <code>request.method</code> elements SHALL be populated. The <code>request.method</code> element SHALL be set to <code>DELETE</code>.
