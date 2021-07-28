@@ -1,10 +1,10 @@
 ### Audience and Scope
 
-This implementation guide is intended to be used by developers of backend services (clients) and FHIR Resource Servers (e.g., EHR systems, data warehouses, and other clinical and administrative systems) that aim to interoperate by sharing large FHIR datasets.  The guide defines the application programming interfaces (APIs) through which an authenticated and authorized client may request a bulk-data export from a server, receive status information regarding progress in the generation of the requested files, and retrieve these files.  It also includes recommendations regarding the FHIR resources that might be exposed through the export interface.  
+This implementation guide is intended to be used by developers of backend services (clients) and FHIR Resource Servers (e.g., EHR systems, data warehouses, and other clinical and administrative systems) that aim to interoperate by sharing large FHIR datasets. The guide defines the application programming interfaces (APIs) through which an authenticated and authorized client may request a bulk-data export from a server, receive status information regarding progress in the generation of the requested files, and retrieve these files.  It also includes recommendations regarding the FHIR resources that might be exposed through the export interface.  
 
 The scope of this document does NOT include:
 
-* A legal framework for sharing data between partners, including Business Associate Agreements, Service Level Agreements, and Data Use Agreements
+* A legal framework for sharing data between partners, including Business Associate Agreements, Service Level Agreements, and Data Use Agreements, though these may be required for some use cases.
 * Real-time data exchange
 * Data transformations that may be required by the client
 * Patient matching (although identifiers may be included in the exported FHIR resources)
@@ -23,37 +23,53 @@ The scope of this document does NOT include:
 ### Terminology
 
 This profile inherits terminology from the standards referenced above.
-The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in RFC2119.
+The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in [RFC2119]([https://tools.ietf.org/html/rfc2119).
 
-### Security Considerations
+### Privacy and Security Considerations
 
 All exchanges described herein between a client and a server SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS.  Use of mutual TLS is OPTIONAL.  
 
-With each of the requests described herein, implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](authorization.html).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
+With each of the requests described herein, implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](authorization.html). When SMART Backend Services Authorization is used, Bulk Data Status Request and Bulk Data Output File Requests with `requiresAccessToken=true` SHALL be protected the same way the Bulk Data Kick-off Request, including an access token with scopes that cover all resources being exported. Servers MAY additionally restrict Bulk Data Status Request and Bulk Data Output File Requests by limiting them to the client that originated the export. Implementations MAY include endpoints that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
 
 This implementation guide does not address protection of the servers themselves from potential compromise.  An adversary who successfully captures administrative rights to a server will have full control over that server and can use those rights to undermine the server's security protections. In the bulk-data-export workflow, the file server will be a particularly attractive target, as it holds highly sensitive and valued PHI.  An adversary who successfully takes control of a file server may choose to continue to deliver files in response to client requests, so that neither the client nor the FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own devious purposes.   
 
-Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches can be used to accomplish this, not all of which would be visible at the API level. This specification does not dictate a particular approach at this time, though it does support the use of an “Expires” header to limit the time period a file will be available for client download (removal of the file from the server is left up to the implementer). We recommend that servers SHOULD not delete files from a bulk data response that a client is actively in the process of downloading regardless of the pre-specified Expires time. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.
+Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches can be used to accomplish this, not all of which would be visible at the API level. This specification does not dictate a particular approach at this time, though it does support the use of an `Expires` header to limit the time period a file will be available for client download (removal of the file from the server is left up to the server implementer). We recommend that servers SHOULD not delete files from a bulk data response that a client is actively in the process of downloading regardless of the pre-specified Expires time. Work currently underway is exploring possible approaches for protecting extracted files persisted in the file server.
 
-Data access control obligations can be met with a combination of in-band restrictions such as OAuth scopes, and out-of-band restrictions, where servers limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations). For example, some clients are authorized to access sensitive mental health information and some aren't; this authorization is defined out-of-band, but when a client requests a full data set, filtering is automatically applied by the server, restricting the data that the client receives.
+Data access control obligations can be met with a combination of in-band restrictions such as OAuth scopes, and out-of-band restrictions, where servers limit the data returned to a specific client in accordance with local considerations (e.g.  policies or regulations). The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized. Implementers SHOULD incorporate technology that preserves and respects an individual's wishes to share their data with desired privacy protections. For example, some clients are authorized to access sensitive mental health information and some aren't; this authorization is defined out-of-band, but when a client requests a full data set, filtering is automatically applied by the server, restricting the data that the client receives.
 
-Bulk data export can be a resource-intensive operation. Server developers should consider and mitigate the risk of intentional or inadvertent denial-of-service attacks (though the details are beyond the scope of this specification).
+Bulk data export can be a resource-intensive operation. Server developers should consider and mitigate the risk of intentional or inadvertent denial-of-service attacks (though the details are beyond the scope of this specification). For example, transactional systems may wish to provide Bulk Data access to a read-only mirror of the database, or may distribute processing over time to avoid loads that could impact clinical operations.
 
 ### Request Flow
+
+This implementation guide builds on the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html), and in some places may extend the pattern.
+
+#### Roles
+
+There are two primary roles involved in a bulk data transaction:
+
+  1. **Bulk Data Provider** - system that provides bulk data. Consists of:
+
+      a. **FHIR Authorization Server** - issues access tokens in response to valid token requests from client
+
+      b. **FHIR Resource Server** - accepts kickoff request and provides job status and completion manifest
+
+      c. **Output File Server** - returns FHIR bulk data files and attachments in response to urls in the completion manifest. This may be built into the FHIR Server, or may be independently hosted.
+
+  2. **Bulk Data Client** - system requesting and receiving access tokens and bulk data files
 
 #### Bulk Data Kick-off Request
 
 This FHIR Operation initiates the asynchronous generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.
 
-The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.
+As discussed in the Privacy and Security Considerations section above, servers will limit the data returned to only those FHIR resources for which the client is authorized.
 
-The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
+The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
-A client MAY repeat kick-off parameters that accept comma delimited values multiple times in a kick-off request. The server SHALL treat the values provided as if they were comma delimited values within a single instance of the parameter.
+A client MAY repeat kick-off parameters that accept comma delimited values multiple times in a kick-off request. The server SHALL treat the values provided as if they were comma delimited values within a single instance of the parameter. Note that we will be soliciting feedback on the use of comma delimited values within parameters, and depending on the response may consider deprecating this input approach in favor of repeating parameters in a future version of this IG.
 
-For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
+For Patient-level requests and Group-level requests associated with groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
 
-Binary Resources associated with individual patients SHALL be serialized as DocumentReference Resources with the content.attachment element populated as described in the [Attachments](#attachments) section below. Binary Resources not associated with an individual patient MAY be included in a System Level export.
+Binary Resources whose content is associated with an individual patient SHALL be serialized as DocumentReference Resources with the content.attachment element populated as described in the [Attachments](#attachments) section below. Binary Resources not associated with an individual patient MAY be included in a System Level export.
 
 References in the resources returned MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.
 
@@ -71,7 +87,7 @@ FHIR Operation to obtain a detailed set of FHIR resources of diverse resource ty
 
 [View table of parameters for Group Export](OperationDefinition-group-export.html)
 
-FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in specified [Group](https://www.hl7.org/fhir/group.html).
+FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all members of a specified [Group](https://www.hl7.org/fhir/group.html).
 
 If a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables clients to discover available groups based on stable characteristics such as `Group.identifier`.
 
@@ -87,13 +103,13 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 
 ##### Headers
 
-- ```Accept``` (string, required)
+- `Accept` (string)
 
-  Specifies the format of the optional OperationOutcome resource response to the kick-off request. Currently, only ```application/fhir+json``` is supported.
+  Specifies the format of the optional OperationOutcome resource response to the kick-off request. Currently, only `application/fhir+json` is supported. A client SHOULD provide this header. If omitted, a server MAY return an error or MAY process the request as if `application/fhir+json` was supplied.
 
-- ```Prefer``` (string, required)
+- `Prefer` (string)
 
-  Specifies whether the response is immediate or asynchronous. The header SHALL be set to ```respond-async``` [https://tools.ietf.org/html/rfc7240](https://tools.ietf.org/html/rfc7240).
+  Specifies whether the response is immediate or asynchronous. Currently, only a value of <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> is supported. A client SHOULD provide this header. If omitted, a server MAY return an error or MAY process the request as if respond-async was supplied.
 
 ##### Query Parameters
 
@@ -111,14 +127,14 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>String</td>
-      <td>The format for the requested bulk data files to be generated as per <a href="http://hl7.org/fhir/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
+      <td>The format for the requested bulk data files to be generated as per <a href="http://hl7.org/fhir/R4/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. Servers SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. Servers SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
     </tr>
     <tr>
       <td><code>_since</code></td>
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>FHIR instant</td>
-      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if <code>Resource.meta.lastUpdated</code> is later than the supplied <code>_since</code> time). In the case of a Group level export, servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server). For Patient- and Group-level requests, servers MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated.</td>
+      <td>Resources will be included in the response if their state has changed after the supplied time (e.g.  if <code>Resource.meta.lastUpdated</code> is later than the supplied <code>_since</code> time). In the case of a Group level export, servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server). For Patient- and Group-level requests, servers MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated. For resources where the server does not maintain a last updated time, the server MAY include these resources in a response irrespective of the _since value supplied by a client.</td>
     </tr>
     <tr>
       <td><code>_type</code></td>
@@ -182,7 +198,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 
 ##### Group Membership Request Pattern
 
-To obtain an new and updated resources for patients in a group, as well as all data for patients who have joined the group since a prior query, a client can use following pattern:
+To obtain new and updated resources for patients in a group, as well as all data for patients who have joined the group since a prior query, a client can use following pattern:
 
 - Initial Query (eg. on 1/1/2020):
 
@@ -232,8 +248,6 @@ As a community, we've identified use cases for finer-grained, client-specified f
 
 To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that restrict the results of the export. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. Understanding `_typeFilter` is OPTIONAL for FHIR servers; clients SHOULD be robust to servers that ignore `_typeFilter`. A client MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When repeated, the server SHALL treat the repeated values as if they were comma delimited values within a single `_typeFilter` parameter.
 
-*Note for client developers*: Because both `_typeFilter` and `_since` can restrict the results returned, the interaction of these parameters may be surprising. Think carefully through the implications when constructing a query with both of these parameters. 
-
 ##### Example Request
 
 The following is an export request for `MedicationRequest` resources and `Condition` resources, where the client would further like to restrict `MedicationRequests` to requests that are `active`, or else `completed` after July 1, 2018. This can be accomplished with two subqueries joined together with a comma for a logical "or":
@@ -272,7 +286,7 @@ If a server wants to prevent a client from beginning a new export before an in-p
 ---
 #### Bulk Data Delete Request
 
-After a bulk data request has been started, a client MAY send a DELETE request to the URL provided in the ```Content-Location``` header to cancel the request.  If the request has been completed, a server MAY use the request as a signal that a client is done retrieving files and that it is safe for the sever to remove those from storage. Following the delete request, when subsequent requests are made to the polling location, the server SHALL return a 404 error and an associated FHIR OperationOutcome in JSON format.
+After a bulk data request has been started, a client MAY send a DELETE request to the URL provided in the `Content-Location` header to cancel the request as described in the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html).  If the request has been completed, a server MAY use the request as a signal that a client is done retrieving files and that it is safe for the sever to remove those from storage. Following the delete request, when subsequent requests are made to the polling location, the server SHALL return a 404 error and an associated FHIR OperationOutcome in JSON format.
 
 ##### Endpoint
 
@@ -291,9 +305,9 @@ After a bulk data request has been started, a client MAY send a DELETE request t
 ---
 #### Bulk Data Status Request
 
-After a bulk data request has been started, the client MAY poll the status URL provided in the ```Content-Location``` header.  
+After a bulk data request has been started, the client MAY poll the status URL provided in the ```Content-Location``` header as described in the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html).
 
-Clients SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach when polling for status. Servers SHOULD supply a [Retry-After header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) with a http date or a delay time in seconds. When provided, clients SHOULD use this information to inform the timing of future polling requests. Servers SHOULD keep an accounting of status queries received from a given client, and if a client is polling too frequently, the server SHOULD respond with a `429 Too Many Requests` status code in addition to a Retry-After header, and optionally a FHIR OperationOutcome resource with further explanation.  If excessively frequent status queries persist, the server MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP `4XX` as well as `5XX` status codes may be used to identify errors as mentioned.
+Clients SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach when polling for status. Servers SHOULD supply a [Retry-After header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) with a with a delay time in seconds (e.g., `120` to represent two minutes) or a http-date (e.g., `Fri, 31 Dec 1999 23:59:59 GMT`). When provided, clients SHOULD use this information to inform the timing of future polling requests. Servers SHOULD keep an accounting of status queries received from a given client, and if a client is polling too frequently, the server SHOULD respond with a `429 Too Many Requests` status code in addition to a Retry-After header, and optionally a FHIR OperationOutcome resource with further explanation.  If excessively frequent status queries persist, the server MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP `4XX` as well as `5XX` status codes may be used to identify errors as mentioned.
 
 When requesting status, the client SHOULD use an ```Accept``` header indicating a content type of  ```application/json```. In the case that errors prevent the export from completing, the server SHOULD respond with a FHIR OperationOutcome resource in JSON format.
 
@@ -321,7 +335,7 @@ Retry-After: 120</code></pre></td>
       <td><a href="#response---error-status-1">Error</a></td>
       <td>Returned by the server if the export operation fails.</td>
       <td><pre><code>Status: 500 Internal Server Error
-Content-Type: application/json
+Content-Type: application/fhir+json
 
 {
 &nbsp;"resourceType": "OperationOutcome",
@@ -375,24 +389,24 @@ Content-Type: application/json
 
 ##### Response - In-Progress Status
 
-- HTTP Status Code of ```202 Accepted```
-- Optionally, the server MAY return an ```X-Progress``` header with a text description of the status of the request that's less than 100 characters. The format of this description is at the server's discretion and may be a percentage complete value, or a more general status such as "in progress". The client MAY parse the description, display it to the user, or log it.
+- HTTP Status Code of `202 Accepted`
+- Optionally, the server MAY return an `X-Progress` header with a text description of the status of the request that's less than 100 characters. The format of this description is at the server's discretion and may be a percentage complete value, or a more general status such as "in progress". The client MAY parse the description, display it to the user, or log it.
 
 ##### Response - Error Status
 
-- HTTP status code of ```4XX``` or ```5XX```
+- HTTP status code of `4XX` or `5XX`
 - `Content-Type` header of `application/fhir+json` when body is a FHIR `OperationOutcome` resource
 - The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON format. If this is not possible (for example, the infrastructure layer returning the error is not FHIR aware), the server MAY return an error message in another format and include a corresponding value for the `Content-Type` header.
 
-In the case of a polling failure that does not indicate failure of the export job, a server SHOULD use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the OperationOutcome ```issue.code``` to indicate to the client that it should retry the request at a later time.
+In the case of a polling failure that does not indicate failure of the export job, a server SHOULD use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the OperationOutcome `issue.code` to indicate to the client that it should retry the request at a later time.
 
-*Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response body SHALL be populated with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). In the case of a partial success, the server SHALL use a 200 status code instead of 4XX or 5XX. The choice of when to determine that an export job has failed in its entirety (error status) vs returning a partial success (complete status) is left up to the implementer.
+*Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response body SHALL be populated with one or more files in ndjson format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). In the case of a partial success, the server SHALL use a 200 status code instead of 4XX or 5XX.  The choice of when to determine that an export job has failed in its entirety (error status) vs. returning a partial success (complete status) is left up to the server implementer.
 
 ##### Response - Complete Status
 
-- HTTP status of ```200 OK```
-- ```Content-Type``` header of ```application/json```
-- The server MAY return an ```Expires``` header indicating when the files listed will no longer be available for access.
+- HTTP status of `200 OK`
+- `Content-Type` header of `application/json`
+- The server SHOULD return an `Expires` header indicating when the files listed will no longer be available for access.
 - A body containing a JSON object providing metadata, and links to the generated bulk data files.  The files SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
 
 Required Fields:
@@ -425,7 +439,7 @@ Required Fields:
       <td><code>requiresAccessToken</code></td>
       <td><span class="label label-success">required</span></td>
       <td>Boolean</td>
-      <td>Indicates whether downloading the generated files requires a bearer access token
+      <td>Indicates whether downloading the generated files requires the same authorization mechanism as the <code>$export</code> operation itself
       <br/>
       <br/>
       Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be <code>false</code> for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
@@ -463,7 +477,7 @@ Required Fields:
       <td>An array of deleted file items following the same structure as the <code>output</code> array.
       <br/>
       <br/>
-        When a <code>_since</code> timestamp is supplied in the export request, this array SHALL be populated with output files containing FHIR Transaction Bundles that indicate which FHIR resources would have been returned, but have been deleted subsequent to that date. If no resources have been deleted or the <code>_since</code> parameter was not supplied, the server MAY omit this key or MAY return an empty array.
+        The ability to convey deleted resources is important in cases when a server may have previously exported data and wishes to indicate that these data should be removed from downstream systems. When a <code>_since</code> timestamp is supplied in the export request, this array SHOULD be populated with output files containing FHIR Transaction Bundles that indicate which FHIR resources match the kickoff request criteria, but have been deleted subsequent to the <code>_since</code> date. If no resources have been deleted, or the <code>_since</code> parameter was not supplied, or the server has other reasons to avoid exposing these data, the server MAY omit this key or MAY return an empty array. Resources that appear in the 'deleted' section of an export manifest SHALL NOT appear in the 'output' section of the manifest.
       <br/>
       <br/>
         Each line in the output file SHALL contain a FHIR Bundle with a type of <code>transaction</code> which SHALL contain one or more entry items that reflect a deleted resource. In each entry, the <code>request.url</code> and <code>request.method</code> elements SHALL be populated. The <code>request.method</code> element SHALL be set to <code>DELETE</code>.
@@ -537,7 +551,7 @@ Example response body:
 ```
 
 ---
-#### Output File Request
+#### Bulk Data Output File Request
 
 Using the URLs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated bulk data files (one or more per resource type) within the time period specified in the ```Expires``` header (if present). If the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the request SHALL include a valid access token.  See the Security Considerations section above.  
 
@@ -573,15 +587,15 @@ Specifies the format of the file being requested.
 
 ##### Attachments
 
-If resources in an output file contain elements of the type ```Attachment```, servers SHALL populate the ```Attachment.contentType``` code as well as either the ```data``` element or the ```url``` element. The ```url``` element SHALL be an absolute url that can be de-referenced to the attachment's content.
+If resources in an output file contain elements of the type `Attachment`, servers SHOULD populate the `Attachment.contentType` code as well as either the `data` element or the `url` element. When populated, the `url` element SHALL be an absolute url that can be de-referenced to the attachment's content.
 
-When the ```url``` element is populated with an absolute URL and the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the url location must be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the ```url``` element is populated and the ```requiresAccessToken``` field in the Complete Status body is set to ```false```, the url location must be accessible by a client without an access token. 
+When the `url` element is populated with an absolute URL and the `requiresAccessToken` field in the Complete Status body is set to `true`, the url location must be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the `url` element is populated and the `requiresAccessToken` field in the Complete Status body is set to `false`, the url location must be accessible by a client without an access token. 
 
-Note that if a server copies files to the bulk data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the ```Attachment.url``` element when generating the FHIR bulk data output files.
+Note that if a server copies files to the bulk data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the `Attachment.url` element when generating the FHIR bulk data output files.
 
 ### Server Capability Documentation
 
-This implementation guide is structured to support a wide variety of bulk data export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers should ensure their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
+This implementation guide is structured to support a wide variety of bulk data export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers should ensure that their Capability Statement accurately reflects the implemented Bulk Data Operations and that their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
 
 - Does the server restrict responses to a specific "profile" like US Core, USCDI, or Blue Button?
 - What approach does the server take to divide datasets into multiple files (eg. single file per the resource type, limit file size to 100MB, limit number of resources per file to 100,000)?
