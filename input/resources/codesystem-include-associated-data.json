@@ -2,11 +2,11 @@
   "resourceType": "CodeSystem",
   "id": "include-associated-data",
   "url": "http://hl7.org/fhir/uv/bulkdata/CodeSystem/include-associated-data",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "name": "IncludeAssociatedData",
   "title": "IncludeAssociatedData",
   "status": "active",
-  "date": "2020-08-16",
+  "date": "2021-07-29",
   "publisher": "SMART Health IT",
   "contact": [{
     "name": "Dan Gottlieb",
@@ -34,7 +34,7 @@
         "display": "World"
       }]
   }],
-  "description" : "Metadata include options for Bulk Data Access Export Operation includeAssociatedData parameter",
+  "description" : "Metadata inclusion options for Bulk Data Access Export Operation includeAssociatedData parameter",
   "caseSensitive" : true,
   "valueSet": "http://hl7.org/fhir/uv/bulkdata/ValueSet/include-associated-data",
   "content" : "complete",

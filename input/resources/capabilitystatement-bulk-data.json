@@ -2,12 +2,12 @@
   "resourceType": "CapabilityStatement",
   "id": "bulk-data",
   "url": "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "name": "BulkDataIGCapabilityStatement",
   "title": "FHIR Bulk Data Access Implementation Guide",
   "status": "active",
   "experimental": false,
-  "date": "2020-08-16",
+  "date": "2021-07-29",
   "publisher": "SMART Health IT",
   "contact": [{
     "name": "Dan Gottlieb",
@@ -28,7 +28,7 @@
         "value": "Vladimir.Ignatov@childrens.harvard.edu"
       }]
   }],
-  "description": "The expected capabilities of a FHIR Resource Server actor (e.g., EHR systems, data warehouses, and other clinical and administrative systems that aim to interoperate by sharing large FHIR datasets) which is responsible for providing responses to the queries submitted by a FHIR Bulk Data Client actor. Systems implementing this capability statement should meet the requirements set by the Bulk Data Access Implementation Guide. A FHIR Bulk Data Client has the option of choosing from this list to access necessary data based on use cases and other contextual requirements.",
+  "description": "The expected capabilities of a Bulk Data Provider actor (e.g., EHR systems, data warehouses, and other clinical and administrative systems that aim to interoperate by sharing large FHIR datasets) which is responsible for providing responses to the queries submitted by a FHIR Bulk Data Client actor. Systems implementing this capability statement should meet the requirements set by the Bulk Data Access Implementation Guide. A FHIR Bulk Data Client has the option of choosing from this list to access necessary data based on use cases and other contextual requirements.",
   "jurisdiction": [{
     "coding": [{
         "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
@@ -42,7 +42,7 @@
   "implementationGuide": ["http://hl7.org/fhir/uv/bulkdata/ImplementationGuide/hl7.fhir.uv.bulkdata"],
   "rest": [{
     "mode": "server",
-    "documentation": "These FHIR Operations initiate the generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.\n\nThe FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.\n\nThe FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).",
+    "documentation": "These FHIR Operations initiate the generation of data to which the client is authorized -- whether that be all patients, a subset (defined group) of patients, or all available data contained in a FHIR server.\n\nThe FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized.\n\nThe FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](hhttp://hl7.org/fhir/R4/async.html). Servers SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).",
     "resource": [{
       "type": "Group",
       "operation": [{
@@ -73,10 +73,10 @@
       }],
       "name": "export",
       "definition": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/export",
-      "documentation": "FHIR Operation to export data from a FHIR server, whether or not it is associated with a patient. This supports use cases like backing up a server, or exporting terminology data by restricting the resources returned using the ```_type``` parameter."
+      "documentation": "FHIR Operation to export data from a FHIR server, whether or not it is associated with a patient. This supports use cases like backing up a server, or exporting terminology data by restricting the resources returned using the `_type` parameter."
     }],
     "security": {
-      "description": "Servers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](authorization/index.html).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs."
+      "description": "Servers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](authorization.html).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs."
     }
   }]
 }

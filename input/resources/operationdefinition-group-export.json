@@ -2,12 +2,12 @@
   "resourceType": "OperationDefinition",
   "id": "group-export",
   "url": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "name": "GroupLevelExport",
   "title": "FHIR Bulk Data Group Level Export",
   "status": "active",
   "kind": "operation",
-  "date": "2020-08-16",
+  "date": "2020-07-29",
   "publisher": "SMART Health IT",
   "contact": [{
     "name": "Dan Gottlieb",
@@ -35,7 +35,7 @@
         "display": "World"
       }]
   }],
-  "description": "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in specified [Group](https://www.hl7.org/fhir/group.html). The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/async.html)",
+  "description": "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all members of the specified [Group](https://www.hl7.org/fhir/group.html). The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html)",
   "code": "export",
   "resource": ["Group"],
   "system": false,
@@ -46,42 +46,43 @@
     "use": "in",
     "min": 0,
     "max": "1",
-    "documentation": "The format for the requested bulk data files to be generated. Defaults to `application/fhir+ndjson`.",
+    "documentation": "Support is required for servers, optional for clients.\n\nThe format for the requested bulk data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html). Defaults to `application/fhir+ndjson`. Servers SHALL support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. Servers SHALL accept the full content type of `application/fhir+ndjson` as well as the abbreviated representations `application/ndjson` and `ndjson`.",
     "type": "string"
   },{
     "name": "_since",
     "use": "in",
     "min": 0,
     "max": "1",
-    "documentation": "Resources will be included in the response if their state has changed after the supplied time (e.g.  if Resource.meta.lastUpdated is later than the supplied `_since` time). Servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior should be clearly documented  by the server).",
+    "documentation": "Support is required for servers, optional for clients.\n\nResources will be included in the response if their state has changed after the supplied time (e.g. if `Resource.meta.lastUpdated` is later than the supplied `_since` time). Servers MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the group after the supplied time (this behavior should be clearly documented by the server). Servers MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated. For resources where the server does not maintain a last updated time, the server MAY include these resources in a response irrespective of the _since value supplied by a client.",
     "type": "instant"
   },{
     "name": "_type",
     "use": "in",
     "min": 0,
-    "max": "1",
-    "documentation": "A string of comma-delimited FHIR resource types. The response SHALL be filtered to only include resources of the specified resource types(s).",
+    "max": "*",
+    "documentation": "Support is optional for clients and servers.\n\nA string of comma-delimited FHIR resource types.\n\nThe response SHALL be filtered to only include resources of the specified resource types(s).\n\nIf this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [Argonaut Implementation Guide](http://www.fhir.org/guides/argonaut/r2/). For groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the Patient Compartment that are referenced by the resources being returned and would be helpful in interpreting the patient data MAY also be returned (such as Organization and Practitioner). When this behavior is supported, servers SHOULD document this support (for example, as narrative text, or by including a [GraphDefinition Resource](https://www.hl7.org/fhir/graphdefinition.html)).\n\nServers unable to support `_type` SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the `_type` parameter. If the client explicitly asks for export of resources that the bulk data server doesn't support, or asks for only resource types that are outside the Patient Compartment, the server SHOULD return details via an OperationOutcome resource in an error response to the request. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error.\n\nFor example `_type=Observation` could be used to filter a given export response to return only Observation resources.",
     "type": "string"
   },{
     "name": "_elements",
     "use": "in",
     "min": 0,
-    "max": "1",
-    "documentation": "Experimental. String of comma-delimited FHIR Elements. The server SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements should be of the form `[resource type].[element name]` (eg. `Patient.id`) or `[element name]` (eg. `id`) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable.\n\nServers are not obliged to return just the requested elements. Servers SHOULD always return mandatory elements whether they are requested or not. Servers SHOULD mark the resources with the tag SUBSETTED to ensure that the incomplete resource is not actually used to overwrite a complete resource.",
-    "type": "string"
+    "max": "*",
+    "documentation": "Experimental - support is optional for clients and servers.\n\nString of comma-delimited FHIR Elements.\n\nWhen provided, the server SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements should be of the form `[resource type].[element name]` (eg. `Patient.id`) or `[element name]` (eg. `id`) and only root elements in a resource are permitted. If the resource type is omitted, the element should be returned for all resources in the response where it is applicable. \n\nServers are not obliged to return just the requested elements. Servers SHOULD always return mandatory elements whether they are requested or not. Servers SHOULD mark the resources with the tag `SUBSETTED` to ensure that the incomplete resource is not actually used to overwrite a complete resource.\n\nServers unable to support `_elements` SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the `_elements` parameter. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error.",
+    "type": "string" 
   },{
     "name": "patient",
     "use": "in",
     "min": 0,
     "max": "*",
-    "documentation": "The server SHALL NOT return resources in the patient compartments belonging to patients outside of this list.",
-    "type": "Reference"
+    "documentation": "This parameter is only valid in kickoff requests initiated through a HTTP POST request. When provided, the server SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a client requests patients who are not present on the server or are not members of the requested group, the server SHOULD return details via an OperationOutcome resource in an error response to the request.\n\nServers unable to support the `patient` parameter SHOULD return an error and OperationOutcome resource so clients can re-submit a request omitting the `patient` parameter. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error.",
+    "type": "Reference",
+    "targetProfile": ["http://hl7.org/fhir/StructureDefinition/Patient"]
   },{
     "name": "includeAssociatedData",
     "use": "in",
     "min": 0,
-    "max": "1",
-    "documentation": "Experimental. Servers with support for the requested values SHALL return or omit a pre-defined set of FHIR resources associated with the request.",
+    "max": "*",
+    "documentation": "Experimental - support is optional for clients and servers.\n\nString of comma-delimited values.\n\nWhen provided, servers with support for the parameter and requested values SHALL return or omit a pre-defined set of FHIR resources associated with the request.\n\nServers unable to support the requested `includeAssociatedData` values SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those values (for example, if a server does not retain provenance data). When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error.\n\nIf multiple conflicting values are included, the server SHALL apply the least restrictive value (value that will return the largest dataset).",
     "type": "code",
     "binding": {
       "strength": "extensible",
@@ -91,8 +92,8 @@
     "name": "_typeFilter",
     "use": "in",
     "min": 0,
-    "max": "1",
-    "documentation": "Experimental. String of comma separated FHIR REST search queries. Servers with support for the requested search queries SHALL filter the data in the response to only include resources that meet the specified criteria.",
+    "max": "*",
+    "documentation": "Experimental - support is optional for clients and servers.\n\nString of comma separated FHIR REST search queries.\n\nWhen provided, servers with support for the parameter and requested search queries SHALL filter the data in the response to only include resources that meet the specified criteria. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. \n\nServers unable to support the requested `_typeFilter` queries SHOULD return an error and OperationOutcome resource so clients can re-submit a request that omits those queries. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error.",
     "type": "string"
   }]
 }
