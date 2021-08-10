@@ -16,7 +16,7 @@
 * Added optional `includeAssociatedData` kickoff parameter and ValueSet for clients to indicate a set of pre-defined resources to omit or include with the response
 * Provided guidance on server handling of unsupported kickoff parameters when a `prefer: handling=lenient header` is or is not provided
 * Added recommended approach for clients to obtain historical data on new group members when not automatically included by server in Group level requests
-* Clarified that resources associated with groups containing non-patient members (such as practitioners) may be exported using a group-level bulk export request
+* Clarified that resources associated with groups containing non-patient members (e.g., groups of practitioners or groups of devices) may be exported using a group-level bulk export request
 * Updated the `Accept` and `Prefer` header requirements from required to recommended for clients, with servers having discretion on whether to return an error or presume a default if omitted
 * Clarified server behavior in cases where the modification date of resources is not tracked and a `_since` parameter is provided by a client
 
