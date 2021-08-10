@@ -32,7 +32,7 @@
 #### Export - Data
 * Clarified that resource references in the response may be relative or absolute
 * Provided guidance for servers and clients to send and retrieve `Binary` resources and `Attachment` elements
-* Changed requirement to populate Attachment.contentType in Attachments from a requirement to a recommendation to align with the core FHIR spec
+* Changed requirement to populate `Attachment.contentType` in Attachments from a requirement to a recommendation to align with the core FHIR spec
 
 #### Export - Other
 * Added recommendations on server capability documentation
