@@ -41,7 +41,7 @@
 * Migrated and integrated documentation into the SMART App Launch Implementation Guide
 * Clarified that servers must support clients that provide a URL pointing to a JWKS Set on registration, as well as those that provide a JWKS Set directly on registration
 * Clarified authorization requirements for status and data requests
-* Corrected errors in key verification algorithm documentation
+* Clarified the algorithm for verifying a client's public key
 * Clarified scopes language and described optional support for SMART v2 scope
 
 
