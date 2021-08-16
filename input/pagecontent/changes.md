@@ -26,6 +26,7 @@
 
 #### Export Complete Status Response
 * Permitted clients to send a HTTP `DELETE` request the the status endpoint following a complete status to signal to the server that it no longer needs to retain the output files
+* Clarified that the `output.url` field in the complete status response should be an absolute path
 * Clarified that the `error` field of the complete status response may include files containing `OperationOutcome` resources that are informational in nature
 * Added `deleted` field in complete status response where servers can list resources that should be removed from downstream systems
 
