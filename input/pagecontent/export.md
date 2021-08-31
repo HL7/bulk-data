@@ -439,7 +439,7 @@ Required Fields:
       <td><code>requiresAccessToken</code></td>
       <td><span class="label label-success">required</span></td>
       <td>Boolean</td>
-      <td>Indicates whether downloading the generated files requires the same authorization mechanism as the <code>$export</code> operation itself
+      <td>Indicates whether downloading the generated files requires the same authorization mechanism as the <code>$export</code> operation itself.
       <br/>
       <br/>
       Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be <code>false</code> for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
