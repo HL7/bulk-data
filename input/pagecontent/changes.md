@@ -3,7 +3,7 @@
 	h4:before {content: none}
 </style>
 
-### Current Draft - v1.1.0
+### STU2 - v2.0.0
 
 #### Export Kickoff Request
 * Permitted server support for kickoff requests via HTTP `POST` of a Parameters Resource
@@ -16,6 +16,9 @@
 * Added optional `includeAssociatedData` kickoff parameter and ValueSet for clients to indicate a set of pre-defined resources to omit or include with the response
 * Provided guidance on server handling of unsupported kickoff parameters when a `prefer: handling=lenient header` is or is not provided
 * Added recommended approach for clients to obtain historical data on new group members when not automatically included by server in Group level requests
+* Clarified that resources associated with groups containing non-patient members (e.g., groups of practitioners or groups of devices) may be exported using a group-level bulk export request
+* Updated the `Accept` and `Prefer` header requirements from required to recommended for clients, with servers having discretion on whether to return an error or presume a default if omitted
+* Clarified server behavior in cases where the modification date of resources is not tracked and a `_since` parameter is provided by a client
 
 #### Export Status Response
 * Provided guidance for servers to return a transient error code in an `OperationOutcome` response when the error indicates a failure to obtain a status rather than a failure of the underlying job
@@ -23,18 +26,24 @@
 
 #### Export Complete Status Response
 * Permitted clients to send a HTTP `DELETE` request the the status endpoint following a complete status to signal to the server that it no longer needs to retain the output files
+* Clarified that the `output.url` field in the complete status response should be an absolute path
 * Clarified that the `error` field of the complete status response may include files containing `OperationOutcome` resources that are informational in nature
 * Added `deleted` field in complete status response where servers can list resources that should be removed from downstream systems
 
 #### Export - Data
 * Clarified that resource references in the response may be relative or absolute
 * Provided guidance for servers and clients to send and retrieve `Binary` resources and `Attachment` elements
+* Changed requirement to populate `Attachment.contentType` in Attachments from a requirement to a recommendation to align with the core FHIR spec
 
 #### Export - Other
 * Added recommendations on server capability documentation
 
 #### Backend Services Authorization
+* Migrated and integrated documentation into the SMART App Launch Implementation Guide
 * Clarified that servers must support clients that provide a URL pointing to a JWKS Set on registration, as well as those that provide a JWKS Set directly on registration
+* Clarified authorization requirements for status and data requests
+* Clarified the algorithm for verifying a client's public key
+* Clarified scopes language and described optional support for SMART v2 scope
 
 
 ### STU1 Technical Correction - v1.0.1
@@ -47,5 +56,3 @@
 ### STU1 - v1.0.0
 
 * Initial release
-
-

@@ -29,7 +29,7 @@ The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMME
 
 All exchanges described herein between a client and a server SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS.  Use of mutual TLS is OPTIONAL.  
 
-With each of the requests described herein, implementers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](authorization.html). When SMART Backend Services Authorization is used, Bulk Data Status Request and Bulk Data Output File Requests with `requiresAccessToken=true` SHALL be protected the same way the Bulk Data Kick-off Request, including an access token with scopes that cover all resources being exported. Servers MAY additionally restrict Bulk Data Status Request and Bulk Data Output File Requests by limiting them to the client that originated the export. Implementations MAY include endpoints that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
+With each of the requests described herein, implementers SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). When SMART Backend Services Authorization is used, Bulk Data Status Request and Bulk Data Output File Requests with `requiresAccessToken=true` SHALL be protected the same way the Bulk Data Kick-off Request, including an access token with scopes that cover all resources being exported. Servers MAY additionally restrict Bulk Data Status Request and Bulk Data Output File Requests by limiting them to the client that originated the export. Implementations MAY include endpoints that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
 
 This implementation guide does not address protection of the servers themselves from potential compromise.  An adversary who successfully captures administrative rights to a server will have full control over that server and can use those rights to undermine the server's security protections. In the bulk-data-export workflow, the file server will be a particularly attractive target, as it holds highly sensitive and valued PHI.  An adversary who successfully takes control of a file server may choose to continue to deliver files in response to client requests, so that neither the client nor the FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own devious purposes.   
 
@@ -439,7 +439,7 @@ Required Fields:
       <td><code>requiresAccessToken</code></td>
       <td><span class="label label-success">required</span></td>
       <td>Boolean</td>
-      <td>Indicates whether downloading the generated files requires the same authorization mechanism as the <code>$export</code> operation itself
+      <td>Indicates whether downloading the generated files requires the same authorization mechanism as the <code>$export</code> operation itself.
       <br/>
       <br/>
       Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be <code>false</code> for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
@@ -461,7 +461,7 @@ Required Fields:
             Each file SHALL contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response. These rules apply only to top-level resources within the response; as always in FHIR, any resource MAY have a "contained" array that includes referenced resources of other types.
             <br/>
             <br/>
-          - <code>url</code> - the path to the file. The format of the file SHOULD reflect that requested in the <code>_outputFormat</code> parameter of the initial kick-off request.
+          - <code>url</code> - the absolute path to the file. The format of the file SHOULD reflect that requested in the <code>_outputFormat</code> parameter of the initial kick-off request.
           <br/>
           <br/>
         Each file item MAY optionally contain the following field:
