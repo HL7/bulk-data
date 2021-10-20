@@ -14,7 +14,7 @@
       "date": "2021-10-30",
       "desc": "STU 2 Publcation",
       "changes": "/changes.html",
-      "path": "http://hl7.org/fhir/bulkdata/STU2",
+      "path": "http://hl7.org/fhir/uv/bulkdata/STU2",
       "sequence": "STU 2",
       "fhirversion": "4.0.1",
       "status": "trial-use",
