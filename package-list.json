@@ -10,6 +10,14 @@
       "path" : "http://build.fhir.org/ig/HL7/bulk-data",
       "status" : "ci-build"
     },{
+      "version": "2.0.0",
+      "date": "2021-10-30",
+      "desc": "STU 2 Publcation: The Bulk IG v2 moves backend authorization to SMART on FHIR, and adds several new features not in /changes.html",
+      "path": "http://hl7.org/fhir/bulkdata/STU2",
+      "sequence": "STU 2",
+      "fhirversion": "4.0.1",
+      "status": "trial-use"
+    },{
       "version": "1.1.0",
       "date": "2021-04-16",
       "desc": "STU 2 Ballot #1",
