@@ -1,6 +1,6 @@
 == Suppressed Messages ==
 
-# update and merged PR #192 into JIRA-Spec-Artifacts  master March 30, 2021
+# update and merged PR publish stu2 bulk data #315 10/21/2021
 WARNING: The jira specification file appears to be out of date with the versions, artifacts and pages currently defined in the IG.  A proposed revised file to be reviewed and, if appropriate, submitted as a pull request against the XML folder in https://github.com/HL7/JIRA-Spec-Artifacts.  To see the differences, perform a file compare on 'template/jira-current.xml' (a normalized view of what is in Github) and 'template/jira-new.xml' (reflects current IG content)
 
 # validated
