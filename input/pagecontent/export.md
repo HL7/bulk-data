@@ -59,7 +59,8 @@ There are two primary roles involved in a Bulk Data transaction:
 
 #### Sequence Overview 
 
-{% include bulk-flow.svg %}
+<div>{% include bulk-flow.svg %}</div>
+<br clear="all"/>
 
 #### Bulk Data Kick-off Request
 
