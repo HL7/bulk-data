@@ -57,6 +57,10 @@ There are two primary roles involved in a Bulk Data transaction:
 
   2. **Bulk Data Client** - system that requests and receives access tokens and Bulk Data files
 
+#### Sequence Overview 
+
+{% include bulk-flow.svg %}
+
 #### Bulk Data Kick-off Request
 
 The Bulk Data Export Operation initiates the asynchronous generation of a requested export dataset - whether that be data for all patients, data for a subset (defined group) of patients, or all FHIR data in the server.
