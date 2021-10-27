@@ -17,7 +17,7 @@ This implementation guide is designed to support sharing any data that can be re
 #### US Core Data for Interoperability
 *Applies to: EHR systems that support the US Core Data for Interoperability.*
 
-This use case exports all resources needed for the US Core Data for Interoperability, as profiled by Argonaut. For a full list of these resources and profiles, see [http://www.hl7.org/fhir/us/core/](http://www.hl7.org/fhir/us/core/).
+This use case exports all resources needed for the [US Core Data for Interoperability](https://www.healthit.gov/isa/united-states-core-data-interoperability-uscdi), as profiled by the [HL7 Argonaut FHIR Accelerator](https://confluence.hl7.org/display/AP/Argonaut+Project+Home). For a full list of these resources and profiles, see [http://www.hl7.org/fhir/us/core/](http://www.hl7.org/fhir/us/core/).
 
 #### Common Financial Data Set
 *Applies to: Financial systems that support FHIR-based interoperability.*
@@ -25,20 +25,13 @@ This use case exports all resources needed for the US Core Data for Interoperabi
 This use case exports all resources needed to convey a patient's healthcare financial history, including Patient, ExplanationOfBenefit, Coverage, and Claim. While FHIR profiles are still being developed and standardized, see [https://bluebutton.cms.gov/developers/#core-resources](https://bluebutton.cms.gov/developers/#core-resources) for a full-fledged example.
 
 #### Additional Use Cases
-* Terminology data, e.g., to export all CodeSystem and ValueSet resources from a terminology server
-* Provider data to export information about a system's full Practitioner, Location, and Organization list
-* Public health surveillance systems that do not require real-time exchange of data (e.g., aggregate situational awareness data reporting)
+* Terminology data - export CodeSystem and ValueSet resources from a terminology server
+* Provider data - export a system's Practitioner, Location, and Organization lists
+* Public health surveillance that does not require real-time exchange of data, such as aggregate situational awareness data reporting
 * Electronic Case Reporting (data from initial export may be filtered or summarized before submitting)
 
-### Resources
+### Additional Documentation
 * [Overview Presentation](https://docs.google.com/presentation/d/14ZHmam9hwz6-SsCG1YqUIQnJ56bvSqEatebltgEVR6c/edit?usp=sharing)
-* [Client and Server Implementations](https://github.com/smart-on-fhir/fhir-bulk-data-docs/blob/master/implementations.md)
 * [Discussion Group (FHIR Zulip "Bulk Data" Track)](https://chat.fhir.org/#narrow/stream/bulk.20data)
 * [Argonaut Project: Bulk Data Export Security Risk Assessment Report](security-risk-assessment-report.pdf)
-
-### Additional Documentation
-* [Export](export.html)
-* [Backend Services Authorization](authorization.html)
-* [Operations](artifacts.html)
-* [Change Log](changes.html)
-* [History](https://hl7.org/fhir/uv/bulkdata/history.html)
+* [Implementation Guide Change Log](changes.html)
