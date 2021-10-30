@@ -5,37 +5,33 @@ participant "FHIR Authorization Server" as AUTH
 participant "FHIR Resource Server" as FHIR
 participant "Output File Server" as FILE
 end box
-
 opt  Precondition: SMART Backend Services Registration
     APP -> AUTH: Registration
-    AUTH -> APP: client_id
+   return client_id
 end
 opt  Precondition: SMART Backend Services Authorization
     APP -> AUTH: Signed token request
-    AUTH -> APP: Short lived token
-
+   return Short lived token
 end
-
 APP -> FHIR: Kick-off request
 activate FHIR #eee
-FHIR -> APP: Status polling location
+FHIR --> APP: Status polling location
 loop Check export status (repeat 1..n)
   APP -> FHIR: Status request
-  FHIR -> APP: In-progress status
+  FHIR --> APP: In-progress status
 end
 FHIR -> FILE: Generated files
 deactivate FHIR
 activate FILE
 APP -> FHIR: Status request
-FHIR -> APP: Complete status (JSON manifest)
+FHIR --> APP: Complete status (JSON manifest)
 loop Retrieve files and errors (repeat 0..n)
   APP -> FILE: Bulk Data output file request
-  FILE -> APP: Bulk Data file
+  FILE --> APP: Bulk Data file
 end
 loop Retrieve attachments (repeat 0..n)
   APP -> FILE: Bulk Data attachment file request
-  FILE -> APP:  Attachment file
+  FILE --> APP:  Attachment file
 end
 deactivate FILE #eee
-
 @enduml
