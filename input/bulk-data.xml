@@ -12,7 +12,7 @@
   <contact>
     <telecom>
       <system value="url"/>
-      <value value="https://www.hl7.org/Special/committees/fiwg/index.cfm"/>
+      <value value="http://hl7.org/Special/committees/fiwg"/>
     </telecom>
   </contact>
   <description value="FHIR based approach for exporting large data sets from a FHIR server to a client application"/>
