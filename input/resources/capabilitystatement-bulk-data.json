@@ -50,7 +50,7 @@
           "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
           "valueCode": "SHOULD"
         }],
-        "name": "group-export",
+        "name": "export",
         "definition": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export",
         "documentation": "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in specified [Group](https://www.hl7.org/fhir/group.html).\n\nIf a FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables clients to discover available groups based on stable characteristics such as `Group.identifier`.\n\nThe [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned."
       }]
@@ -61,7 +61,7 @@
           "url": "http://hl7.org/fhir/StructureDefinition/capabilitystatement-expectation",
           "valueCode": "SHOULD"
         }],
-        "name": "patient-export",
+        "name": "export",
         "definition": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/patient-export",
         "documentation": "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients.\n\nThe [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned."
       }]
