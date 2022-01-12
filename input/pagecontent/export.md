@@ -480,7 +480,7 @@ Required Fields:
     <tr>
       <td><code>deleted</code></td>
       <td><span class="label label-success">optional</span></td>
-      <td>JOSN array</td>
+      <td>JSON array</td>
       <td>An array of deleted file items following the same structure as the <code>output</code> array.
       <br/>
       <br/>
