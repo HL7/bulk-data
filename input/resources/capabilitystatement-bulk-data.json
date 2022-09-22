@@ -76,7 +76,7 @@
       "documentation": "FHIR Operation to export data from a FHIR server, whether or not it is associated with a patient. This supports use cases like backing up a server, or exporting terminology data by restricting the resources returned using the `_type` parameter."
     }],
     "security": {
-      "description": "Servers are encouraged to implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](authorization.html).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs."
+      "description": "Servers SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](authorization.html).  Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs."
     }
   }]
 }
