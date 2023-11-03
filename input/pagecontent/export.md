@@ -125,6 +125,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
     <th>Query Parameter</th>
     <th>Optionality for Server</th>
     <th>Optionality for Client</th>
+    <th>Cardinality</th>
     <th>Type</th>
     <th>Description</th>
   </thead>
@@ -133,6 +134,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_outputFormat</code></td>
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
+      <td>0..1</td>
       <td>String</td>
       <td>The format for the requested Bulk Data files to be generated as per <a href="http://hl7.org/fhir/R4/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. The server SHALL support <a href="http://ndjson.org">Newline Delimited JSON</a>, but MAY choose to support additional output formats. The server SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
     </tr>
@@ -140,6 +142,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_since</code></td>
       <td><span class="label label-info">required</span></td>
       <td><span class="label label-info">optional</span></td>
+      <td>0..1</td>
       <td>FHIR instant</td>
       <td>Resources will be included in the response if their state has changed after the supplied time (e.g., if <code>Resource.meta.lastUpdated</code> is later than the supplied <code>_since</code> time). In the case of a Group level export, the server MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior SHOULD be clearly documented  by the server). For Patient- and Group-level requests, the server MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated. For resources where the server does not maintain a last updated time, the server MAY include these resources in a response irrespective of the <code>_since</code> value supplied by a client.</td>
     </tr>
@@ -147,6 +150,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_type</code></td>
       <td><span class="label label-info">optional</span></td>
       <td><span class="label label-info">optional</span></td>
+      <td>0..*</td>
       <td>string of comma-delimited FHIR resource types</td>
       <td>The response SHALL be filtered to only include resources of the specified resource types(s).<br /><br />
       If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the <a href="http://www.hl7.org/fhir/us/core/">US Core Implementation Guide</a>. For Patient- and Group-level requests, the <a href='https://www.hl7.org/fhir/compartmentdefinition-patient.html'>Patient Compartment</a> SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the Patient Compartment that are referenced by the resources being returned and would be helpful in interpreting the patient data MAY also be returned (such as Organization and Practitioner). When this behavior is supported, a server SHOULD document this support (for example, as narrative text, or by including a <a href="https://www.hl7.org/fhir/graphdefinition.html">GraphDefinition Resource</a>).<br /><br />
@@ -157,6 +161,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_elements</code></td>
       <td><span class="label label-info">optional, experimental</span></td>
       <td><span class="label label-info">optional</span></td>
+      <td>0..*</td>
       <td>string of comma-delimited FHIR Elements</td>
       <td>When provided, the server SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements SHOULD be of the form <code>[resource type].[element name]</code> (e.g., <code>Patient.id</code>) or <code>[element name]</code> (e.g., <code>id</code>) and only root elements in a resource are permitted. If the resource type is omitted, the element SHOULD be returned for all resources in the response where it is applicable.<br /><br />
       A server is not obliged to return just the requested elements. A server SHOULD always return mandatory elements whether they are requested or not. A server SHOULD mark the resources with the tag SUBSETTED to ensure that the incomplete resource is not actually used to overwrite a complete resource.<br/><br/>
@@ -167,6 +172,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>patient</code><br/>(POST requests only)</td>
       <td><span class="label label-info">optional</span></td>
       <td><span class="label label-info">optional</span></td>
+      <td>0..*</td>
       <td>FHIR Reference</td>
       <td>Not applicable to system level export requests. When provided, the server SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a client requests patients who are not present on the server (or in the case of a group level export, who are not members of the group), the server SHOULD return details via a FHIR <code>OperationOutcome</code> resource in an error response to the request.<br /><br />
       A server that is unable to support <code>patient</code> SHOULD return an error and FHIR <code>OperationOutcome</code> resource so the client can re-submit a request omitting the <code>patient</code> parameter. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
@@ -176,6 +182,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>includeAssociatedData</code><br/></td>
       <td><span class="label label-info">optional, experimental</span></td>
       <td><span class="label label-info">optional</span></td>
+      <td>0..*</td>
       <td>string of comma delimited values</td>
       <td>When provided, a server with support for the parameter and requested values SHALL return or omit a pre-defined set of FHIR resources associated with the request.<br /><br />
       A server that is unable to support the requested <code>includeAssociatedData</code> values SHOULD return an error and FHIR <code>OperationOutcome</code> resource so the client can re-submit a request that omits those values (for example, if a server does not retain provenance data). When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.<br /><br />
@@ -191,6 +198,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><code>_typeFilter</code><br/></td>
       <td><span class="label label-info">optional, experimental</span></td>
       <td><span class="label label-info">optional</span></td>
+      <td>0..*</td>
       <td>string of comma delimited FHIR REST queries</td>
       <td>When provided, a server with support for the parameter and requested search queries SHALL filter the data in the response to only include resources that meet the specified criteria. FHIR search response parameters such as <code>_include</code> and <code>_sort</code> SHALL NOT be used. <a href="#_typefilter-experimental-query-parameter">See details below</a>.<br /><br />
       A server unable to support the requested <code>_typeFilter</code> queries SHOULD return an error and FHIR <code>OperationOutcome</code> resource so the client can re-submit a request that omits those queries. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
