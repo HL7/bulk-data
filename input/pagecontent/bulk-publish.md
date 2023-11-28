@@ -19,11 +19,11 @@ Expected use cases include publication of provider directories by payor organiza
 ### Terminology
 
 This profile inherits terminology from the standards referenced above.
-The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in RFC2119.
+The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
 
 ### Security Considerations
 
-All exchanges described herein between a client and a server SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS.  Use of mutual TLS is OPTIONAL. With each of the requests described herein, implementers MAY implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](authorization.html).
+All exchanges described herein between a client and a server SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS.  Use of mutual TLS is OPTIONAL. With each of the requests described herein, implementers MAY implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html).
 
 ### Request Flow
 
@@ -38,16 +38,16 @@ GET `[fhir base]/$bulk-publish`
 
 ##### Response - Error
 
-- HTTP status code of ```4XX``` or ```5XX```
+- HTTP status code of `4XX` or `5XX`
 - `Content-Type` header of `application/fhir+json`
 - The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON format. If this is not possible (for example, the infrastructure layer returning the error is not FHIR aware), the server MAY return an error message in another format and include a corresponding value for the `Content-Type` header.
 
 
 ##### Response - Manifest
 
-- HTTP status of ```200 OK```
-- ```Content-Type``` header of ```application/json```
-- The server MAY return an ```Expires``` header indicating when the files listed will no longer be available for access.
+- HTTP status of `200 OK`
+- `Content-Type` header of `application/json`
+- The server MAY return an `Expires` header indicating when the files listed will no longer be available for access.
 - A body containing a JSON object providing metadata, and links to the generated bulk data files.  The files SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
 
 Required Fields:
@@ -83,14 +83,14 @@ Required Fields:
       <td>Indicates whether downloading the generated files requires a bearer access token
       <br/>
       <br/>
-      Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens.
+      Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be <code>false</code> for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
       </td>
     </tr>
     <tr>
       <td><code>output</code></td>
       <td><span class="label label-success">required</span></td>
-      <td>Array</td>
-      <td>An array of file items with one entry for each generated file. If no resources are returned from the kick-off request, the server SHOULD return an empty array.
+      <td>JSON array</td>
+      <td>An array of file items with one entry for each generated file. If no resources are returned from the manifest request, the server SHOULD return an empty array.
       <br/>
       <br/>
         Each file item SHALL contain the following fields:
@@ -121,18 +121,18 @@ Required Fields:
       <td>Array of message file items following the same structure as the <code>output</code> array.
       <br/>
       <br/>
-        Error, warning, and information messages related to the export should be included here (not in output). If there are no relevant messages, the server SHOULD return an empty array. Only the <code>OperationOutcome</code> resource type is currently supported, so a server SHALL generate files in the same format as bulk data output files that contain <code>OperationOutcome</code> resources.
-        <br/><br/>Note: this field may be renamed in a future version of this IG to reflect the inclusion of <code>OperationOutcome</code> resources with severity levels other than error.
+        Error, warning, and information messages related to the export SHOULD be included here (not in output). If there are no relevant messages, the server SHOULD return an empty array. Only the FHIR <code>OperationOutcome</code> resource type is currently supported, so the server SHALL generate files in the same format(s) as bulk data output files that contain FHIR <code>OperationOutcome</code> resources.
+        <br/><br/>Note: this field may be renamed in a future version of this IG to reflect the inclusion of <code>OperationOutcome</code> resources with severity levels other than <code>error</code>.
       </td>
     </tr>
     <tr>
       <td><code>extension</code></td>
       <td><span class="label label-info">optional</span></td>
-      <td>JSON Object</td>
+      <td>JSON object</td>
       <td>To support extensions, this implementation guide reserves the name <code>extension</code> and will never define a field with that name, allowing server implementations to use it to provide custom behavior and information. For example, a server may choose to provide a custom extension that contains a decryption key for encrypted ndjson files. The value of an extension element SHALL be a pre-coordinated JSON object.
       <br/>
       <br/>
-      Note: In addition to extensions being supported on the root object level, extensions may also be included within the fields above (e.g., in the 'output' object).
+      Note: In addition to extensions being supported on the root object level, extensions may also be included within the fields above. For example, a server could include an extension for each object in the 'output' array to provide details that help clients fetch only the files containing data associated with a specific geographic location.
       </td>
     </tr>
   </tbody>
@@ -146,29 +146,29 @@ Example response body:
     "request" : "https://example.com/pd/$bulk-publish",
     "requiresAccessToken" : true,
     "output" : [{
-	  "type" : "Practitioner",
-	  "url" : "https://example.com/pd/practitioner_file_1.ndjson",
-	  "extension" : {
-		  "format" : "application/fhir+ndjson"
-	  }
+      "type" : "Practitioner",
+      "url" : "https://example.com/pd/practitioner_file_1.ndjson",
+      "extension" : {
+        "format" : "application/fhir+ndjson"
+      }
     },{
       "type" : "Practitioner",
-	  "url" : "https://example.com/pd/practitioner_file_2.ndjson",
-	  "extension" : {
+      "url" : "https://example.com/pd/practitioner_file_2.ndjson",
+      "extension" : {
         "format" : "application/fhir+ndjson"
-	  }
+      }
     },{
       "type" : "Organization",
-	  "url" : "https://example.com/pd/organization_file_1.ndjson",
-	   "extension" : {
-	      "format" : "application/fhir+ndjson"
-		}
-	},{
+      "url" : "https://example.com/pd/organization_file_1.ndjson",
+       "extension" : {
+        "format" : "application/fhir+ndjson"
+      }
+    },{
       "type" : "Location",
-	  "url" : "https://example.com/pd/location_file_1.ndjson",
-	   "extension" : {
-	      "format" : "application/fhir+ndjson"
-	    }
+      "url" : "https://example.com/pd/location_file_1.ndjson",
+       "extension" : {
+          "format" : "application/fhir+ndjson"
+        }
     }],
     "error" : []
   }
@@ -177,11 +177,11 @@ Example response body:
 ---
 #### Output File Request
 
-Using the URLs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated bulk data files (one or more per resource type) within the time period specified in the ```Expires``` header (if present). If the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the request SHALL include a valid access token.  See the Security Considerations section above.  
+Using the URLs supplied by the FHIR server in the manifest, a client MAY download the generated bulk data files (one or more per resource type) within the time period specified in the `Expires` header (if present). If the `requiresAccessToken` field in the manifest is set to `true`, the request SHALL include a valid access token. See the [Security Considerations](#security-considerations) section above.  
 
-The exported data SHALL include only the most recent version of any exported resources unless the client explicitly requests different behavior in a fashion supported by the server (e.g.  via a new query parameter yet to be defined). Inclusion of the .meta information is at the discretion of the server (as it is for all FHIR interactions).
+The exported data SHALL include only the most recent version of any exported resources unless the client explicitly requests different behavior in a fashion supported by the server (e.g.  via a new query parameter yet to be defined). Inclusion of the `.meta` information is at the discretion of the server (as it is for all FHIR interactions).
 
-Binary Resources MAY be serialized as DocumentReference Resources with the content.attachment element populated as described in the [Attachments](#attachments) section below.
+Binary Resources MAY be serialized as `DocumentReference` resources with the `content.attachment` element populated as described in the [Attachments](#attachments) section below.
 
 References in the resources returned MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. References will be resolved by looking for a resource with the specified type and id within the file set.
 
@@ -190,42 +190,41 @@ Example NDJSON output file:
 {"id":"5c41cecf-cf81-434f-9da7-e24e5a99dbc2","name":[{"given":["Brenda"],"family":["Jackson"]}],"gender":"female","birthDate":"1956-10-14T00:00:00.000Z","resourceType":"Patient"}
 {"id":"3fabcb98-0995-447d-a03f-314d202b32f4","name":[{"given":["Bram"],"family":["Sandeep"]}],"gender":"male","birthDate":"1994-11-01T00:00:00.000Z","resourceType":"Patient"}
 {"id":"945e5c7f-504b-43bd-9562-a2ef82c244b2","name":[{"given":["Sandy"],"family":["Hamlin"]}],"gender":"female","birthDate":"1988-01-24T00:00:00.000Z","resourceType":"Patient"}
-
 ```
 
 ##### Endpoint
 
-`GET [url from status request output field]`
+`GET [url from manifest output object]`
 
 ##### Headers
 
-- ```Accept``` (optional, defaults to ```application/fhir+ndjson```)
+- `Accept` (optional, defaults to `application/fhir+ndjson`)
 
 Specifies the format of the file being requested.
 
 ##### Response - Success
 
-- HTTP status of ```200 OK```
-- ```Content-Type``` header that matches the file format being delivered.  For files in ndjson format, SHALL be ```application/fhir+ndjson```
+- HTTP status of `200 OK`
+- `Content-Type` header that matches the file format being delivered.  For files in ndjson format, SHALL be `application/fhir+ndjson`
 - Body of FHIR resources in newline delimited json - [ndjson](http://ndjson.org/) or other requested format
 
 ##### Response - Error
 
-- HTTP Status Code of ```4XX``` or ```5XX```
+- HTTP Status Code of `4XX` or `5XX`
 
 ##### Attachments
 
-If resources in an output file contain elements of the type ```Attachment```, servers SHALL populate the ```Attachment.contentType``` code as well as either the ```data``` element or the ```url``` element. The ```url``` element SHALL be an absolute url that can be de-referenced to the attachment's content.
+If resources in an output file contain elements of the type `Attachment`, the server SHOULD populate the `Attachment.contentType` code as well as either the `data` element or the `url` element. When populated, the `url` element SHALL be an absolute url that can be de-referenced to the attachment's content.
 
-When the ```url``` element is populated with an absolute URL and the ```requiresAccessToken``` field in the Complete Status body is set to ```true```, the url location must be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the ```url``` element is populated and the ```requiresAccessToken``` field in the Complete Status body is set to ```false```, the url location must be accessible by a client without an access token. 
+When the `url` element is populated with an absolute URL and the `requiresAccessToken` field in the manifest is set to `true`, the url location SHALL be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the `url` element is populated and the `requiresAccessToken` field in the manifest is set to `false`, and no additional authorization-related extensions are present on the manifest's output entry, the url location must be accessible by a client without an access token. 
 
-Note that if a server copies files to the bulk data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the ```Attachment.url``` element when generating the FHIR bulk data output files.
+Note that if a server copies files to the bulk data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the `Attachment.url` element when generating the bulk data output files.
 
 ### Server Capability Documentation
 
-This implementation guide is structured to support a wide variety of bulk data export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers should ensure their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
+This implementation guide is structured to support a wide variety of use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, data providers should ensure their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
 
-- Does the server restrict responses to a specific "profile" like US Core, USCDI, or Blue Button?
+- Does the server restrict responses to a specific profile like the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/) or the [Blue Button Implementation Guide](http://hl7.org/fhir/us/carin-bb/)?
 - What approach does the server take to divide datasets into multiple files (eg. single file per the resource type, limit file size to 100MB, limit number of resources per file to 100,000)?
-- Does the server support system-wide or Group-level export?
 - What file formats does this server return?
+- Are there extension fields populated in the manifest and how should a client use them?
