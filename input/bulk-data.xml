@@ -90,6 +90,11 @@
         <title value="Downloads"/>
         <generation value="html"/>
       </page>
+      <page>
+        <nameUrl value="bulk-publish.html"/>
+        <title value="Bulk Data Publish"/>
+        <generation value="markdown"/>
+      </page>
       <!-- <page>
         <nameUrl value="operations.html"/>
         <title value="Bulk Data Export Operations"/>
