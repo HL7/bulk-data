@@ -34,7 +34,7 @@ Request for fully static or periodically updated dataset in FHIR format.
 GET `[fhir base]/$bulk-publish`
 
 - A client MAY include an `_since` parameter with a value that is a [FHIR instant](https://www.hl7.org/fhir/datatypes.html#instant). If this parameter is provided, the server MAY restrict the FHIR resources included in the response to only those that have been created or modified after the supplied time (e.g., `Resource.meta.lastUpdated` is later).
-
+- A client MAY include the conditional request HTTP header `If-None-Match` or `If-Modified-Since` with each request to avoid retrieving data when nothing has changed since the last request. Servers SHOULD support the use of these headers.
 
 ##### Response - Error
 
@@ -48,6 +48,7 @@ GET `[fhir base]/$bulk-publish`
 - HTTP status of `200 OK`
 - `Content-Type` header of `application/json`
 - The server MAY return an `Expires` header indicating when the files listed will no longer be available for access.
+- The server SHOULD return an `ETag` header
 - A body containing a JSON object providing metadata, and links to the generated bulk data files.  The files SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
 
 Required Fields:
@@ -200,12 +201,15 @@ Example NDJSON output file:
 
 - `Accept` (optional, defaults to `application/fhir+ndjson`)
 
-Specifies the format of the file being requested.
+  Specifies the format of the file being requested.
+
+- A client MAY include the conditional request HTTP header `If-None-Match` or `If-Modified-Since` with each request to avoid retrieving data when nothing has changed since the last request. Servers SHOULD support the use of these headers.
 
 ##### Response - Success
 
 - HTTP status of `200 OK`
 - `Content-Type` header that matches the file format being delivered.  For files in ndjson format, SHALL be `application/fhir+ndjson`
+- The server SHOULD return an `ETag` header
 - Body of FHIR resources in newline delimited json - [ndjson](http://ndjson.org/) or other requested format
 
 ##### Response - Error
