@@ -1,0 +1,24 @@
+{
+  "systems" : [
+    {
+      "system" : "http://unstats.un.org/unsd/methods/m49/m49.htm",
+      "authoritative" : [],
+      "candidates" : ["http://tx.fhir.org/r4"]
+    },
+    {
+      "system" : "urn:ietf:bcp:13",
+      "authoritative" : [],
+      "candidates" : ["http://tx.fhir.org/r4"]
+    },
+    {
+      "system" : "urn:iso:std:iso:3166",
+      "authoritative" : [],
+      "candidates" : ["http://tx.fhir.org/r4"]
+    },
+    {
+      "system" : "urn:iso:std:iso:3166:-2",
+      "authoritative" : [],
+      "candidates" : ["http://tx.fhir.org/r4"]
+    }
+  ]
+}

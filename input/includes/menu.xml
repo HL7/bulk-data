@@ -2,6 +2,7 @@
   <li><a href="index.html">Home</a></li>
   <li><a href="export.html">Export</a></li>
   <li><a href="authorization.html">Authorization</a></li>
+  <li><a href="match.html">Match</a></li>
   <li><a href="artifacts.html">FHIR Artifacts</a></li>
   <li><a href="downloads.html">Downloads</a></li>
   <li><a href="abbreviations.html">Abbreviations</a></li>

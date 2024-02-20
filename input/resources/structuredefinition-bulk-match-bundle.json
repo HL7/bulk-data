@@ -1,0 +1,155 @@
+{
+	"resourceType": "StructureDefinition",
+	"id": "bulk-match-bundle",
+	"url": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/bulk-match-bundle",
+	"name": "BulkMatchBundle",
+	"title": "FHIR Bulk Match Bundle Profile",
+	"status": "active",
+	"date": "2024-02-16",
+	"description": "JSON FHIR Bundle (type: `searchset`) that is returned from a bulk match operation.",
+	"fhirVersion": "4.0.1",
+	"kind": "resource",
+	"abstract": false,
+	"type": "Bundle",
+	"baseDefinition": "http://hl7.org/fhir/StructureDefinition/Bundle",
+	"derivation": "constraint",
+	"differential": {
+		"element": [
+			{
+				"id": "Bundle",
+				"path": "Bundle",
+				"short": "Bulk Match Brands Bundle",
+				"definition": "JSON FHIR Bundle (type: `searchset`) that is returned from a Bulk Match operation."
+			},
+			{
+				"id": "Bundle.meta",
+				"path": "Bundle.meta",
+				"mustSupport": true
+			},
+			{
+				"id": "Bundle.meta.extension",
+				"path": "Bundle.meta.extension",
+				"min": 1,
+				"mustSupport": true,
+				"slicing": {
+					"discriminator": [
+						{
+							"type": "value",
+							"path": "url"
+						}
+					],
+					"ordered": false,
+					"rules": "open"
+				}
+			},
+			{
+				"path": "Bundle.meta.extension",
+				"sliceName": "match-reference",
+				"short": "Reference to resource being matched",
+				"definition": "Reference to the resource being matched from a match request",
+				"min": 1,
+				"max": "1",
+				"type": [
+					{
+						"code": "Extension",
+						"profile": [
+							"http://hl7.org/fhir/uv/bulkdata/StructureDefinition/match-resource"
+						]
+					}
+				]
+			},
+			{
+				"id": "Bundle.type",
+				"path": "Bundle.type",
+				"fixedCode": "searchset",
+				"mustSupport": true
+			},
+			{
+				"id": "Bundle.entry",
+				"path": "Bundle.entry",
+				"slicing": {
+					"discriminator": [
+						{
+							"type": "type",
+							"path": "resource"
+						}
+					],
+					"rules": "closed"
+				},
+				"mustSupport": true
+			},
+			{
+				"id": "Bundle.entry.search",
+				"path": "Bundle.entry.search",
+				"min": 1,
+				"slicing": {
+					"discriminator": [
+						{
+							"type": "type",
+							"path": "resource"
+						}
+					],
+					"rules": "closed"
+				},
+				"mustSupport": true
+			},{
+				"id": "Bundle.entry.search.extension",
+				"path": "Bundle.entry.search.extension",
+				"min": 1,
+				"mustSupport": true,
+				"slicing": {
+					"discriminator": [
+						{
+							"type": "value",
+							"path": "url"
+						}
+					],
+					"ordered": false,
+					"rules": "open"
+				}
+			},
+			{
+				"path": "Bundle.entry.search.extension",
+				"sliceName": "match-grade",
+				"short" : "How likely this resource is to be a match",
+				"definition" : "Assessment of resource match outcome - how likely this resource is to be a match.",
+				"min": 1,
+				"max": "1",
+				"type": [
+					{
+						"code": "Extension",
+						"profile": [
+							"http://hl7.org/fhir/StructureDefinition/match-grade"
+						]
+					}
+				]
+			},{
+				"id": "Bundle.entry.search.mode",
+				"path": "Bundle.entry.search.mode",
+				"fixedCode": "match",
+				"min": 1,
+				"mustSupport": true
+			},{
+				"id": "Bundle.entry.search.score",
+				"path": "Bundle.entry.search.score",
+				"min": 1,
+				"mustSupport": true
+			},
+			{
+				"id": "Bundle.entry:Patient",
+				"path": "Bundle.entry",
+				"sliceName": "Patient",
+				"min": 0,
+				"max": "*",
+				"mustSupport": true
+			},
+			{
+				"id": "Bundle.entry:OperationDefinition",
+				"path": "Bundle.entry",
+				"sliceName": "OperationDefinition",
+				"min": 0,
+				"max": "*",
+				"mustSupport": true
+			}]
+	}
+}

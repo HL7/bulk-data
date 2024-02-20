@@ -5,7 +5,7 @@ dlurl=$pubsource$publisher_jar
 
 input_cache_path=$PWD/input-cache/
 
-scriptdlroot=https://raw.githubusercontent.com/FHIR/sample-ig/master
+scriptdlroot=https://raw.githubusercontent.com/HL7/ig-publisher-scripts/main
 update_bat_url=$scriptdlroot/_updatePublisher.bat
 gen_bat_url=$scriptdlroot/_genonce.bat
 gencont_bat_url=$scriptdlroot/_gencontinuous.bat
@@ -31,11 +31,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 echo "Checking internet connection"
-case "$OSTYPE" in
-	linux-gnu* ) ping tx.fhir.org -4 -c 1 -w 1000 >/dev/null ;;
-  darwin* )	ping tx.fhir.org -c 1 >/dev/null ;;
-	*) echo "unknown: $OSTYPE"; exit 1 ;;
-esac
+curl -sSf tx.fhir.org > /dev/null
 
 if [ $? -ne 0 ] ; then
   echo "Offline (or the terminology server is down), unable to update.  Exiting"

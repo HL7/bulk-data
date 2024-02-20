@@ -2,47 +2,66 @@
 <!--
   - A list of all work groups (and other HL7 groups/individuals) that can have responsibility for change requests
   -
-  - WARNING: Don't *ever* change the key as you'll break old tracker workgroups.  Leave the key the same and change the name only.  
+  - WARNING: Don't *ever* change the key as you'll break old tracker workgroups.  Leave the key the same and change the name only.
   -          No one sees the key except when maintaining these files or working with exports
   -->
-  
+
 <workgroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schemas/workgroupList.xsd">
-  <workgroup key="brr" webcode="rcrim" name="Biomedical Research &amp;amp; Regulation"/>
-  <workgroup key="cbcc" webcode="homehealth" name="Community-Based Care and Privacy"/>
-  <workgroup key="cgit" webcode="ictc" name="Conformance"/>
-  <workgroup key="cimi" webcode="cimi" name="CIMI"/>
-  <workgroup key="cds" webcode="dss" name="Clinical Decision Support"/>
-  <workgroup key="cic" webcode="cic" name="Clinical Interoperability Council"/>
-  <workgroup key="cg" webcode="clingenomics" name="Clinical Genomics"/>
-  <workgroup key="cgp" webcode="cgp" name="Cross-Group Projects"/>
-  <workgroup key="cqi" webcode="cqi" name="Clinical Quality Information"/>
-  <workgroup key="dev" webcode="healthcaredevices" name="Devices"/>
-  <workgroup key="ehr" webcode="ehr" name="Electronic Health Record"/>
+  <workgroup key="gas" webcode="gas" name="Anesthesia" deprecated="true"/>
+  <workgroup key="arb" name="Architecture Review Board" deprecated="true"/>
+  <workgroup key="as" webcode="as" name="Arden Syntax" listserv="ardensyntax@lists.HL7.org"/>
+  <workgroup key="att" webcode="att" name="Attachments" deprecated="true"/>
+  <workgroup key="brr" webcode="rcrim" name="Biomedical Research &amp;amp; Regulation" listserv="biomedrr@lists.HL7.org"/>
+  <workgroup key="cbcc" webcode="homehealth" name="Community-Based Care and Privacy" listserv="cbhs@lists.HL7.org/"/>
+  <workgroup key="cdamg" webcode="cdamanagement" name="CDA Management Group" listserv="cdamg@lists.HL7.org/"/>
+  <workgroup key="cgit" webcode="ictc" name="Conformance" listserv="cgit@lists.HL7.org/"/>
+  <workgroup key="cimi" webcode="cimi" name="CIMI" listserv="cimi@lists.HL7.org/"/>
+  <workgroup key="cds" webcode="dss" name="Clinical Decision Support" listserv="dss@lists.HL7.org/"/>
+  <workgroup key="cic" webcode="cic" name="Clinical Interoperability Council" listserv="ciclist@lists.HL7.org/"/>
+  <workgroup key="cg" webcode="clingenomics" name="Clinical Genomics" listserv="clingenomics@lists.HL7.org/"/>
+  <workgroup key="cgp" webcode="cgp" name="Cross-Group Projects" listserv="cgp@lists.HL7.org/"/>
+  <workgroup key="cqi" webcode="cqi" name="Clinical Quality Information" listserv="cqi@lists.HL7.org/"/>
+  <workgroup key="dev" webcode="healthcaredevices" name="Devices" listserv="healthcaredevices@lists.HL7.org/"/>
+  <workgroup key="ec" webcode="ec" name="Emergency Care" listserv="emergencycare@lists.HL7.org/"/>
+  <workgroup key="ehr" webcode="ehr" name="Electronic Health Record" listserv="ehr@lists.HL7.org/"/>
   <workgroup key="director" name="FHIR Director"/>
   <workgroup key="fgb" name="FHIR Governance Board" deprecated="true"/>
-  <workgroup key="fhir-i" webcode="fiwg" name="FHIR Infrastructure"/>
-  <workgroup key="fmg" webcode="fhirmg" name="FHIR Mgmt Group"/>
-  <workgroup key="fm" webcode="fm" name="Financial Mgmt"/>
+  <workgroup key="fhir-i" webcode="fiwg" name="FHIR Infrastructure" listserv="fhir@lists.HL7.org/"/>
+  <workgroup key="fmg" webcode="fhirmg" name="FHIR Mgmt Group" listserv="fmg@lists.HL7.org/"/>
+  <workgroup key="fm" webcode="fm" name="Financial Mgmt" listserv="fm@lists.HL7.org/"/>
+  <workgroup key="hcd" webcode="hcd" name="Health Care Devices" deprecated="true"/>
   <workgroup key="hsi" name="Health Standards Integration" deprecated="true"/>
-  <workgroup key="hta" webcode="termauth" name="HL7 Terminology Authority"/>
+  <workgroup key="hss" webcode="hsswg" name="Human and Social Services" listserv="hsswg@lists.HL7.org/"/>
+  <workgroup key="hta" webcode="termauth" name="HL7 Terminology Authority" listserv="termauth@lists.HL7.org/"/>
+  <workgroup key="ic" webcode="ic" name="International Council" listserv="intl@lists.HL7.org/"/>
   <workgroup key="project" name="IG Project" deprecated="true"/>
-  <workgroup key="ii" webcode="imagemgt" name="Imaging Integration"/>
-  <workgroup key="its" webcode="xml" name="Implementable Technology Specifications"/>
-  <workgroup key="inm" webcode="inm" name="Infrastructure &amp;amp; Messaging"/>
-  <workgroup key="mnm" webcode="mnm" name="Modeling &amp;amp; Methodology"/>
-  <workgroup key="oo" webcode="orders" name="Orders &amp;amp; Observations"/>
-  <workgroup key="pa" webcode="pafm" name="Patient Administration"/>
-  <workgroup key="pc" webcode="patientcare" name="Patient Care"/>
-  <workgroup key="pe" webcode="patientempowerment" name="Patient Empowerment"/>
-  <workgroup key="pie" webcode="claims" name="Payer/Provider Information Exchange"/>
-  <workgroup key="pharm" webcode="medication" name="Pharmacy"/>
-  <workgroup key="pher" webcode="pher" name="Public Health"/>
-  <workgroup key="pubs" webcode="publishing" name="Publishing"/>
-  <workgroup key="security" webcode="secure" name="Security"/>
-  <workgroup key="soa" webcode="soa" name="Service Oriented Architecture"/>
-  <workgroup key="sd" webcode="structure" name="Structured Documents"/>
+  <workgroup key="ii" webcode="imagemgt" name="Imaging Integration" listserv="dicom@lists.HL7.org/"/>
+  <workgroup key="its" webcode="xml" name="Implementable Technology Specifications" listserv="its@lists.HL7.org/"/>
+  <workgroup key="inm" webcode="inm" name="Infrastructure &amp;amp; Messaging" listserv="inm@lists.HL7.org/"/>
+  <workgroup key="lhs" webcode="lhs" name="Learning Health Systems" listserv="lhswg@lists.HL7.org/"/>
+  <workgroup key="mh" webcode="mh" name="Mobile Health" listserv="mobilehealth@lists.HL7.org/"/>
+  <workgroup key="mnm" webcode="mnm" name="Modeling &amp;amp; Methodology" deprecated="true"/>
+  <workgroup key="oo" webcode="orders" name="Orders &amp;amp; Observations" listserv="ord@lists.HL7.org/"/>
+  <workgroup key="pa" webcode="pafm" name="Patient Administration" listserv="pafm@lists.HL7.org/"/>
+  <workgroup key="pc" webcode="patientcare" name="Patient Care" listserv="patientcare@lists.HL7.org/"/>
+  <workgroup key="pe" webcode="patientempowerment" name="Patient Empowerment" listserv="patients@lists.HL7.org/"/>
+  <workgroup key="pie" webcode="claims" name="Payer/Provider Information Exchange" listserv="pie@lists.HL7.org/"/>
+  <workgroup key="pharm" webcode="medication" name="Pharmacy" listserv="pharmacy@lists.HL7.org/"/>
+  <workgroup key="pic" webcode="pic" name="Process Improvement Committee" deprecated="true"/>
+  <workgroup key="ps" webcode="ps" name="Project Services" deprecated="true"/>
+  <workgroup key="pher" webcode="pher" name="Public Health" listserv="pher@lists.HL7.org/"/>
+  <workgroup key="pubs" webcode="publishing" name="Publishing" listserv="es@lists.HL7.org/"/>
+  <workgroup key="security" webcode="secure" name="Security" listserv="security@lists.HL7.org/"/>
+  <workgroup key="soa" webcode="soa" name="Service Oriented Architecture" listserv="soa@lists.HL7.org/"/>
+  <workgroup key="sd" webcode="structure" name="Structured Documents" listserv="strucdoc@lists.HL7.org/"/>
+  <workgroup key="sgb" name="Standards Governance Board" deprecated="true"/>
   <workgroup key="templates" name="Templates" deprecated="true"/>
-  <workgroup key="us-realm" webcode="usrealm" name="US Realm Task Force"/>
-  <workgroup key="vocab" webcode="vocab" name="Vocabulary"/>
-  <workgroup key="v2mg" webcode="v2management" name="V2 Mgmt Group"/>
+  <workgroup key="tsc" webcode="tsc" name="Technical Steering Committee"/>
+  <workgroup key="tsmg" webcode="tsmanagement" name="Terminology Services Management Group" listserv="tsmg@lists.HL7.org/"/>
+  <workgroup key="us-realm" webcode="usrealm" name="US Realm Task Force" deprecated="true"/>
+  <workgroup key="vocab" webcode="vocab" name="Terminology Infrastructure" listserv="ti@lists.HL7.org/"/>
+  <workgroup key="v2mg" webcode="v2management" name="V2 Mgmt Group" listserv="v2mgmtgrp@lists.HL7.org/"/>
+  <workgroup key="eu" webcode="eu" name="HL7 Europe" listserv="europe@lists.hl7.org/"/>  
+  <workgroup key="au-v2" webcode="au-v2" name="HL7 Australia V2" listserv="hl7v2wgballot@hl7.com.au"/>
+  <workgroup key="au-fhir" webcode="au-fhir" name="HL7 Australia FHIR" listserv="fhirwgballot@hl7.com.au"/>
 </workgroups>

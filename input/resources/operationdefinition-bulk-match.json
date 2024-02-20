@@ -1,0 +1,93 @@
+{
+	"resourceType" : "OperationDefinition",
+	"id" : "bulk-match",
+	"extension" : [{
+	  "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm",
+	  "valueInteger" : 0
+	},
+	{
+	  "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
+	  "valueCode" : "trial-use"
+	},
+	{
+	  "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
+	  "valueCode" : "fhir"
+	}],
+	"url" : "http://hl7.org/fhir/OperationDefinition/bulk-match",
+	"version" : "2.0.0",
+	"name" : "Match",
+	"title" : "FHIR Bulk Match Operation",
+	"description": "FHIR Operation for a client determine the FHIR Patient resource ids of a set of patients in a FHIR server by transmitting demographic information.",
+	"status" : "draft",
+	"kind" : "operation",
+	"experimental" : false,
+	"date" : "2024-02-16",
+	"publisher": "SMART Health IT",
+	"contact": [{
+	  "name": "Dan Gottlieb",
+	  "telecom": [{
+		  "system": "email",
+		  "value": "daniel.gottlieb@childrens.harvard.edu"
+		}]
+	},{
+	  "name": "Josh Mandel",
+	  "telecom": [{
+		  "system": "email",
+		  "value": "joshua.mandel@childrens.harvard.edu"
+		}]
+	}],
+	"jurisdiction": [{
+	  "coding": [{
+		  "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",
+		  "code": "001",
+		  "display": "World"
+		}]
+	}],
+	"affectsState" : false,
+	"code" : "bulk-match",
+	"comment" : "",
+	"resource" : ["Patient"],
+	"system" : false,
+	"type" : true,
+	"instance" : false,
+	"parameter" : [{
+	  "name" : "resource",
+	  "use" : "in",
+	  "min" : 1,
+	  "max" : "*",
+	  "documentation" : "Use this to provide an entire set of patient details to match against.",
+	  "type" : "Resource"
+	},
+	{
+	  "name" : "onlySingleMatch",
+	  "use" : "in",
+	  "min" : 0,
+	  "max" : "1",
+	  "documentation" : "If there are multiple potential matches, the server should identify the single most appropriate match that should be used with future interactions with the server (for example, as part of a subsequent create interaction).",
+	  "type" : "boolean"
+	},
+	{
+	  "name" : "onlyCertainMatches",
+	  "use" : "in",
+	  "min" : 0,
+	  "max" : "1",
+	  "documentation" : "If there are multiple potential matches, the server should be certain that each of the records are for the same patients.  This could happen if the records are duplicates, are the same person for the purpose of data segregation, or other reasons.  When false, the server may return multiple results with each result graded accordingly.",
+	  "type" : "boolean"
+	},
+	{
+	  "name" : "count",
+	  "use" : "in",
+	  "min" : 0,
+	  "max" : "1",
+	  "documentation" : "The maximum number of records to return. If no value is provided, the server decides how many matches to return. Note that clients should be careful when using this, as it may prevent probable - and valid - matches from being returned",
+	  "type" : "integer"
+	},
+	{
+		"name": "_outputFormat",
+		"use": "in",
+		"min": 0,
+		"max": "1",
+		"documentation": "Support is required for a server, optional for a client.\n\nThe format for the requested Bulk Data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html). Defaults to `application/fhir+ndjson`. The server SHALL support [Newline Delimited JSON](http://ndjson.org), but MAY choose to support additional output formats. The server SHALL accept the full content type of `application/fhir+ndjson` as well as the abbreviated representations `application/ndjson` and `ndjson`.",
+		"type": "string"
+	  }]
+}

@@ -56,6 +56,21 @@
         <reference value="CodeSystem/include-associated-data" />
       </reference>
     </resource>
+    <resource>
+      <reference>
+        <reference value="OperationDefinition/bulk-match" />
+      </reference>
+    </resource>
+    <resource>
+      <reference>
+        <reference value="StructureDefinition/bulk-match-bundle" />
+      </reference>
+    </resource>
+        <resource>
+      <reference>
+        <reference value="StructureDefinition/match-resource" />
+      </reference>
+    </resource>
     <page>
       <nameUrl value="toc.html"/>
       <title value="Table of Contents"/>
@@ -73,6 +88,11 @@
       <page>
         <nameUrl value="authorization.html"/>
         <title value="SMART Backend Services Authorization"/>
+        <generation value="markdown"/>
+      </page>
+      <page>
+        <nameUrl value="match.html"/>
+        <title value="Bulk Match"/>
         <generation value="markdown"/>
       </page>
       <page>
