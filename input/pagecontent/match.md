@@ -72,9 +72,9 @@ The Resource FHIR server SHALL support invocation of the Bulk Match operation us
 
 ##### Parameters
 
-Parameters are based on those in the [Single Patient Match Operation](http://build.fhir.org/patient-operation-match.html), with the `resource` parameter adjusted to a permit a cardinality of `[1..*]` and the addition of the `_outputFormat` parameter. 
+Parameters are based on those in the [Single Patient Match Operation](http://build.fhir.org/patient-operation-match.html), with the `resource` parameter adjusted to permit a cardinality of `[1..*]` and the addition of the `_outputFormat` parameter. 
 
-The patient resources submitted to the operation do not need to be complete. Individual systems and use case specific implementation guides MAY require data elements and/or specific identifier types be populated. Note that the client should provide an `id` element for each Patient resource that's unique to a patient in the source system, since this `id` will be returned as part of the response to enable tying the match bundles to patients in the request.
+The patient resources submitted to the operation do not need to be complete. Individual systems and use case specific implementation guides MAY require data elements and/or specific identifier types be populated. Note that the client SHALL provide an `id` element for each Patient resource that's unique to a patient in the source system, since this `id` will be returned as part of the response to enable tying the match bundles to patients in the request.
 
 The server MAY document a limit on the number of bytes or instances of the `resource` parameter in a kickoff request. For requests larger than this limit, a client can break the request into smaller requests and submit them serially. See the [Response - Error](#response---error) section below for more details.
 
@@ -207,10 +207,7 @@ Content-Type: application/json
 &nbsp;&nbsp;"type" : "Bundle",
 &nbsp;&nbsp;"url" : "https://example.com/output/match_file_2.ndjson"
 &nbsp;}],
-&nbsp;"error" : [{
-&nbsp;&nbsp;"type" : "OperationOutcome",
-&nbsp;&nbsp;"url" : "https://example.com/output/err_file_1.ndjson"
-&nbsp;}],
+&nbsp;"error" : [],
 &nbsp;"extension":{"https://example.com/extra-property": true}
 }</code></pre></td>
     </tr>
@@ -321,7 +318,7 @@ In the case of a polling failure that does not indicate failure of the export jo
 ---
 #### Bulk Match Output File Request
 
-Using the URLs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated Bulk Data files (one or more per resource type) within the time period specified in the `Expires` header (if present). 
+Using the URLs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated Bulk Data files within the time period specified in the `Expires` header (if present). 
 
 If the `requiresAccessToken` field in the Complete Status body is set to `true`, the request SHALL include a valid access token.  Regardless, a server SHALL limit the data returned to only those FHIR resources for which the client is authorized. See [Privacy and Security Considerations](#privacy-and-security-considerations) above.  
 
