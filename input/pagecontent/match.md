@@ -118,7 +118,7 @@ The server MAY document a limit on the number of bytes or instances of the `reso
 
 - HTTP Status Code of `4XX` or `5XX`
 - The body SHALL be a FHIR `OperationOutcome` resource in JSON format
-- The server MAY reject a bulk match request if number of bytes or instances of the resource parameter is too large by returning a `413 Content Too Large` header. A client SHOULD respond by breaking the request into smaller requests and submitting them serially. These limits SHOULD be described in the server documentation.
+- The server MAY reject a bulk match request if number of bytes or instances of the resource parameter is too large by returning a `413 Content Too Large` response. A client SHOULD respond by breaking the request into smaller requests and submitting them serially. These limits SHOULD be described in the server documentation.
 - If a server wants to prevent a client from beginning a new match request before an in-progress match request is completed, it SHOULD respond with a `429 Too Many Requests` status and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header, following the rate-limiting advice for "Bulk Match Status Request" below.
 
 ---
