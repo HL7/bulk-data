@@ -13,7 +13,7 @@
 	  "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-wg",
 	  "valueCode" : "fhir"
 	}],
-	"url" : "http://hl7.org/fhir/OperationDefinition/bulk-match",
+	"url" : "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-match",
 	"version" : "2.0.0",
 	"name" : "Match",
 	"title" : "FHIR Bulk Match Operation",
