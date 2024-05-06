@@ -288,16 +288,16 @@ The following steps outline a logical model of how a server should process a bul
 
 4. When `_typeFilter` is populated, resources with resource types that have a `_typeFilter` search query specified and would have been included in the bulk output based on the resource type and temporal criteria above should be filtered to only those that satisfy the relevant search expressions in `_typeFilter` parameter.
 
-  - If more than one `_typeFilter` parameter references a set of criteria for a resource type, resources of this type should be included if they satisfy any of these criteria sets. 
+    - If more than one `_typeFilter` parameter references a set of criteria for a resource type, resources of this type should be included if they satisfy any of these criteria sets. 
 
-  - Each resource type is filtered independently. For example, filtering Patient resources to people born after the year 2000 will not filter Encounter resources for patients born before the year 2000 from the export.
+    - Each resource type is filtered independently. For example, filtering Patient resources to people born after the year 2000 will not filter Encounter resources for patients born before the year 2000 from the export.
 
-  - Resources that would have been included in the output based on the resource type and temporal criteria above and don't have a `_typeFilter` search parameter specified for their resource type should remain in the output. 
+    - Resources that would have been included in the output based on the resource type and temporal criteria above and don't have a `_typeFilter` search parameter specified for their resource type should remain in the output. 
 
 5. When `includeAssociatedData` is populated, any associated data of the type specified in one of the values that is available for any of the resources included in the output should be added to the output. For example, if `LatestProvenanceResources` is specified, the most recent Provenance resource for each of the resources in the output should also be added to the output.
 
  <figure>
-  {% include processing-flow.svg %}
+  <img src="processing-flow.png" height="600px"/>
   <figcaption>Diagram outlining a logical model of how a server should process a bulk export request.</figcaption>
 </figure>
 
