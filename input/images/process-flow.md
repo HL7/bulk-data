@@ -11,7 +11,7 @@ flowchart TB
     typefilter_no_filter[Retain all resources for these resource types]
     iad[Add associated resources\nspecified in IncludeAssociatedData parameter]
     return[Resources included in export]
-    all --> group --> authz --> type --> since --> typefilter_criteria --> typefilter_filter --> iac
+    all --> group --> authz --> type --> since --> typefilter_criteria --> typefilter_filter --> iad
     since --> typefilter_no_criteria --> typefilter_no_filter --> iad
     iad --> return
 ```
