@@ -414,7 +414,7 @@ In the case of a polling failure that does not indicate failure of the export jo
 - HTTP status of `200 OK`
 - `Content-Type` header of `application/json`
 - The server SHOULD return an `Expires` header indicating when the files listed will no longer be available for access.
-- A body containing a JSON object providing metadata, and links to the generated Bulk Data files (the export manifest).  The files SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
+- A body containing a JSON object (the export manifest) providing metadata and links to the generated Bulk Data files. The files SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
 
 Required Fields:
 
