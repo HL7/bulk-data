@@ -129,4 +129,27 @@
       <value value="true"/>
     </parameter>
   </definition>
+  <!-- temporary fix for build error  Unknown NamingSystemIdentifierType code '?, 
+    see https://chat.fhir.org/#narrow/stream/179252-IG-creation/topic/unknown.20NamingSystemIdentifierType.20code.20'.3F'/near/451694633
+  -->
+  <dependsOn id="terminology">
+      <uri value="http://terminology.hl7.org/ImplementationGuide/hl7.terminology#5.5.0"/>
+      <packageId value="hl7.terminology.r4"/>
+      <version value="5.5.0"/>
+  </dependsOn>
+  <extension url="http://hl7.org/fhir/StructureDefinition/structuredefinition-wg">
+    <valueCode value="fhir" />
+  </extension>
+  <publisher value="HL7 International / FHIR Infrastructure" />
+  <contact>
+    <name value="HL7 International / FHIR Infrastructure" />
+    <telecom>
+      <system value="url" />
+      <value value="http://www.hl7.org/Special/committees/fiwg" />
+    </telecom>
+    <telecom>
+      <system value="email" />
+      <value value="fhir@lists.HL7.org" />
+    </telecom>
+  </contact>
 </ImplementationGuide>
