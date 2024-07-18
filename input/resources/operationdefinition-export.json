@@ -8,26 +8,6 @@
   "status": "active",
   "kind": "operation",
   "date": "2021-07-29",
-  "publisher": "SMART Health IT",
-  "contact": [{
-    "name": "Dan Gottlieb",
-    "telecom": [{
-        "system": "email",
-        "value": "daniel.gottlieb@childrens.harvard.edu"
-      }]
-  },{
-    "name": "Josh Mandel",
-    "telecom": [{
-        "system": "email",
-        "value": "joshua.mandel@childrens.harvard.edu"
-      }]
-  },{
-    "name": "Vlad Ignatov",
-    "telecom": [{
-        "system": "email",
-        "value": "vladimir.ignatov@childrens.harvard.edu"
-      }]
-  }],
   "jurisdiction": [{
     "coding": [{
         "system": "http://unstats.un.org/unsd/methods/m49/m49.htm",

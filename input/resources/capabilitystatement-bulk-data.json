@@ -8,26 +8,6 @@
   "status": "active",
   "experimental": false,
   "date": "2021-07-29",
-  "publisher": "SMART Health IT",
-  "contact": [{
-    "name": "Dan Gottlieb",
-    "telecom": [{
-        "system": "email",
-        "value": "daniel.gottlieb@childrens.harvard.edu"
-      }]
-  },{
-    "name": "Josh Mandel",
-    "telecom": [{
-        "system": "email",
-        "value": "joshua.mandel@childrens.harvard.edu"
-      }]
-  },{
-    "name": "Vlad Ignatov",
-    "telecom": [{
-        "system": "email",
-        "value": "Vladimir.Ignatov@childrens.harvard.edu"
-      }]
-  }],
   "description": "The expected capabilities of a Bulk Data Provider actor (e.g., EHR systems, data warehouses, and other clinical and administrative systems that aim to interoperate by sharing large FHIR datasets) which is responsible for providing responses to the queries submitted by a FHIR Bulk Data Client actor. Systems implementing this capability statement should meet the requirements set by the Bulk Data Access Implementation Guide. A FHIR Bulk Data Client has the option of choosing from this list to access necessary data based on use cases and other contextual requirements.",
   "jurisdiction": [{
     "coding": [{
