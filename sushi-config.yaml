@@ -1,0 +1,68 @@
+id: hl7.fhir.uv.bulkdata
+canonical: http://hl7.org/fhir/uv/bulkdata
+name: BulkDataAccessIG
+title: Bulk Data Access IG
+description: FHIR based approach for exporting large data sets from a FHIR server to a client application
+status: draft
+version: 2.0.0
+fhirVersion: 4.0.1
+copyrightYear: 2021+
+releaseLabel: ci-build # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
+license: CC0-1.0 # https://www.hl7.org/fhir/valueset-spdx-license.html
+jurisdiction: http://unstats.un.org/unsd/methods/m49/m49.htm#001
+publisher:
+  name: HL7 International / FHIR Infrastructure
+  url: http://www.hl7.org/Special/committees/fiwg
+  email: fhir@lists.HL7.org
+
+# this is a temporary fix and should be removed once publisher will build without it
+dependencies:
+  hl7.terminology.r4:
+    id: terminology
+    uri: http://terminology.hl7.org/ImplementationGuide/hl7.terminology
+    version: 5.5.0
+
+pages:
+  index.md:
+    title: Home
+  export.md:
+    title: Export
+  authorization.md:
+    title: SMART Backend Services Authorization
+  abbreviations.md:
+    title: Abbreviations
+  changes.md:
+    title: IG Change History
+  downloads.html:
+    title: Downloads
+
+parameters:
+  excludettl: true
+  excludexml: true
+  excludemap: true
+
+menu:
+  Home: index.html
+  Export: export.html
+  Authorization: authorization.html
+  FHIR Artifacts: artifacts.html
+  Downloads: downloads.html
+  Abbreviations: abbreviations.html
+
+resources:
+  CapabilityStatement/bulk-data:
+    name: Capability Statement
+  OperationDefinition/export:
+    name: System Level Export Operation Definition
+  OperationDefinition/group-export:
+    name: Group Level Export Operation Definition
+  OperationDefinition/patient-export:
+    name: Patient Level Export Operation Definition
+  ValueSet/include-associated-data:
+    name: Include Associated Data Value Set
+  CodeSystem/include-associated-data:
+    name: Include Associated Data Code System
+
+extension:
+  - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-wg
+    valueCode: fhir
