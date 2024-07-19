@@ -5,7 +5,7 @@ dlurl=$pubsource$publisher_jar
 
 input_cache_path=$PWD/input-cache/
 
-scriptdlroot=https://raw.githubusercontent.com/FHIR/sample-ig/master
+scriptdlroot=https://raw.githubusercontent.com/HL7/ig-publisher-scripts/main
 update_bat_url=$scriptdlroot/_updatePublisher.bat
 gen_bat_url=$scriptdlroot/_genonce.bat
 gencont_bat_url=$scriptdlroot/_gencontinuous.bat
@@ -31,11 +31,7 @@ while [ "$#" -gt 0 ]; do
 done
 
 echo "Checking internet connection"
-case "$OSTYPE" in
-	linux-gnu* ) ping tx.fhir.org -4 -c 1 -w 1000 >/dev/null ;;
-  darwin* )	ping tx.fhir.org -c 1 >/dev/null ;;
-	*) echo "unknown: $OSTYPE"; exit 1 ;;
-esac
+curl -sSf tx.fhir.org > /dev/null
 
 if [ $? -ne 0 ] ; then
   echo "Offline (or the terminology server is down), unable to update.  Exiting"
@@ -121,13 +117,16 @@ if [[ $skipPrompts == true ]] || [[ $response =~ ^[yY].*$ ]]; then
 
   curl -L $gencont_sh_url -o /tmp/_gencontinuous.new
   cp /tmp/_gencontinuous.new _gencontinuous.sh
+  chmod +x _gencontinuous.sh
   rm /tmp/_gencontinuous.new
 
   curl -L $gen_sh_url -o /tmp/_genonce.new
   cp /tmp/_genonce.new _genonce.sh
+  chmod +x _genonce.sh
   rm  /tmp/_genonce.new
 
   curl -L $update_sh_url -o /tmp/_updatePublisher.new
   cp /tmp/_updatePublisher.new _updatePublisher.sh
+  chmod +x _updatePublisher.sh
   rm /tmp/_updatePublisher.new
 fi

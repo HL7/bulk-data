@@ -1,10 +1,1 @@
 == Suppressed Messages ==
-
-# validated
-INFORMATION: ImplementationGuide/hl7.fhir.uv.bulkdata: ImplementationGuide: Validate resource against profile http://hl7.org/fhir/StructureDefinition/ImplementationGuide
-INFORMATION: CapabilityStatement/bulk-data: CapabilityStatement: Validate resource against profile http://hl7.org/fhir/StructureDefinition/CapabilityStatement
-INFORMATION: CodeSystem/include-associated-data: CodeSystem: Validate resource against profile http://hl7.org/fhir/StructureDefinition/CodeSystem
-INFORMATION: OperationDefinition/export: OperationDefinition: Validate resource against profile http://hl7.org/fhir/StructureDefinition/OperationDefinition
-INFORMATION: OperationDefinition/group-export: OperationDefinition: Validate resource against profile http://hl7.org/fhir/StructureDefinition/OperationDefinition
-INFORMATION: OperationDefinition/patient-export: OperationDefinition: Validate resource against profile http://hl7.org/fhir/StructureDefinition/OperationDefinition
-INFORMATION: ValueSet/include-associated-data: ValueSet: Validate resource against profile http://hl7.org/fhir/StructureDefinition/ValueSet
