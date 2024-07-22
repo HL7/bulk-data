@@ -285,6 +285,15 @@ $export?
 
 Note: The `Condition` resource is included in `_type` but omitted from `_typeFilter` because the client intends to request all `Condition` resources without any filters.
 
+##### Server Processing Model
+
+The following steps outline a logical model of how a server should process a bulk export request. The actual operations a server performs and the order in which they're performed may differ. Additionally, as documented elsewhere in this implementation guide, depending on the values and headers provided, some requests may cause a server to return an error rather than continuing to process the request.
+
+ <figure>
+  {% include processing-model.svg %}
+  <figcaption>Diagram outlining a logical model of how a server should process a bulk export request.</figcaption>
+</figure>
+
 ##### Response - Success
 
 - HTTP Status Code of `202 Accepted`
