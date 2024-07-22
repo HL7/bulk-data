@@ -618,7 +618,11 @@ Note that if a server copies files to the Bulk Data output endpoint or proxies r
 
 ### Server Capability Documentation
 
-This implementation guide is structured to support a wide variety of Bulk Data Export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHOULD ensure that their Capability Statement accurately reflects the implemented Bulk Data Operations and that their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
+This implementation guide is structured to support a wide variety of Bulk Data Export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the implemented Bulk Data Operations. Additionally, the server's Capability Statement SHOULD list the resource types available for export in the `rest.resource` element, and SHOULD list the search parameters that can be used in the _typeFilter parameter in the `rest.resource.searchParam` element. 
+
+Servers SHOULD indicate resource types and search parameters that are accessible on the server with the REST API, but not available using the Bulk Export operation, with one or more extensions that have a URL of `http://hl7.org/fhir/uv/bulkdata/Extension/operation-not-supported` and a `valueCanonical` with the canonical URL for the [OperationDefinition](artifacts.html#behavior-operation-definitions) of the bulk operation that is not supported. Alternatively, the extension may be populated with the canonical URL for the FHIR Bulk Data Access Implementation Guide [CapabilityStatement](artifacts.html#behavior-capability-statements) when none of the bulk operations are supported.
+
+Server providers SHOULD also ensure that their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
 
 - Does the server restrict responses to a specific profile like the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/) or the [Blue Button Implementation Guide](http://hl7.org/fhir/us/carin-bb/)?
 - What approach does the server take to divide datasets into multiple files (e.g., single file per single resource type, limit file size to 100MB, limit number of resources per file to 100,000)?
