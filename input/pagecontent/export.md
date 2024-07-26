@@ -435,7 +435,7 @@ Content-Type: application/json
 
 - HTTP Status Code of `202 Accepted`
 - Optionally, the server MAY return an `X-Progress` header with a text description of the status of the request that is less than 100 characters. The format of this description is at the server's discretion and MAY be a percentage complete value, or MAY be a more general status such as "in progress". The client MAY parse the description, display it to the user, or log it.
-- When the `allowPartialManifests` kickoff parameter is `true`, the server MAY return a `Content-Type` header of `application/json` and a body containing an output manifest in the format [described below](response---output-manifest), populated with a partial set of output files for the export. When provided, a manifest SHALL only contain files that are available for retrieval by the client. Once returned, the server SHALL NOT alter a manifest when it is returned in subsequent requests, with the exception of optionally adding a `link` field pointing to a manifest with additional output files. The output files referenced in the manifest SHALL NOT be altered once they have been included in a manifest that has been returned to a client.
+- When the `allowPartialManifests` kickoff parameter is `true`, the server MAY return a `Content-Type` header of `application/json` and a body containing an output manifest in the format [described below](response---output-manifest), populated with a partial set of output files for the export. When provided, a manifest SHALL only contain files that are available for retrieval by the client. Once returned, the server SHALL NOT alter a manifest when it is returned in subsequent requests, with the exception of optionally adding a `link` field pointing to a manifest with additional output files or updating output file URLs that have expired. The output files referenced in the manifest SHALL NOT be altered once they have been included in a manifest that has been returned to a client.
 
 ##### Response - Error Status
 
@@ -658,7 +658,13 @@ Example header for `Patient` resource:
 
 #### Bulk Data Output File Request
 
-Using the URLs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated Bulk Data files (one or more per resource type) within the time period specified in the `Expires` header (if present). If the `requiresAccessToken` field in the Complete Status body is set to `true`, the request SHALL include a valid access token.  See [Privacy and Security Considerations](#privacy-and-security-considerations) above.  
+Using the URLs supplied by the FHIR server in the manifest, a client MAY download the generated Bulk Data files (one or more per resource type) within the time period specified in the `Expires` header (if present). A client MAY re-fetch the output manifest if output links have expired, and a server MAY provide updated links and/or an updated timestamp in the `Expires` header in the response. 
+
+As long as a server is following relevant security guidance, it MAY generate output manifests where the `requiresAccessToken` field is `true` or `false`; this applies even for servers available on the public internet.
+
+If the `requiresAccessToken` field in the manifest is set to `true`, the request SHALL include a valid access token.  See [Privacy and Security Considerations](#privacy-and-security-considerations) above.  
+
+If the `requiresAccessToken` field is set to `false` and no additional authorization-related extensions are present in the manifest's output entry, then the output URLs SHALL be dereferenceable directly (a "capability URL"), and SHALL follow expiration timing requirement that have been documented for bearer tokens in SMART Backend Services. A client SHALL NOT provide a SMART Backend Services access token when dereferencing an output URL where `requiresAccessToken` is `false`.
 
 The exported data SHALL include only the most recent version of any exported resources unless the client explicitly requests different behavior in a fashion supported by the server (e.g.,  via a new query parameter yet to be defined). Inclusion of the `Resource.meta` information in the resources is at the discretion of the server (as it is for all FHIR interactions).
 
