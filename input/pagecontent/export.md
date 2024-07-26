@@ -312,6 +312,8 @@ The following steps outline a logical model of how a server should process a bul
   {% include processing-model.svg %}
   <figcaption>Diagram outlining a logical model of how a server should process a bulk export request.</figcaption>
 </figure>
+<br />
+_* In the case of a Group level export, the server may retain resources modified prior to _since timestamp if the resources belong to the patient compartment of a patient added to the Group after the supplied time and this behavior is documented by the server._
 
 ##### Response - Success
 

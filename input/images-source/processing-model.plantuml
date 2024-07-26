@@ -12,7 +12,7 @@ if (`_type` parameter?) then (yes)
 else (no)
 endif
 if (`_since` parameter?) then (yes)
-  :Exclude resources updated prior to `_since` timestamp;
+  :Exclude resources updated prior to `_since` timestamp*;
 else (no)
 endif
 if (`_typeFilter` parameter?) then (yes)
