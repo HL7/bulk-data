@@ -668,6 +668,8 @@ If the `requiresAccessToken` field is set to `false` and no additional authoriza
 
 The exported data SHALL include only the most recent version of any exported resources unless the client explicitly requests different behavior in a fashion supported by the server (e.g.,  via a new query parameter yet to be defined). Inclusion of the `Resource.meta` information in the resources is at the discretion of the server (as it is for all FHIR interactions).
 
+A client MAY provide an `Accept-Encoding` header when requesting output files. When provided, the client SHOULD include `gzip` compression as one of the encoding options in the header. A server SHALL provide output files as uncompressed, with `gzip` compression, or with another compression format from the `Accept-Encoding` header. When compression is used, a server SHALL communicate this to the client by including a `Content-Encoding` header in the response. A client SHALL accept files that are uncompressed or encoded with `gzip` compression, and MAY accept files encoded with other compression formats.
+
 Example NDJSON output file:
 ```
 {"id":"5c41cecf-cf81-434f-9da7-e24e5a99dbc2","name":[{"given":["Brenda"],"family":["Jackson"]}],"gender":"female","birthDate":"1956-10-14T00:00:00.000Z","resourceType":"Patient"}
