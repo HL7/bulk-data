@@ -16,17 +16,19 @@ publisher:
   email: fhir@lists.HL7.org
 
 # this is a temporary fix and should be removed once publisher will build without it
-dependencies:
-  hl7.terminology.r4:
-    id: terminology
-    uri: http://terminology.hl7.org/ImplementationGuide/hl7.terminology
-    version: 5.5.0
+# dependencies:
+#   hl7.terminology.r4:
+#     id: terminology
+#     uri: http://terminology.hl7.org/ImplementationGuide/hl7.terminology
+#     version: 5.5.0
 
 pages:
   index.md:
     title: Home
   export.md:
     title: Export
+  group.md:
+    title: Groups
   authorization.md:
     title: SMART Backend Services Authorization
   abbreviations.md:
@@ -44,6 +46,7 @@ parameters:
 menu:
   Home: index.html
   Export: export.html
+  Groups: group.html
   Authorization: authorization.html
   FHIR Artifacts: artifacts.html
   Downloads: downloads.html
