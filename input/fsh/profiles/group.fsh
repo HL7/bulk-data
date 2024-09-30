@@ -44,7 +44,7 @@ Description: "Group that provides characteristic based cohorts through coarse-gr
 * modifierExtension contains MemberFilter named memberFilter 1..*
   * ^short = "Filter for members of this group" 
   * ^definition = """
-    A server SHALL support the inclusion of one or more `memberFilter` modifier extensions containing a `valueExpression` with a language of `application/x-fhir-query` and an `expression` populated with a FHIR REST API query for a resource type included in the Patient or Practitioner compartment. If multiple `memberFilter` extensions are provided that contain criteria for different resource types, servers SHALL filter the group to only include Patients or Practitioners that have resources in their compartments that meet the conditions in all of the expressions. If multiple `memberFilter` extensions are provided that contain criteria for a single resource type, the server SHALL include Patients or Practitioners who have resources in their compartments that meet the criteria for that resource type in any of those expressions (a logical "or"). 
+    A server SHALL support the inclusion of one or more `memberFilter` modifier extensions containing a `valueExpression` with a language of `application/x-fhir-query` and an `expression` populated with a FHIR REST API query for a resource type included in the Patient or Practitioner compartment. If multiple `memberFilter` extensions are provided that contain criteria for different resource types, servers SHALL filter the group to only include Patients or Practitioners that have resources in their compartments that meet the conditions in all of the expressions. If multiple `memberFilter` extensions are provided that contain criteria for a single resource type, the server SHALL include Patients or Practitioners who have resources in their compartments that meet the criteria for that resource type in any of those expressions (a logical "or"). A server MAY also support other expression languages such as `text/cql`. When more than one lanugage is supported by a server a client SHALL use a single language type for all of the memberFilter expressions included in a single Group.
  
     FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `memberFilter` criteria. Clients should consult the server's capability statement to identify supported search parameters. Servers SHALL reject Group creation requests that include unsupported search parameters in a `memberFilter` expression. Implementation guides that reference the Bulk Cohort API, should specify required search parameters must be supported for their use case. Other implementations guides that incorporate the Bulk Export operation MAY provide a set of core search parameters that servers implementing the guide need to support.
     """
@@ -56,8 +56,8 @@ Description: "Group that provides characteristic based cohorts through coarse-gr
 * name 1..1
 * characteristic 0..0
   * ^short = "This element is not used for in groups complying with this profile"
-* actual
-  * ^short = "'actual' if member element is popluated, 'descriptive' otherwise"
+* actual = false
+* actual ^short = "Group members are described by memberFilter extension"
   
 Instance: BulkCohortGroupExample
 InstanceOf: BulkCohortGroup
@@ -69,4 +69,4 @@ Usage: #example
 * modifierExtension[memberFilter][0].valueExpression.expression = "Condition?category=http://terminology.hl7.org/CodeSystem/condition-category|problem-list-item&clinical-status=http://terminology.hl7.org/CodeSystem/condition-clinical|active&code=http://hl7.org/fhir/sid/icd-10-cm|E11.9"
 * modifierExtension[memberFilter][1].valueExpression.expression = "Encounter?class=http://terminology.hl7.org/CodeSystem/v3-ActCode|AMB&date=ge2024-01-01&date=le2024-01-31"
 * type = #person
-* actual = true
+* actual = false

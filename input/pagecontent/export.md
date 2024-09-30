@@ -144,7 +144,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional</span></td>
       <td>0..1</td>
       <td>FHIR instant</td>
-      <td>Resources will be included in the response if their state has changed after the supplied time (e.g., if <code>Resource.meta.lastUpdated</code> is later than the supplied <code>_since</code> time). In the case of a Group level export, the server MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior SHOULD be clearly documented  by the server). For Patient- and Group-level requests, the server MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated. For resources where the server does not maintain a last updated time, the server MAY include these resources in a response irrespective of the <code>_since</code> value supplied by a client.</td>
+      <td>Resources will be included in the response if their state has changed after the supplied time (e.g., if <code>Resource.meta.lastUpdated</code> is later than the supplied <code>_since</code> time). In the case of a Group level export, the server MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior SHOULD be clearly documented by the server). For Patient- and Group-level requests, the server MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated. For resources where the server does not maintain a last updated time, the server MAY include these resources in a response irrespective of the <code>_since</code> value supplied by a client.</td>
     </tr>
     <tr>
       <td><code>_type</code></td>
@@ -220,7 +220,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional</span></td>
       <td>0..1</td>
       <td>boolean</td>
-      <td>When provided, a server with support for the parameter MAY return a portion of bulk data output files to a client prior to all output files being available and/or MAY list output files in multiple output manifests. <a href="#manifest-link">See details below</a>.
+      <td>When provided, a server with support for the parameter MAY return a portion of bulk data output files to a client prior to all output files being available and/or MAY distribute bulk data output files among multiple manifests and provide links for clients to page through the manifests. <a href="#manifest-link">See details below</a>.
       </td>
     </tr>
   </tbody>
@@ -280,9 +280,9 @@ To obtain new and updated resources for patients in a group, as well as all data
 
 The `_typeFilter` parameter enables finer-grained filtering out of resources in the bulk data export response that would have otherwise been returned. For example, a client may want to retrieve only active prescriptions rather than all prescriptions and only laboratory observations rather than all observations. When using `_typeFilter`, each resource type is filtered independently. For example, filtering `Patient` resources to people born after the year 2000 will not filter `Encounter` resources for patients born before the year 2000 from the export.
 
-The value of the `_typeFilter` parameter is a FHIR REST API query. Resources with a resource type specified in this query that do not meet the criteria in the search expression in the query SHALL NOT be returned (see [processing model](#processing-model)). A client MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When more than one `_typeFilter` parameter is provided with a query for the same resource type, the server SHALL include resources of that resource type that meet the criteria in any of the parameters (a logical "or").  
+The value of the `_typeFilter` parameter is a FHIR REST API query. Resources with a resource type specified in this query that do not meet the criteria in the search expression in the query SHALL NOT be returned, with the exception of related resources being included by a server to provide context about the resources being exported (see [processing model](#processing-model)). A client MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When more than one `_typeFilter` parameter is provided with a query for the same resource type, the server SHALL include resources of that resource type that meet the criteria in any of the parameters (a logical "or").  
 
- FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `_typeFilter` criteria. Clients should consult the server's capability statement to identify supported search parameters (see [server capability documentation](#server-capability-documentation)). Since support for `_typeFilter` is OPTIONAL for a FHIR server, clients SHOULD be robust to servers that ignore `_typeFilter`.
+FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `_typeFilter` criteria. Clients should consult the server's capability statement to identify supported search parameters (see [server capability documentation](#server-capability-documentation)). Since support for `_typeFilter` is OPTIONAL for a FHIR server, clients SHOULD be robust to servers that ignore `_typeFilter`.
 
 **Example Request**
 
@@ -560,6 +560,8 @@ The output manifest is a JSON object providing metadata and links to the generat
       <td>JSON array</td>
       <td>
         When the <code>allowPartialManifests</code> kickoff parameter is <code>true</code>, the manifest MAY include a <code>link</code> array with a single object containing a <code>relation</code> field with a value of <code>next</code>, and a <code>url</code> field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the <code>output</code>, <code>deleted</code> and <code>link</code> arrays. 
+        <br/><br/>
+        In response to a request to a <code>next link</code>, a server MAY return an error as described <a href="#response---error-status-1">Error Status</a> section above. For non-transient errors, a client MAY process resources that have already retrieved be retrieved prior to re-running the export job or MAY discard them.
       </td>
     </tr>
     <tr>
@@ -643,7 +645,9 @@ Output files may be organized by resource type, or by instances of a resource ty
 
 When the `organizeOutputBy` kickoff parameter is not populated, each output file SHALL contain resources of only one type, and a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers and files. 
 
-When the `organizeOutputBy` kickoff parameter is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type in the kickoff parameter, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resources block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` field in the relevant `output` array items.
+When the `organizeOutputBy` kickoff parameter is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type in the kickoff parameter, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resource's block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` field in the relevant `output` array items. 
+
+Resources that would otherwise be included in the export, but do not have references to the resource type specified in the `organizeOutputBy` parameter, MAY be included in a resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the export.  
  
 Example header for `Patient` resource:
 ```json

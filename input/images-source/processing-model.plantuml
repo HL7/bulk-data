@@ -30,6 +30,7 @@ if (`includeAssociatedData` parameter) then (yes)
   :Add associated resources for resources in export;
 else (no)
 endif
+:Add other related resources to provide context to those in export;
 :Output resources;
 stop
 @enduml
