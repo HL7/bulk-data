@@ -71,7 +71,7 @@ Usage: #definition
     
     String with a FHIR REST search query.
     
-    When provided, a server with support for the parameter and requested search queries SHALL filter the data in the response for resource types referenced in the typeFilter expression to only include resources that meet the specified criteria. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. 
+    When provided, a server with support for the parameter and requested search queries SHALL filter the data in the response for resource types referenced in the typeFilter expression to only include resources that meet the specified criteria. FHIR search result parameters such as `_include` and `_sort` SHALL NOT be used. 
     
     A server unable to support the requested `_typeFilter` queries SHOULD return an error and FHIR `OperationOutcome` resource so the client can re-submit a request that omits those queries. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error.
   """
