@@ -70,7 +70,7 @@ Servers MAY support Group update requests. When update requests are supported, s
 {{ '<br/><code>actual</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
 
 #### Example
-```js
+```
 {
   //group with plan members (type 1 or 2 group) 
   //filtered to patients with T2 DM and an ambulatory encounter in January 2024
@@ -90,8 +90,10 @@ Servers MAY support Group update requests. When update requests are supported, s
         class=http://terminology.hl7.org/CodeSystem/v3-ActCode|AMB&
         date=ge2024-01-01&date=le2024-01-31"		
   }]
+  ...
 }
 ```
+[Full group example](Group-BulkCohortGroupExample.json.html)
 
 ### Server Capability Documentation
 To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the Bulk Cohort profile as a `rest.resource.supportedProfile` of Group.  Server providers SHOULD also ensure that their documentation addresses when and how often are Bulk Cohort group membership is updated and which search parameters are supported in `member-filter` expressions.
