@@ -52,10 +52,10 @@ Servers MAY support Group update requests. When update requests are supported, s
 {{ '<br/><code>member</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
 
 {% assign element = elements | find: 'el_id', 'Group.modifierExtension' %}
-{{ '<br/><code>memberFilter</code> ModifierExtension (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
+{{ '<br/><code>member-filter</code> ModifierExtension (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
 
 {% assign element = elements | find: 'el_id', 'Group.extension' %}
-{{ '<br/><code>membersRefreshed</code> Extension (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
+{{ '<br/><code>members-refreshed</code> Extension (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
 
 {% assign element = elements | find: 'el_id', 'Group.type' %}
 {{ '<br/><code>type</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
@@ -79,13 +79,13 @@ Servers MAY support Group update requests. When update requests are supported, s
     "entity": {"reference": "Group/blue-cross-members"}
   }],
   "modifierExtension": [{
-    "url": "{...}/memberFilter",
+    "url": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/member-filter",
     "valueString": "Condition?
         category=http://terminology.hl7.org/CodeSystem/condition-category|problem-list-item&
         clinical-status=http://terminology.hl7.org/CodeSystem/condition-clinical|active&
         code=http://hl7.org/fhir/sid/icd-10-cm|E11.9"
   },{		
-    "url": "{...}/memberFilter",
+    "url": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/member-filter",
     "valueString": "Encounter?
         class=http://terminology.hl7.org/CodeSystem/v3-ActCode|AMB&
         date=ge2024-01-01&date=le2024-01-31"		
@@ -94,4 +94,4 @@ Servers MAY support Group update requests. When update requests are supported, s
 ```
 
 ### Server Capability Documentation
-To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the Bulk Cohort profile as a `rest.resource.supportedProfile` of Group.  Server providers SHOULD also ensure that their documentation addresses when and how often are Bulk Cohort group membership is updated and which search parameters are supported in `memberFilter` expressions.
+To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the Bulk Cohort profile as a `rest.resource.supportedProfile` of Group.  Server providers SHOULD also ensure that their documentation addresses when and how often are Bulk Cohort group membership is updated and which search parameters are supported in `member-filter` expressions.
