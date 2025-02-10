@@ -70,30 +70,12 @@ Servers MAY support Group update requests. When update requests are supported, s
 {{ '<br/><code>actual</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
 
 #### Example
-```
-{
-  //group with plan members (type 1 or 2 group) 
-  //filtered to patients with T2 DM and an ambulatory encounter in January 2024
-  "resourceType": "Group",
-  "member": [{
-    "entity": {"reference": "Group/blue-cross-members"}
-  }],
-  "modifierExtension": [{
-    "url": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/member-filter",
-    "valueString": "Condition?
-        category=http://terminology.hl7.org/CodeSystem/condition-category|problem-list-item&
-        clinical-status=http://terminology.hl7.org/CodeSystem/condition-clinical|active&
-        code=http://hl7.org/fhir/sid/icd-10-cm|E11.9"
-  },{		
-    "url": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/member-filter",
-    "valueString": "Encounter?
-        class=http://terminology.hl7.org/CodeSystem/v3-ActCode|AMB&
-        date=ge2024-01-01&date=le2024-01-31"		
-  }]
-  ...
-}
-```
-[Full group example](Group-BulkCohortGroupExample.json.html)
+
+Group with plan members filtered to patients with diabetes on their problem list and an ambulatory encounter in January 2024.
+
+{% fragment Group/BulkCohortGroupExample JSON ELIDE:id|meta|text %}
+
+[View Example](Group-BulkCohortGroupExample.json.html)
 
 ### Server Capability Documentation
 To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the Bulk Cohort profile as a `rest.resource.supportedProfile` of Group.  Server providers SHOULD also ensure that their documentation addresses when and how often are Bulk Cohort group membership is updated and which search parameters are supported in `member-filter` expressions.
