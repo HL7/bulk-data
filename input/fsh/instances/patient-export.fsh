@@ -48,7 +48,7 @@ Usage: #definition
   * use = #in
   * min = 0
   * max = "*"
-  * documentation = "Experimental - support is optional for a server and a client.\n\nThis parameter is only valid in kickoff requests initiated through a HTTP POST request. When provided, the server SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a client requests patients who are not present on the server or are not members of the requested group, the server SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.\n\nA server that is unable to support the `patient` parameter SHOULD return an error and FHIR `OperationOutcome` resource so the client can re-submit a request omitting the `patient` parameter. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error."
+  * documentation = "Support is optional for a server and a client.\n\nThis parameter is only valid in kickoff requests initiated through a HTTP POST request. When provided, the server SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a client requests patients who are not present on the server or are not members of the requested group, the server SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.\n\nA server that is unable to support the `patient` parameter SHOULD return an error and FHIR `OperationOutcome` resource so the client can re-submit a request omitting the `patient` parameter. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error."
   * type = #Reference
   * targetProfile = "http://hl7.org/fhir/StructureDefinition/Patient"
 * parameter[+]
@@ -69,10 +69,36 @@ Usage: #definition
   * documentation = """
     Support is optional for a server and a client.
     
-    String with a FHIR REST search query.
+    String of a FHIR REST search query.
     
     When provided, a server with support for the parameter and requested search queries SHALL filter the data in the response for resource types referenced in the typeFilter expression to only include resources that meet the specified criteria. FHIR search result parameters such as `_include` and `_sort` SHALL NOT be used. 
     
     A server unable to support the requested `_typeFilter` queries SHOULD return an error and FHIR `OperationOutcome` resource so the client can re-submit a request that omits those queries. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error.
   """
   * type = #string
+* parameter[+]
+  * name = #organizeOutputBy
+  * use = #in
+  * min = 0
+  * max = "1"
+  * documentation = """
+    Support is optional for a server and a client.
+    
+    String of a FHIR resource type
+    
+    When provided, a server with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, servers SHALL organize each output file with resources of only single type. See details below.
+
+    A server unable to structure output by the requested organizeOutputBy resource SHOULD return an error and FHIR OperationOutcome resource. When a Prefer: handling=lenient header is included in the request, the server MAY process the request instead of returning an error.
+  """
+  * type = #string
+* parameter[+]
+  * name = #allowPartialManifests
+  * use = #in
+  * min = 0
+  * max = "1"
+  * documentation = """
+    Support is optional for a server and a client.
+        
+    When provided, a server with support for the parameter MAY return a portion of bulk data output files to a client prior to all output files being available and/or MAY distribute bulk data output files among multiple manifests and provide links for clients to page through the manifests.
+  """
+  * type = #boolean
