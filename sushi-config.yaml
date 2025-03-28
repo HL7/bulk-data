@@ -3,7 +3,7 @@ canonical: http://hl7.org/fhir/uv/bulkdata
 name: BulkDataAccessIG
 title: Bulk Data Access IG
 description: FHIR based approach for exporting large data sets from a FHIR server to a client application
-status: draft
+status: active
 version: 2.0.0
 fhirVersion: 4.0.1
 copyrightYear: 2021+
@@ -20,6 +20,8 @@ pages:
     title: Home
   export.md:
     title: Export
+  group.md:
+    title: Groups
   authorization.md:
     title: SMART Backend Services Authorization
   abbreviations.md:
@@ -37,6 +39,7 @@ parameters:
 menu:
   Home: index.html
   Export: export.html
+  Groups: group.html
   Authorization: authorization.html
   FHIR Artifacts: artifacts.html
   Downloads: downloads.html
