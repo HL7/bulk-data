@@ -15,13 +15,6 @@ publisher:
   url: http://www.hl7.org/Special/committees/fiwg
   email: fhir@lists.HL7.org
 
-# this is a temporary fix and should be removed once publisher will build without it
-dependencies:
-  hl7.terminology.r4:
-    id: terminology
-    uri: http://terminology.hl7.org/ImplementationGuide/hl7.terminology
-    version: 5.5.0
-
 pages:
   index.md:
     title: Home
@@ -66,3 +59,5 @@ resources:
 extension:
   - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-wg
     valueCode: fhir
+  - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+    valueCode: trial-use

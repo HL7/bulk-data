@@ -1,0 +1,36 @@
+@startuml
+start
+:All resources available for Bulk Export;
+:Exclude unauthorized resources
+(based on OAuth scopes and business logic);
+if (group export) then (yes)
+  :Exclude resources for patients outside group;
+else (no)
+endif
+if (`_type` parameter?) then (yes)
+  :Exclude resource of types not listed in `_type` parameter;
+else (no)
+endif
+if (`_since` parameter?) then (yes)
+  :Exclude resources updated prior to `_since` timestamp*;
+else (no)
+endif
+if (`_typeFilter` parameter?) then (yes)
+  repeat :for each resource type in export;
+  if (has `_typeFilter` criteria) then (yes)
+    :Exclude resources of this resource type 
+    that don't meet criteria in at least one 
+    of the `_typeFilter` parameters;
+  else (no)
+    :Retain all resources for this resource type;
+  endif
+  repeat while (additional resource types in export?);
+endif
+if (`includeAssociatedData` parameter) then (yes)
+  :Add associated resources for resources in export;
+else (no)
+endif
+:Add other related resources to provide context to those in export;
+:Output resources;
+stop
+@enduml
