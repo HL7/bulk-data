@@ -57,5 +57,13 @@ Usage: #definition
   * use = #in
   * min = 0
   * max = "*"
-  * documentation = "Experimental - support is optional for a server and a client.\n\nString of comma-delimited FHIR REST search queries.\n\nWhen provided, a server with support for the parameter and requested search queries SHALL filter the data in the response to only include resources that meet the specified criteria. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. \n\nA server that that is unable to support the requested `_typeFilter` queries SHOULD return an error and a FHIR `OperationOutcome` resource so the client can re-submit a request that omits those queries. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error."
   * type = #string
+  * documentation = """
+    Support is optional for a server and a client.
+    
+    String of a FHIR REST search query.
+    
+    When provided, a server with support for the parameter and requested search queries SHALL filter the data in the response for resource types referenced in the typeFilter expression to only include resources that meet the specified criteria. FHIR search result parameters such as `_include` and `_sort` SHALL NOT be used and a query in the `_typeFilter` parameter SHALL have the search context of a single FHIR Resource Type.
+    
+    A server unable to support the requested `_typeFilter` queries SHOULD return an error and FHIR `OperationOutcome` resource so the client can re-submit a request that omits those queries. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error.
+  """

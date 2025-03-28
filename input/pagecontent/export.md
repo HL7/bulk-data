@@ -196,11 +196,11 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
     </tr>
     <tr>
       <td><code>_typeFilter</code><br/></td>
-      <td><span class="label label-info">optional, experimental</span></td>
+      <td><span class="label label-info">optional</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>0..*</td>
-      <td>string of comma delimited FHIR REST queries</td>
-      <td>When provided, a server with support for the parameter and requested search queries SHALL filter the data in the response to only include resources that meet the specified criteria. FHIR search response parameters such as <code>_include</code> and <code>_sort</code> SHALL NOT be used. <a href="#_typefilter-experimental-query-parameter">See details below</a>.<br /><br />
+      <td>string of a FHIR REST API query</td>
+      <td>When provided, a server with support for the parameter and the requested search parameters SHALL filter the data in the response for resource types referenced in the typeFilter expression to only include resources that meet the specified criteria. FHIR search result parameters such as <code>_include</code> and <code>_sort</code> SHALL NOT be used. <a href="#_typefilter-query-parameter">See details below</a>.<br /><br />
       A server unable to support the requested <code>_typeFilter</code> queries SHOULD return an error and FHIR <code>OperationOutcome</code> resource so the client can re-submit a request that omits those queries. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
       </td>
     </tr>
@@ -257,33 +257,46 @@ To obtain new and updated resources for patients in a group, as well as all data
 
   - Client retains the transactionTime value from the response.
 
-##### `_typeFilter` Experimental Query Parameter
+##### `_typeFilter` Query Parameter
 
-The community has identified use cases for finer-grained, client-specified filtering. For example, some clients may want to retrieve only active prescriptions rather than historical prescriptions or only laboratory observations rather than all observations. 
+The `_typeFilter` parameter enables finer-grained filtering out of resources in the bulk data export response that would have otherwise been returned. For example, a client may want to retrieve only active prescriptions rather than all prescriptions and only laboratory observations rather than all observations. When using `_typeFilter`, each resource type is filtered independently. For example, filtering `Patient` resources to people born after the year 2000 will not filter `Encounter` resources for patients born before the year 2000 from the export.
 
-To request finer-grained filtering, a client MAY supply a `_typeFilter` parameter alongside the `_type` parameter. The value of the `_typeFilter` parameter is a comma-separated list of FHIR REST API queries that restrict the results of the export. FHIR search response parameters such as `_include` and `_sort` SHALL NOT be used. Since support for `_typeFilter` is OPTIONAL for a FHIR server, clients SHOULD be robust to servers that ignore `_typeFilter`. A client MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When repeated, the server SHALL treat the repeated values as if they were comma delimited values within a single `_typeFilter` parameter.
+The value of the `_typeFilter` parameter is a FHIR REST API query. Resources with a resource type specified in this query that do not meet the criteria in the search expression in the query SHALL NOT be returned, with the exception of related resources being included by a server to provide context about the resources being exported (see [processing model](#processing-model)). A client MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When more than one `_typeFilter` parameter is provided with a query for the same resource type, the server SHALL include resources of that resource type that meet the criteria in any of the parameters (a logical "or").  
 
-##### Example Request
+FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `_typeFilter` criteria. Additionally, a query in the `_typeFilter` parameter SHALL have the [search context](https://hl7.org/fhir/search.html#searchcontexts) of a single FHIR Resource Type. The contexts "all resource types" and "a specified compartment" are not allowed. Clients should consult the server's capability statement to identify supported search parameters (see [server capability documentation](#server-capability-documentation)). Since support for `_typeFilter` is OPTIONAL for a FHIR server, clients SHOULD be robust to servers that ignore `_typeFilter`.
 
-The following is an export request for `MedicationRequest` resources and `Condition` resources, where the client would further like to restrict `MedicationRequests` to requests that are `active`, or else `completed` after July 1, 2018. This can be accomplished with two subqueries joined together with a comma for a logical "or":
+<div class="stu-note"><a href="https://hl7.org/fhir/search.html#chaining">Chained parameters</a> used in a `typeFilter` query are an experimental feature, and when supported by a server, the set of exported resources resulting from the interactions between the `_typeFilter` parameter and other kickoff parameters may be surprising. We are soliciting feedback on the use of chained parameters, and depending on the response may consider deprecating this capability in a future version of this IG.</div>
+
+**Example Request**
+
+The following is an export request for `MedicationRequest` resources, where the client would further like to restrict the MedicationRequests to those that are `active`, or else `completed` after July 1, 2018. This can be accomplished with two `_typeFilter` query parameters and an `_type ` query parameter:
+
 
 * `MedicationRequest?status=active`
 * `MedicationRequest?status=completed&date=gt2018-07-01T00:00:00Z`
 
-To create a `_typeFilter` parameter, a client should URL encode these two subqueries and join them with `,`.
-Newlines and spaces have been added for clarity, and would not be included in a real request:
-
 ```
 $export?
   _type=
-    MedicationRequest,
-    Condition&
-  _typeFilter=
-    MedicationRequest%3Fstatus%3Dactive,
+    MedicationRequest
+  &_typeFilter=
+    MedicationRequest%3Fstatus%3Dactive
+  &_typeFilter=
     MedicationRequest%3Fstatus%3Dcompleted%26date%3Dgt2018-07-01T00%3A00%3A00Z
 ```
 
-Note: The `Condition` resource is included in `_type` but omitted from `_typeFilter` because the client intends to request all `Condition` resources without any filters.
+_Note that newlines and spaces have been added above for clarity, and would not be included in a real request._
+
+##### Processing Model
+
+The following steps outline a logical model of how a server should process a bulk export request. The actual operations a server performs and the order in which they're performed may differ. Additionally, as documented elsewhere in this implementation guide, depending on the values and headers provided, some requests may cause a server to return an error rather than continuing to process the request.
+
+ <figure>
+  {% include processing-model.svg %}
+  <figcaption>Diagram outlining a logical model of how a server should process a bulk export request.</figcaption>
+</figure>
+<br />
+_* In the case of a Group level export, the server may retain resources modified prior to _since timestamp if the resources belong to the patient compartment of a patient added to the Group after the supplied time and this behavior is documented by the server._
 
 ##### Response - Success
 
@@ -400,7 +413,6 @@ Content-Type: application/json
     </tr>
   </tbody>
 </table>
-
 
 ##### Response - In-Progress Status
 
@@ -609,7 +621,11 @@ Note that if a server copies files to the Bulk Data output endpoint or proxies r
 
 ### Server Capability Documentation
 
-This implementation guide is structured to support a wide variety of Bulk Data Export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHOULD ensure that their Capability Statement accurately reflects the implemented Bulk Data Operations and that their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
+This implementation guide is structured to support a wide variety of Bulk Data Export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the implemented Bulk Data Operations. Additionally, the server's Capability Statement SHOULD list the resource types available for export in the `rest.resource` element, and SHOULD list the search parameters that can be used in the `_typeFilter` parameter in `rest.resource.searchParam` elements. 
+
+Servers SHOULD indicate resource types and search parameters that are accessible on the server with the REST API, but not available using the Bulk Export operation, with one or more extensions that have a URL of `http://hl7.org/fhir/uv/bulkdata/Extension/operation-not-supported` and a `valueCanonical` with the canonical URL for the [OperationDefinition](artifacts.html#behavior-operation-definitions) of the bulk operation that is not supported. Alternatively, the extension may be populated with the canonical URL for the FHIR Bulk Data Access Implementation Guide [CapabilityStatement](artifacts.html#behavior-capability-statements) when none of the bulk operations are supported.
+
+Server providers SHOULD also ensure that their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
 
 - Does the server restrict responses to a specific profile like the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/) or the [Blue Button Implementation Guide](http://hl7.org/fhir/us/carin-bb/)?
 - What approach does the server take to divide datasets into multiple files (e.g., single file per single resource type, limit file size to 100MB, limit number of resources per file to 100,000)?
