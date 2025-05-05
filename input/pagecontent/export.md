@@ -672,9 +672,17 @@ Example header for `Patient` resource:
 
 #### Bulk Data Output File Request
 
-Using the URLs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated Bulk Data files (one or more per resource type) within the time period specified in the `Expires` header (if present). If the `requiresAccessToken` field in the Complete Status body is set to `true`, the request SHALL include a valid access token.  See [Privacy and Security Considerations](#privacy-and-security-considerations) above.  
+Using the URLs supplied by the FHIR server in the manifest, a client MAY download the generated Bulk Data files (one or more per resource type) within the time period specified in the `Expires` header (if present). A client MAY re-fetch the output manifest if output links have expired, and a server MAY provide updated links and/or an updated timestamp in the `Expires` header in the response. 
+
+As long as a server is following relevant security guidance, it MAY generate output manifests where the `requiresAccessToken` field is `true` or `false`; this applies even for servers available on the public internet.
+
+If the `requiresAccessToken` field in the manifest is set to `true`, the request SHALL include a valid access token.  See [Privacy and Security Considerations](#privacy-and-security-considerations) above.  
+
+If the `requiresAccessToken` field is set to `false` and no additional authorization-related extensions are present in the manifest's output entry, then the output URLs SHALL be dereferenceable directly (a "capability URL"), and SHALL follow expiration timing requirement that have been documented for bearer tokens in SMART Backend Services. A client SHALL NOT provide a SMART Backend Services access token when dereferencing an output URL where `requiresAccessToken` is `false`.
 
 The exported data SHALL include only the most recent version of any exported resources unless the client explicitly requests different behavior in a fashion supported by the server (e.g.,  via a new query parameter yet to be defined). Inclusion of the `Resource.meta` information in the resources is at the discretion of the server (as it is for all FHIR interactions).
+
+A client SHOULD provide an `Accept-Encoding` header when requesting output files and SHOULD include `gzip` compression as one of the encoding options in the header. A server SHALL provide output files as uncompressed, with `gzip` compression, or with another compression format from the `Accept-Encoding` header. When compression is used, a server SHALL communicate this to the client by including a `Content-Encoding` header in the response. A client SHALL accept files that are uncompressed or encoded with `gzip` compression, and MAY accept files encoded with other compression formats.
 
 Example NDJSON output file:
 ```
