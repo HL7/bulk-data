@@ -204,12 +204,31 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       A server unable to support the requested <code>_typeFilter</code> queries SHOULD return an error and FHIR <code>OperationOutcome</code> resource so the client can re-submit a request that omits those queries. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
       </td>
     </tr>
+    <tr>
+      <td><code>organizeOutputBy</code><br/></td>
+      <td><span class="label label-info">optional</span></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>0..1</td>
+      <td><a href="https://hl7.org/fhir/valueset-resource-types.html">string of a FHIR resource type</a></td>
+      <td>When provided, a server with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, servers SHALL organize each output file with resources of only single type. <a href="#bulk-data-output-file-organization">See details below</a>.<br /><br />
+      A server unable to structure output by the requested <code>organizeOutputBy</code> resource SHOULD return an error and FHIR <code>OperationOutcome</code> resource. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
+      </td>
+    </tr>
+    <tr>
+      <td><code>allowPartialManifests</code><br/></td>
+      <td><span class="label label-info">optional</span></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>0..1</td>
+      <td>boolean</td>
+      <td>When provided, a server with support for the parameter MAY distribute the bulk data output files among multiple manifests, providing links for clients to page through the manifests (<a href="#manifest-link">see details below)</a>. Prior to all of the files in the export being available, the server MAY return a manifest with files that are available along with a <code>202 Accepted</code> HTTP response status, and subsequently update the manifest with a paging link to a new manifest when additional files are ready for download (<a href="#response---in-progress-status">see details below</a>).
+      </td>
+    </tr>
   </tbody>
 </table>
 
-  *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). If the client explicitly asks for export of resources that the Bulk Data server doesn't support, the server SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
+*Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). If the client explicitly asks for export of resources that the Bulk Data server doesn't support, the server SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
 
-  If an <code>includeAssociatedValue</code> value relevant to provenance is not specified, or if this parameter is not supported by a server, the server SHALL include all available Provenance resources whose `Provenance.target` is a resource in the Patient compartment in a patient level export request, and all available Provenance resources in a system level export request unless a specific resource set is specified using the <code>_type</code> parameter and this set does not include Provenance.
+If an <code>includeAssociatedValue</code> value relevant to provenance is not specified, or if this parameter is not supported by a server, the server SHALL include all available Provenance resources whose `Provenance.target` is a resource in the Patient compartment in a patient level export request, and all available Provenance resources in a system level export request unless a specific resource set is specified using the <code>_type</code> parameter and this set does not include Provenance.
 
 ##### Group Membership Request Pattern
 
@@ -265,7 +284,9 @@ The value of the `_typeFilter` parameter is a FHIR REST API query. Resources wit
 
 FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `_typeFilter` criteria. Additionally, a query in the `_typeFilter` parameter SHALL have the [search context](https://hl7.org/fhir/search.html#searchcontexts) of a single FHIR Resource Type. The contexts "all resource types" and "a specified compartment" are not allowed. Clients should consult the server's capability statement to identify supported search parameters (see [server capability documentation](#server-capability-documentation)). Since support for `_typeFilter` is OPTIONAL for a FHIR server, clients SHOULD be robust to servers that ignore `_typeFilter`.
 
-<div class="stu-note"><a href="https://hl7.org/fhir/search.html#chaining">Chained parameters</a> used in a `typeFilter` query are an experimental feature, and when supported by a server, the set of exported resources resulting from the interactions between the `_typeFilter` parameter and other kickoff parameters may be surprising. We are soliciting feedback on the use of chained parameters, and depending on the response may consider deprecating this capability in a future version of this IG.</div>
+<div class="stu-note">
+<a href="https://hl7.org/fhir/search.html#chaining">Chained parameters</a> used in a <code>typeFilter</code> query are an experimental feature, and when supported by a server, the set of exported resources resulting from the interactions between the <code>_typeFilter</code> parameter and other kickoff parameters may be surprising. We are soliciting feedback on the use of chained parameters, and depending on the response may consider deprecating this capability in a future version of this IG.
+</div>
 
 **Example Request**
 
@@ -395,10 +416,10 @@ Content-Type: application/json
 &nbsp;&nbsp;"url" : "https://example.com/output/patient_file_1.ndjson"
 &nbsp;},{
 &nbsp;&nbsp;"type" : "Patient",
-&nbsp;&nbsp;"url" : "https://example.com/output/patient_file_2.ndjson"
+&nbsp;&nbsp;"url" : "https://example.com/output/observation_file_1.ndjson"
 &nbsp;},{
 &nbsp;&nbsp;"type" : "Observation",
-&nbsp;&nbsp;"url" : "https://example.com/output/observation_file_1.ndjson"
+&nbsp;&nbsp;"url" : "https://example.com/output/observation_file_2.ndjson"
 &nbsp;}],
 &nbsp;"deleted" : [{
 &nbsp;&nbsp;"type" : "Bundle",
@@ -418,6 +439,7 @@ Content-Type: application/json
 
 - HTTP Status Code of `202 Accepted`
 - Optionally, the server MAY return an `X-Progress` header with a text description of the status of the request that is less than 100 characters. The format of this description is at the server's discretion and MAY be a percentage complete value, or MAY be a more general status such as "in progress". The client MAY parse the description, display it to the user, or log it.
+- When the `allowPartialManifests` kickoff parameter is `true`, the server MAY return a `Content-Type` header of `application/json` and a body containing an output manifest in the format [described below](#response---output-manifest), populated with a partial set of output files for the export. When provided, a manifest SHALL only contain files that are available for retrieval by the client. Once returned, the server SHALL NOT alter a manifest when it is returned in subsequent requests, with the exception of optionally adding a `link` field pointing to a manifest with additional output files or updating output file URLs that have expired. The output files referenced in the manifest SHALL NOT be altered once they have been included in a manifest that has been returned to a client.
 
 ##### Response - Error Status
 
@@ -434,9 +456,11 @@ In the case of a polling failure that does not indicate failure of the export jo
 - HTTP status of `200 OK`
 - `Content-Type` header of `application/json`
 - The server SHOULD return an `Expires` header indicating when the files listed will no longer be available for access.
-- A body containing a JSON object (the export manifest) providing metadata and links to the generated Bulk Data files. The files SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
+- A body containing the output manifest described below.
 
-Required Fields:
+##### Response - Output Manifest
+
+The output manifest is a JSON object providing metadata and links to the generated Bulk Data files. The files SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
 
 <table class="table">
   <thead>
@@ -473,28 +497,27 @@ Required Fields:
       </td>
     </tr>
     <tr>
+      <td><code>outputOrganizedBy</code></td>
+      <td><span class="label label-success">required</span> when <code>organizeOutputBy</code> was populated</td>
+      <td>String</td>
+      <td>The organizeOutputBy value from the Bulk Data kick-off request when populated and supported.</td>
+    </tr>
+    <tr>
       <td><code>output</code></td>
       <td><span class="label label-success">required</span></td>
       <td>JSON array</td>
       <td>An array of file items with one entry for each generated file. If no resources are returned from the kick-off request, the server SHOULD return an empty array.
-      <br/>
-      <br/>
-        Each file item SHALL contain the following fields:
         <br/>
         <br/>
-          - <code>type</code> - the FHIR resource type that is contained in the file.
-          <br/>
-          <br/>
-            Each file SHALL contain resources of only one type, but a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers. If no data are found for a resource, the server SHOULD NOT return an output item for that resource in the response. These rules apply only to top-level resources within the response; as always in FHIR, any resource MAY have a "contained" array that includes referenced resources of other types.
-            <br/>
-            <br/>
-          - <code>url</code> - the absolute path to the file. The format of the file SHOULD reflect that requested in the <code>_outputFormat</code> parameter of the initial kick-off request.
-          <br/>
-          <br/>
-        Each file item MAY optionally contain the following field:
+        The <code>url</code> field SHALL be populated for each output item. When a resource type is not specified in the <code>organizeOutputBy</code> kick-off parameter, the <code>type</code> field SHALL also be populated for each item. When a resource type is specified in the <code>organizeOutputBy</code> kick-off parameter and resources related to a resource of this type continue into another output file, the <code>continuesInFile</code> field SHALL be populated with the URL of that output file.
         <br/>
         <br/>
-          - <code>count</code> - the number of resources in the file, represented as a JSON number.
+        <ul>
+          <li><code>type</code> - the FHIR resource type that is contained in the file.<br/></li>    
+          <li><code>url</code> - the absolute path to the file. The format of the file SHOULD reflect that requested in the <code>_outputFormat</code> parameter of the initial kick-off request.<br/></li>
+          <li><code>continuesInFile</code> - url of the output file when resources associated with a FHIR resource of the type specified in the <code>organizeOutputBy</code> kick-off parameter in this file continue into another file. <a href="#bulk-data-output-file-organization">See details below</a>.<br/></li>
+          <li><code>count</code> (optional) - the number of resources in the file, represented as a JSON number.<br/></li>
+        </ul>
       </td>
     </tr>
     <tr>
@@ -536,6 +559,16 @@ Required Fields:
       </td>
     </tr>
     <tr>
+      <td><code id="manifest-link">link</code></td>
+      <td><span class="label label-info">optional</span></td>
+      <td>JSON array</td>
+      <td>
+        When the <code>allowPartialManifests</code> kickoff parameter is <code>true</code>, the manifest MAY include a <code>link</code> array with a single object containing a <code>relation</code> field with a value of <code>next</code>, and a <code>url</code> field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the <code>output</code>, <code>deleted</code> and <code>link</code> arrays.
+        <br/><br/>
+        In response to a request to a <code>next link</code>, a server MAY return an error as described <a href="#response---error-status-1">Error Status</a> section above. For non-transient errors, a client MAY process resources that have already retrieved prior to re-running the export job or MAY discard them.
+      </td>
+    </tr>
+    <tr>
       <td><code>extension</code></td>
       <td><span class="label label-info">optional</span></td>
       <td>JSON object</td>
@@ -548,7 +581,7 @@ Required Fields:
   </tbody>
 </table>
 
-Example response body:
+Example manifest, `organizeOutputBy` kickoff parameter is not populated:
 
 ```json
   {
@@ -559,11 +592,11 @@ Example response body:
       "type" : "Patient",
       "url" : "https://example.com/output/patient_file_1.ndjson"
     },{
-      "type" : "Patient",
-      "url" : "https://example.com/output/patient_file_2.ndjson"
-    },{
       "type" : "Observation",
       "url" : "https://example.com/output/observation_file_1.ndjson"
+    },{
+      "type" : "Observation",
+      "url" : "https://example.com/output/observation_file_2.ndjson"
     }],
     "deleted": [{
       "type" : "Bundle",
@@ -577,7 +610,66 @@ Example response body:
   }
 ```
 
+Example manifest, `organizeOutputBy` kickoff parameter is `Patient`, and `allowPartialManifests` kickoff parameter is `true`:
+
+```json
+  {
+    "transactionTime": "2021-01-01T00:00:00Z",
+    "request" : "https://example.com/fhir/Patient/$export?_type=Patient,Observation",
+    "requiresAccessToken" : true,
+    "outputOrganizedBy": "Patient",
+    "output" : [{
+      "url" : "https://example.com/output/file_1.ndjson"
+    },{
+      "url" : "https://example.com/output/file_2.ndjson",
+      "continuesInFile": "https://example.com/output/file_3.ndjson"
+    },{
+      "url" : "https://example.com/output/file_3.ndjson"
+    }],
+    "deleted": [{
+      "type" : "Bundle",
+      "url" : "https://example.com/output/del_file_1.ndjson"      
+    }],
+    "error" : [{
+      "type" : "OperationOutcome",
+      "url" : "https://example.com/output/err_file_1.ndjson"
+    }],
+    "extension":{"https://example.com/extra-property": true},
+    "link": [{
+      "relation": "next",
+      "url": "https://example.com/output/manifest-2.json"
+    }]
+  }
+```
+
 ---
+#### Bulk Data Output File Organization
+
+Output files may be organized by resource type, or by instances of a resource type specified in the `organizeOutputBy` kickoff parameter.
+
+When the `organizeOutputBy` kickoff parameter is not populated, each output file SHALL contain resources of only one type, and a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers and files. 
+
+When the `organizeOutputBy` kickoff parameter is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type in the kickoff parameter, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resource's block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` field in the relevant `output` array items. 
+
+Resources that would otherwise be included in the export, but do not have references to the resource type specified in the `organizeOutputBy` parameter, MAY be included in a resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the export.  
+
+<div class="stu-note">
+When the <code>organizeOutputBy</code> parameter is set <code>Patient</code>, servers SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.  
+
+For other resource types, we are soliciting feedback on the best approach for documenting the set of resources in a resource block. Implementation Guides MAY reference a <a hre="https://www.hl7.org/fhir/compartmentdefinition.html">Compartment Definition</a>, populate a <a href="https://www.hl7.org/fhir/graphdefinition.html">GraphDefinition Resource</a>, include narrative text, or use another approach.
+</div>
+
+Example header for `Patient` resource:
+```json
+{
+  "resourceType" : "Parameters",
+  "parameter" : [{
+    "name": "header",
+    "valueReference": {"reference": "Patient/123"}
+  }]
+}
+```
+
 #### Bulk Data Output File Request
 
 Using the URLs supplied by the FHIR server in the Complete Status response body, a client MAY download the generated Bulk Data files (one or more per resource type) within the time period specified in the `Expires` header (if present). If the `requiresAccessToken` field in the Complete Status body is set to `true`, the request SHALL include a valid access token.  See [Privacy and Security Considerations](#privacy-and-security-considerations) above.  

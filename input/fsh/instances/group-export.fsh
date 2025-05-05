@@ -76,3 +76,29 @@ Usage: #definition
     
     A server unable to support the requested `_typeFilter` queries SHOULD return an error and FHIR `OperationOutcome` resource so the client can re-submit a request that omits those queries. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error.
   """
+* parameter[+]
+  * name = #organizeOutputBy
+  * use = #in
+  * min = 0
+  * max = "1"
+  * documentation = """
+    Support is optional for a server and a client.
+    
+    String of a FHIR resource type
+    
+    When provided, a server with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, servers SHALL organize each output file with resources of only single type.
+
+    A server unable to structure output by the requested organizeOutputBy resource SHOULD return an error and FHIR OperationOutcome resource. When a Prefer: handling=lenient header is included in the request, the server MAY process the request instead of returning an error.
+  """
+  * type = #string
+* parameter[+]
+  * name = #allowPartialManifests
+  * use = #in
+  * min = 0
+  * max = "1"
+  * documentation = """
+    Support is optional for a server and a client.
+    
+    When provided, a server with support for the parameter MAY distribute the bulk data output files among multiple manifests, providing links for clients to page through the manifests. Prior to all of the files in the export being available, the server MAY return a manifest with files that are available along with a `202 Accepted` HTTP response status, and subsequently update the manifest with a paging link to a new manifest when additional files are ready for download.
+  """
+  * type = #boolean
