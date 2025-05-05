@@ -98,7 +98,7 @@ Usage: #definition
   * max = "1"
   * documentation = """
     Support is optional for a server and a client.
-        
-    When provided, a server with support for the parameter MAY return a portion of bulk data output files to a client prior to all output files being available and/or MAY distribute bulk data output files among multiple manifests and provide links for clients to page through the manifests.
+    
+    When provided, a server with support for the parameter MAY distribute the bulk data output files among multiple manifests, providing links for clients to page through the manifests. Prior to all of the files in the export being available, the server MAY return a manifest with files that are available along with a `202 Accepted` HTTP response status, and subsequently update the manifest with a paging link to a new manifest when additional files are ready for download.
   """
   * type = #boolean

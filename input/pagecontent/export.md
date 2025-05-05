@@ -220,7 +220,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional</span></td>
       <td>0..1</td>
       <td>boolean</td>
-      <td>When provided, a server with support for the parameter MAY return a portion of bulk data output files to a client prior to all output files being available and/or MAY distribute bulk data output files among multiple manifests and provide links for clients to page through the manifests. <a href="#manifest-link">See details below</a>.
+      <td>When provided, a server with support for the parameter MAY distribute the bulk data output files among multiple manifests, providing links for clients to page through the manifests (<a href="#manifest-link">see details below)</a>. Prior to all of the files in the export being available, the server MAY return a manifest with files that are available along with a <code>202 Accepted</code> HTTP response status, and subsequently update the manifest with a paging link to a new manifest when additional files are ready for download (<a href="#response---in-progress-status">see details below</a>).
       </td>
     </tr>
   </tbody>
@@ -563,9 +563,9 @@ The output manifest is a JSON object providing metadata and links to the generat
       <td><span class="label label-info">optional</span></td>
       <td>JSON array</td>
       <td>
-        When the <code>allowPartialManifests</code> kickoff parameter is <code>true</code>, the manifest MAY include a <code>link</code> array with a single object containing a <code>relation</code> field with a value of <code>next</code>, and a <code>url</code> field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the <code>output</code>, <code>deleted</code> and <code>link</code> arrays. 
+        When the <code>allowPartialManifests</code> kickoff parameter is <code>true</code>, the manifest MAY include a <code>link</code> array with a single object containing a <code>relation</code> field with a value of <code>next</code>, and a <code>url</code> field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the <code>output</code>, <code>deleted</code> and <code>link</code> arrays.
         <br/><br/>
-        In response to a request to a <code>next link</code>, a server MAY return an error as described <a href="#response---error-status-1">Error Status</a> section above. For non-transient errors, a client MAY process resources that have already retrieved be retrieved prior to re-running the export job or MAY discard them.
+        In response to a request to a <code>next link</code>, a server MAY return an error as described <a href="#response---error-status-1">Error Status</a> section above. For non-transient errors, a client MAY process resources that have already retrieved prior to re-running the export job or MAY discard them.
       </td>
     </tr>
     <tr>
