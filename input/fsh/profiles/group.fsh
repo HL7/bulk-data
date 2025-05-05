@@ -12,7 +12,18 @@ Description: "Valuset to constrain the type element in a Group to just person an
 Extension: MemberFilter
 Id: member-filter
 Title: "Member Filter"
-Description: "Extension to define the population of the group using FHIR REST API parameters"
+Description: """
+  Extension to define the population of the group using FHIR REST API parameters. For example, the following extension would limit the population of the group to patients with an ambulatory encounter in January 2024:
+  ```
+  "modifierExtension" : [{
+    "url" : "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/member-filter",
+    "valueExpression" : {
+      "language" : "application/x-fhir-query",
+        "expression" : "Encounter?class=http://terminology.hl7.org/CodeSystem/v3-ActCode|AMB&date=ge2024-01-01&date=le2024-01-31"
+    }
+  }]
+  ```
+"""
 Context: Group
 * . ^isModifier = true
 * . ^isModifierReason = "Filters members of group to a subset"
