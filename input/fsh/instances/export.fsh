@@ -26,7 +26,14 @@ Usage: #definition
   * use = #in
   * min = 0
   * max = "1"
-  * documentation = "Support is required for a server, optional for a client.\n\nResources will be included in the response if their state has changed after the supplied time (e.g., if `Resource.meta.lastUpdated` is later than the supplied `_since` time). For resources where the server does not maintain a last updated time, the server MAY include these resources in a response irrespective of the `_since` value supplied by a client."
+  * documentation = "Support is required for a server, optional for a client.\n\nResources will be included in the response if their state has changed after the supplied time (e.g., if `Resource.meta.lastUpdated` is later than the supplied `_since` time). The server MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated. For resources where the server does not maintain a last updated time, the server MAY include these resources in a response irrespective of the `_since` value supplied by a client."
+  * type = #instant
+* parameter[+]
+  * name = #_until
+  * use = #in
+  * min = 0
+  * max = "1"
+  * documentation = "Resources will be included in the response if their state has changed before the supplied time (e.g., if `Resource.meta.lastUpdated` is earlier than the supplied `_until` time). The server MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated. For resources where the server does not maintain a last updated time, the server MAY include these resources in a response irrespective of the `_until` value supplied by a client."
   * type = #instant
 * parameter[+]
   * name = #_type
