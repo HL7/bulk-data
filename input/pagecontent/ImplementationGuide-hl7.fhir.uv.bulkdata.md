@@ -4,8 +4,7 @@
 |||
 |---|---|
 |*Official URL*: {{ site.data.resources[IG].url }}|*Version*: {{ site.data.resources[IG].version }}|
-|*NPM package name*: {{ site.data.resources[IG].packageId }}|*ComputableName*: {{ site.data.resources[IG].name }}|
-|*Copyright/Legal*: Used by permission of HL7 International, all rights reserved Creative Commons License|
+|*NPM package name*: {{ site.data.fhir.packageId }}|*ComputableName*: {{ site.data.resources[IG].name }}|
 {:.grid}
 
 {{ site.data.resources[IG].description }}
