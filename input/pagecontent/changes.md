@@ -3,6 +3,15 @@
 	h4:before {content: none}
 </style>
 
+### STU3 - v3.0.0
+* Added support for partial export manifests to enable servers to make some files available prior to all of the files being ready and to split large lists of files across multiple manifests.
+* Removed the “experimental” label from the `_typeFilter` kickoff parameter since it has been widely implemented, clarified its documentation and approach to boolean logic, and documented the interaction with other filters.
+* Added optional `_until` kickoff parameter on the Bulk Data kickoff request as an analog to the `_since` parameter to enable users to specify a cutoff modification timestamp for the resources in the response.
+* Added guidance on the use of FHIR Groups with Bulk Export, and added a Group profile to support the creation of characteristic based cohorts using coarse-grained filters to more efficiently export data on sets of patients from a source system.
+* Moved guidance on the use of capability urls from a separate confluence page into the Bulk Data Output File Request section of the IG and added guidance on content encoding.
+* Defined an extension for a server to indicate search parameters in the capability statement that are accessible with the REST API, but not available when using the Bulk Export operation.
+
+
 ### STU2 - v2.0.0
 
 #### Export Kickoff Request
