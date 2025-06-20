@@ -37,6 +37,7 @@ parameters:
   excludettl: true
   excludexml: true
   excludemap: true
+    - fsh-generated/resources
 
 menu:
   Home: index.html
