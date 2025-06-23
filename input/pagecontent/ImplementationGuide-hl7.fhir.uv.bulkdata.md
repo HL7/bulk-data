@@ -1,8 +1,16 @@
+{% assign igID  = site.data.fhir.igId  %}
+{% assign IG =  "ImplementationGuide/" | append: igID %}
 
-{{ site.data.ig.description }}
+|||
+|---|---|
+|*Official URL*: {{ site.data.resources[IG].url }}|*Version*: {{ site.data.resources[IG].version }}|
+|*NPM package name*: {{ site.data.fhir.packageId }}|*ComputableName*: {{ site.data.resources[IG].name }}|
+{:.grid}
 
-- [XML](ImplementationGuide-{{site.data.ig.id}}.xml)
-- [JSON](ImplementationGuide-{{site.data.ig.id}}.json)
+{{ site.data.resources[IG].description }}
+
+- [XML](ImplementationGuide-{{igID}}.xml)
+- [JSON](ImplementationGuide-{{igID}}.json)
 
 ### Cross Version Analysis
 
