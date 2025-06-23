@@ -17,5 +17,5 @@ The extension http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValue
 # 01. Group profile - this code system is used by the Group resource
 Reference to draft CodeSystem http://hl7.org/fhir/group-type|4.0.1
 
-# 02. The includeAssociatedData code system and valueset are specific to this IGe and extremely unlikely to be used elsewhere. We will request TSMG approval.
+# 02. The includeAssociatedData code system and valueset are specific to this IG and extremely unlikely to be used elsewhere. We will request TSMG approval.
 Most code systems defined in HL7 IGs will need to move to THO later during the process. Consider giving this code system a THO URL now (See https://confluence.hl7.org/display/TSMG/Terminology+Play+Book, and/or talk to TSMG)
