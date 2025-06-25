@@ -30,6 +30,9 @@ This use case exports all resources needed to convey a patient's healthcare fina
 * Public health surveillance that does not require real-time exchange of data, such as aggregate situational awareness data reporting
 * Electronic Case Reporting (data from initial export may be filtered or summarized before submitting)
 
+### Implementation Guide Details
+The [Bulk Data Access ImplementationGuide Resource](ImplementationGuide-hl7.fhir.uv.bulkdata.html) defines the technical details of this publication, including dependencies and  publishing parameters.
+
 ### Additional Documentation
 * [Overview Presentation](https://docs.google.com/presentation/d/14ZHmam9hwz6-SsCG1YqUIQnJ56bvSqEatebltgEVR6c/edit?usp=sharing)
 * [Discussion Group (FHIR Zulip "Bulk Data" Track)](https://chat.fhir.org/#narrow/stream/bulk.20data)

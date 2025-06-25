@@ -16,6 +16,10 @@ When considering Bulk Export use cases, the community has identified three commo
 
 Servers supporting the Bulk Data Access IG MAY support the Bulk Cohort API which consists of an asynchronous Group creation REST interaction and a profile on the Group resource. The intent is to support the creation of characteristic based cohorts using coarse-grained filters to more efficiently export data on sets of patients from a source system. Post export, the client can use the FHIR resources returned for these cohorts for finer grained filtering to support use cases such as measure calculation or analytics that may necessitate more complex filter criteria.
 
+<div class="dragon">
+While this overall implementation guide has a [maturity level] of FMM 5, the Bulk Cohort API is still experimental and has a maturity level of FMM 1.
+</div>
+
 #### REST Interactions
 
 When the Bulk Cohort API is supported, the server SHALL accept FHIR Group create requests that use the [FHIR Asynchronous Interaction Request](https://hl7.org/fhir/async-bundle.html) pattern and provide a valid FHIR Group resource that complies with the [Bulk Cohort Group Profile](#group-profile). Servers MAY also accept synchronous FHIR Group create requests, but since not all servers can create groups in this way (for example, some systems require a manual group approval step), clients should not expect this to be universally available. After group creation, a server MAY subsequently make the new Group resource available to authorized clients or MAY reject resource creation request and returning a relevant error. Servers SHOULD support read, search, delete, and Bulk Export operations on created Group resources, and SHOULD support the `name` search parameter in search requests for these resources. Servers MAY support other FHIR REST API operations and other search parameters. 

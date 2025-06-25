@@ -1,1 +1,21 @@
 == Suppressed Messages ==
+# Warnings
+
+# 01. An inline example is provided in the extension description
+The Implementation Guide contains no examples for this extension
+
+# 02. This valueset is defined on the Expression type, not in this IG
+A definition could not be found for Canonical URL 'http://www.rfc-editor.org/bcp/bcp13.txt'
+
+# Hints
+
+# 01.This extension is defined in the Expression type, not in this IG
+The extension http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet|5.2.0 is deprecated
+
+# Hints - Terminology
+
+# 01. Group profile - this code system is used by the Group resource
+Reference to draft CodeSystem http://hl7.org/fhir/group-type|4.0.1
+
+# 02. The includeAssociatedData code system and valueset are specific to this IG and extremely unlikely to be used elsewhere. We will request TSMG approval.
+Most code systems defined in HL7 IGs will need to move to THO later during the process. Consider giving this code system a THO URL now (See https://confluence.hl7.org/display/TSMG/Terminology+Play+Book, and/or talk to TSMG)
