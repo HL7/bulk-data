@@ -27,7 +27,7 @@ pages:
   abbreviations.md:
     title: Abbreviations
   changes.md:
-    title: IG Change History
+    title: Change Log
   downloads.html:
     title: Downloads
   ImplementationGuide-hl7.fhir.uv.bulkdata.md:
@@ -46,6 +46,7 @@ menu:
   FHIR Artifacts: artifacts.html
   Downloads: downloads.html
   Abbreviations: abbreviations.html
+  Change Log: changes.html
 
 resources:
   CapabilityStatement/bulk-data:
