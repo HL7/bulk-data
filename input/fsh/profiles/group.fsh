@@ -34,7 +34,15 @@ Context: Group
 Extension: MembersRefreshed
 Id: members-refreshed
 Title: "Members Refreshed"
-Description: "Extension used by a server to indicate to a client when the members in a dynamic group were last updated"
+Description: """
+  Extension used by a server to indicate to a client when the members in a dynamic group were last updated. For example, the following extension would indicate that the group members were last updated January 1st 2024:
+  ```
+  "Extension" : [{
+    "url" : "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/members-refreshed",
+    "valueDateTime" : "2024-01-01T13:28:17-05:00"
+  }]
+  ```
+"""
 Context: Group
 * value[x] only dateTime
 
