@@ -91,7 +91,7 @@ Usage: #example
 * meta.extension[1].url = "http://hl7.org/fhir/StructureDefinition/instance-description"
 * meta.extension[1].valueMarkdown = "Blue cross plan member group with members filtered to patients that have an active diagnosis of diabetes on their problem list and an ambulatory encounter in January 2024"
 * name = "DM Dx and Jan. 2024 Ambulatory Encounter"
-* member.entity = Reference("http://example.org/fhir/Group/blue-cross-members)
+* member.entity = Reference(http://example.org/fhir/Group/blue-cross-members)
 * extension[members-refreshed].valueDateTime = "2024-08-22T10:00:00Z"
 * modifierExtension[member-filter][0].valueExpression.expression = "Condition?category=http://terminology.hl7.org/CodeSystem/condition-category|problem-list-item&clinical-status=http://terminology.hl7.org/CodeSystem/condition-clinical|active&code=http://hl7.org/fhir/sid/icd-10-cm|E11.9"
 * modifierExtension[member-filter][1].valueExpression.expression = "Encounter?class=http://terminology.hl7.org/CodeSystem/v3-ActCode|AMB&date=ge2024-01-01&date=le2024-01-31"
