@@ -70,11 +70,13 @@ Description: "Group that provides characteristic based cohorts through coarse-gr
 * extension contains MembersRefreshed named members-refreshed 0..1
   * ^short = "when membership in this group was updated"
   * ^definition = """
-    If a groups membership is calculated periodically from the `member-filter` criteria, a server SHALL populate a `valueDateTime` with the date the group's membership was last updated. When a `date` element is populated for the Group, the `valueDateTime` element SHALL NOT be later than the date in that element, but may be the same datetime or an earlier datetime. If members are calculated dynamically for the group (for example, when a Bulk Export operation is kicked off) this value SHALL be omitted. The server's refresh cycle capabilities and relevant configuration options SHOULD be described in the server's documentation.
+    If a group's membership is calculated periodically from the `member-filter` criteria, a server SHALL populate a `valueDateTime` with the date the group's membership was last updated. When a `date` element is populated for the Group, the `valueDateTime` element SHALL NOT be later than the date in that element, but may be the same datetime or an earlier datetime. If members are calculated dynamically for the group (for example, when a Bulk Export operation is kicked off) this value SHALL be omitted. The server's refresh cycle capabilities and relevant configuration options SHOULD be described in the server's documentation.
     """
 * name 1..1
 * characteristic 0..0
-  * ^short = "This element is not used for in groups complying with this profile"
+  * ^short = "This element is not used in groups complying with this profile"
+  * ^definition = "This element is not used in groups complying with this profile"
+
 * actual
   * ^short = "True if the member element is populated, otherwise false."
   * ^definition = "True if the member element is populated, otherwise false."
