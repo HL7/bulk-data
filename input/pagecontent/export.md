@@ -425,7 +425,7 @@ Content-Type: application/json
 &nbsp;&nbsp;"type" : "Patient",
 &nbsp;&nbsp;"url" : "https://example.com/output/patient_file_1.ndjson"
 &nbsp;},{
-&nbsp;&nbsp;"type" : "Patient",
+&nbsp;&nbsp;"type" : "Observation",
 &nbsp;&nbsp;"url" : "https://example.com/output/observation_file_1.ndjson"
 &nbsp;},{
 &nbsp;&nbsp;"type" : "Observation",
