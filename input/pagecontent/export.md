@@ -132,7 +132,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
   <tbody>
     <tr>
       <td><code>_outputFormat</code></td>
-      <td><span class="label label-info">required</span></td>
+      <td><span class="label label-success">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>0..1</td>
       <td>String</td>
@@ -140,7 +140,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
     </tr>
     <tr>
       <td><code>_since</code></td>
-      <td><span class="label label-info">required</span></td>
+      <td><span class="label label-success">required</span></td>
       <td><span class="label label-info">optional</span></td>
       <td>0..1</td>
       <td>FHIR instant</td>
@@ -425,7 +425,7 @@ Content-Type: application/json
 &nbsp;&nbsp;"type" : "Patient",
 &nbsp;&nbsp;"url" : "https://example.com/output/patient_file_1.ndjson"
 &nbsp;},{
-&nbsp;&nbsp;"type" : "Patient",
+&nbsp;&nbsp;"type" : "Observation",
 &nbsp;&nbsp;"url" : "https://example.com/output/observation_file_1.ndjson"
 &nbsp;},{
 &nbsp;&nbsp;"type" : "Observation",
@@ -532,7 +532,7 @@ The output manifest is a JSON object providing metadata and links to the generat
     </tr>
     <tr>
       <td><code>deleted</code></td>
-      <td><span class="label label-success">optional</span></td>
+      <td><span class="label label-info">optional</span></td>
       <td>JSON array</td>
       <td>An array of deleted file items following the same structure as the <code>output</code> array.
       <br/>
