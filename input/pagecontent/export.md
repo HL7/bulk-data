@@ -669,15 +669,18 @@ When the <code>organizeOutputBy</code> parameter is set <code>Patient</code>, se
 For other resource types, we are soliciting feedback on the best approach for documenting the set of resources in a resource block. Implementation Guides MAY reference a <a hre="https://www.hl7.org/fhir/compartmentdefinition.html">Compartment Definition</a>, populate a <a href="https://www.hl7.org/fhir/graphdefinition.html">GraphDefinition Resource</a>, include narrative text, or use another approach.
 </div>
 
-Example header for `Patient` resource:
-```json
-{
-  "resourceType" : "Parameters",
-  "parameter" : [{
-    "name": "header",
-    "valueReference": {"reference": "Patient/123"}
-  }]
-}
+For example, if the `organizeOutputBy` parameter in the kickoff request is set to `Patient`, an output file might look like this:
+```js
+  {"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-1"}}]}
+  {"id": "p-1", "resourceType": "Patient", ...}
+  {"id": "c-1", "resourceType": "Condition", "subject":{"reference": "Patient/p-1"}, ...}
+  {"id": "o-1", "resourceType": "Observation", "subject":{"reference": "Patient/p-1"}, ...}
+  {...}
+  {"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-2"}}]}
+  {"id": "p-2", "resourceType": "Patient", ...}
+  {"id": "c-101", "resourceType": "Condition", "subject":{"reference": "Patient/p-2"}, ...}
+  {"id": "o-102", "resourceType": "Observation", "subject":{"reference": "Patient/p-2"}, ...}
+  {...}
 ```
 
 #### Bulk Data Output File Request
@@ -696,9 +699,9 @@ A client SHOULD provide an `Accept-Encoding` header when requesting output files
 
 Example NDJSON output file:
 ```
-{"id":"5c41cecf-cf81-434f-9da7-e24e5a99dbc2","name":[{"given":["Brenda"],"family":["Jackson"]}],"gender":"female","birthDate":"1956-10-14T00:00:00.000Z","resourceType":"Patient"}
-{"id":"3fabcb98-0995-447d-a03f-314d202b32f4","name":[{"given":["Bram"],"family":["Sandeep"]}],"gender":"male","birthDate":"1994-11-01T00:00:00.000Z","resourceType":"Patient"}
-{"id":"945e5c7f-504b-43bd-9562-a2ef82c244b2","name":[{"given":["Sandy"],"family":["Hamlin"]}],"gender":"female","birthDate":"1988-01-24T00:00:00.000Z","resourceType":"Patient"}
+{"id":"5c41cecf-cf81-434f-9da7-e24e5a99dbc2","resourceType":"Patient", "name":[{"given":["Brenda"],"family":"Jackson"}],"gender":"female"}
+{"id":"3fabcb98-0995-447d-a03f-314d202b32f4","resourceType":"Patient", "name":[{"given":["Bram"],"family":"Sandeep"}],"gender":"male"}
+{"id":"945e5c7f-504b-43bd-9562-a2ef82c244b2","resourceType":"Patient", "name":[{"given":["Sandy"],"family":"Hamlin"}],"gender":"female"}
 ```
 
 ##### Endpoint
