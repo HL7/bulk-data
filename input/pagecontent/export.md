@@ -218,7 +218,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional</span></td>
       <td>0..1</td>
       <td><a href="https://hl7.org/fhir/valueset-resource-types.html">string of a FHIR resource type</a></td>
-      <td>When provided, a server with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, servers SHALL organize each output file with resources of only single type. <a href="#bulk-data-output-file-organization">See details below</a>.<br /><br />
+      <td>When provided, a server with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, servers SHALL organize each output file with resources of only single type. See <a href="#bulk-data-output-file-organization">details</a>, <a href="#organize-output-by-manifest-example">example manifest</a>, and <a href="#organize-output-by-file-example">example output file</a> below.<br /><br />
       A server unable to structure output by the requested <code>organizeOutputBy</code> resource SHOULD return an error and FHIR <code>OperationOutcome</code> resource. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
       </td>
     </tr>
@@ -620,6 +620,8 @@ Example manifest, `organizeOutputBy` kickoff parameter is not populated:
   }
 ```
 
+<a name="organize-output-by-manifest-example" />
+
 Example manifest, `organizeOutputBy` kickoff parameter is `Patient`, and `allowPartialManifests` kickoff parameter is `true`:
 
 ```json
@@ -669,7 +671,9 @@ When the <code>organizeOutputBy</code> parameter is set <code>Patient</code>, se
 For other resource types, we are soliciting feedback on the best approach for documenting the set of resources in a resource block. Implementation Guides MAY reference a <a hre="https://www.hl7.org/fhir/compartmentdefinition.html">Compartment Definition</a>, populate a <a href="https://www.hl7.org/fhir/graphdefinition.html">GraphDefinition Resource</a>, include narrative text, or use another approach.
 </div>
 
-For example, if the `organizeOutputBy` parameter in the kickoff request is set to `Patient`, an output file might look like this:
+<a name="organize-output-by-file-example" />
+
+For example, when the `organizeOutputBy` parameter in the kickoff request is set to `Patient`, an output file will look like this:
 ```js
   {"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-1"}}]}
   {"id": "p-1", "resourceType": "Patient", ...}
