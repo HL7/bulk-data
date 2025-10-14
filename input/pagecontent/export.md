@@ -218,7 +218,7 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
       <td><span class="label label-info">optional</span></td>
       <td>0..1</td>
       <td><a href="https://hl7.org/fhir/valueset-resource-types.html">string of a FHIR resource type</a></td>
-      <td>When provided, a server with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, servers SHALL organize each output file with resources of only single type. <a href="#bulk-data-output-file-organization">See details below</a>.<br /><br />
+      <td>When provided, a server with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, servers SHALL organize each output file with resources of only single type. See <a href="#bulk-data-output-file-organization">details</a>, <a href="#organize-output-by-manifest-example">example manifest</a>, and <a href="#organize-output-by-file-example">example output file</a> below.<br /><br />
       A server unable to structure output by the requested <code>organizeOutputBy</code> resource SHOULD return an error and FHIR <code>OperationOutcome</code> resource. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
       </td>
     </tr>
@@ -620,6 +620,8 @@ Example manifest, `organizeOutputBy` kickoff parameter is not populated:
   }
 ```
 
+<a name="organize-output-by-manifest-example" />
+
 Example manifest, `organizeOutputBy` kickoff parameter is `Patient`, and `allowPartialManifests` kickoff parameter is `true`:
 
 ```json
@@ -653,33 +655,6 @@ Example manifest, `organizeOutputBy` kickoff parameter is `Patient`, and `allowP
 ```
 
 ---
-#### Bulk Data Output File Organization
-
-Output files may be organized by resource type, or by instances of a resource type specified in the `organizeOutputBy` kickoff parameter.
-
-When the `organizeOutputBy` kickoff parameter is not populated, each output file SHALL contain resources of only one type, and a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers and files. 
-
-When the `organizeOutputBy` kickoff parameter is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type in the kickoff parameter, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resource's block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` field in the relevant `output` array items. 
-
-Resources that would otherwise be included in the export, but do not have references to the resource type specified in the `organizeOutputBy` parameter, MAY be included in a resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the export.  
-
-<div class="stu-note">
-When the <code>organizeOutputBy</code> parameter is set <code>Patient</code>, servers SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.  
-
-For other resource types, we are soliciting feedback on the best approach for documenting the set of resources in a resource block. Implementation Guides MAY reference a <a hre="https://www.hl7.org/fhir/compartmentdefinition.html">Compartment Definition</a>, populate a <a href="https://www.hl7.org/fhir/graphdefinition.html">GraphDefinition Resource</a>, include narrative text, or use another approach.
-</div>
-
-Example header for `Patient` resource:
-```json
-{
-  "resourceType" : "Parameters",
-  "parameter" : [{
-    "name": "header",
-    "valueReference": {"reference": "Patient/123"}
-  }]
-}
-```
-
 #### Bulk Data Output File Request
 
 Using the URLs supplied by the FHIR server in the manifest, a client MAY download the generated Bulk Data files (one or more per resource type) within the time period specified in the `Expires` header (if present). A client MAY re-fetch the output manifest if output links have expired, and a server MAY provide updated links and/or an updated timestamp in the `Expires` header in the response. 
@@ -693,13 +668,6 @@ If the `requiresAccessToken` field is set to `false` and no additional authoriza
 The exported data SHALL include only the most recent version of any exported resources unless the client explicitly requests different behavior in a fashion supported by the server (e.g.,  via a new query parameter yet to be defined). Inclusion of the `Resource.meta` information in the resources is at the discretion of the server (as it is for all FHIR interactions).
 
 A client SHOULD provide an `Accept-Encoding` header when requesting output files and SHOULD include `gzip` compression as one of the encoding options in the header. A server SHALL provide output files as uncompressed, with `gzip` compression, or with another compression format from the `Accept-Encoding` header. When compression is used, a server SHALL communicate this to the client by including a `Content-Encoding` header in the response. A client SHALL accept files that are uncompressed or encoded with `gzip` compression, and MAY accept files encoded with other compression formats.
-
-Example NDJSON output file:
-```
-{"id":"5c41cecf-cf81-434f-9da7-e24e5a99dbc2","name":[{"given":["Brenda"],"family":["Jackson"]}],"gender":"female","birthDate":"1956-10-14T00:00:00.000Z","resourceType":"Patient"}
-{"id":"3fabcb98-0995-447d-a03f-314d202b32f4","name":[{"given":["Bram"],"family":["Sandeep"]}],"gender":"male","birthDate":"1994-11-01T00:00:00.000Z","resourceType":"Patient"}
-{"id":"945e5c7f-504b-43bd-9562-a2ef82c244b2","name":[{"given":["Sandy"],"family":["Hamlin"]}],"gender":"female","birthDate":"1988-01-24T00:00:00.000Z","resourceType":"Patient"}
-```
 
 ##### Endpoint
 
@@ -720,6 +688,48 @@ Specifies the format of the file being requested.
 ##### Response - Error
 
 - HTTP Status Code of `4XX` or `5XX`
+
+##### Bulk Data Output File Organization
+
+Output files may be organized by resource type, or by instances of a resource type specified in the `organizeOutputBy` kickoff parameter.
+
+When the `organizeOutputBy` kickoff parameter is not populated, each output file SHALL contain resources of only one type, and a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers and files. 
+
+When the `organizeOutputBy` kickoff parameter is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type in the kickoff parameter, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resource's block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` field in the relevant `output` array items. 
+
+Resources that would otherwise be included in the export, but do not have references to the resource type specified in the `organizeOutputBy` parameter, MAY be included in a resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the export.  
+
+<div class="stu-note">
+When the <code>organizeOutputBy</code> parameter is set <code>Patient</code>, servers SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.  
+
+For other resource types, we are soliciting feedback on the best approach for documenting the set of resources in a resource block. Implementation Guides MAY reference a <a hre="https://www.hl7.org/fhir/compartmentdefinition.html">Compartment Definition</a>, populate a <a href="https://www.hl7.org/fhir/graphdefinition.html">GraphDefinition Resource</a>, include narrative text, or use another approach.
+</div>
+
+Example NDJSON file when the `organizeOutputBy` parameter in the kickoff request is not populated:
+
+```js
+{"id":"p-1","resourceType":"Patient", "name":[{"given":["Brenda"],"family":"Jackson"}],"gender":"female", ...}
+{"id":"p-2","resourceType":"Patient", "name":[{"given":["Bram"],"family":"Sandeep"}],"gender":"male", ...}
+{"id":"p-3","resourceType":"Patient", "name":[{"given":["Sandy"],"family":"Hamlin"}],"gender":"female", ...}
+{...}
+```
+
+<a name="organize-output-by-file-example" />
+
+Example NDJSON file when the `organizeOutputBy` parameter in the kickoff request is set to `Patient`:
+
+```js
+  {"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-1"}}]}
+  {"id": "p-1", "resourceType": "Patient", ...}
+  {"id": "c-1", "resourceType": "Condition", "subject":{"reference": "Patient/p-1"}, ...}
+  {"id": "o-1", "resourceType": "Observation", "subject":{"reference": "Patient/p-1"}, ...}
+  {...}
+  {"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-2"}}]}
+  {"id": "p-2", "resourceType": "Patient", ...}
+  {"id": "c-101", "resourceType": "Condition", "subject":{"reference": "Patient/p-2"}, ...}
+  {"id": "o-102", "resourceType": "Observation", "subject":{"reference": "Patient/p-2"}, ...}
+  {...}
+```
 
 ##### Attachments
 
