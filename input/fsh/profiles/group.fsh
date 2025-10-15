@@ -3,11 +3,11 @@ Id: group-type-subset
 Title: "Person and Practitioner from GroupType Value Set"
 Description: "Valuset to constrain the type element in a Group to just person and practitioner"
 * ^experimental = false
-* ^jurisdiction = $m49.htm#001 "World"
+* ^jurisdiction = http://unstats.un.org/unsd/methods/m49/m49.htm#001 "World"
 * ^immutable = true
 * http://hl7.org/fhir/group-type#person
 * http://hl7.org/fhir/group-type#practitioner
-
+* http://hl7.org/fhir/group-type#device
 
 Extension: MemberFilter
 Id: member-filter
@@ -19,7 +19,7 @@ Description: """
     "url" : "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/member-filter",
     "valueExpression" : {
       "language" : "application/x-fhir-query",
-        "expression" : "Encounter?class=http://terminology.hl7.org/CodeSystem/v3-ActCode|AMB&date=ge2024-01-01&date=le2024-01-31"
+      "expression" : "Encounter?class=http://terminology.hl7.org/CodeSystem/v3-ActCode|AMB&date=ge2024-01-01&date=le2024-01-31"
     }
   }]
   ```
@@ -28,8 +28,6 @@ Context: Group
 * . ^isModifier = true
 * . ^isModifierReason = "Filters members of group to a subset"
 * value[x] only Expression
-  * language = #application/x-fhir-query
-
 
 Extension: MembersRefreshed
 Id: members-refreshed
@@ -54,16 +52,16 @@ Title: "Bulk Cohort Group"
 Description: "Group that provides characteristic based cohorts through coarse-grained, REST search expression based filters to support constraining bulk export requests"
 * type from GroupTypeSubset (required)
   * ^definition = """
-    A client SHALL populate this element with `person` when creating a group of Patients, or `practitioner` when creating a group of Practitioners.
+    A client SHALL populate this element with `person` when creating a group of Patient resources or RelatedPerson resources, `practitioner` when creating a group of Practitioner resources, or `device` when creating a group of Device resources.
     """
 * member
   * ^definition = """
-    A server MAY support the inclusion of one or more `member` elements that contain an `entity` element with a reference to a Patient resource, Practitioner resource, or Group resource that is a group of Patient resources or Practitioner resources. When members are provided, the expression in the `member-filter` extension for the Group SHALL only be applied to the referenced resources and the compartments of the referenced resources, or those of the members of referenced Group resources. When members are not provided and the Group's `type` element is set to `person`, the expression in the `member-filter` extension SHALL be applied to all of the Patient resources and Patient compartments the client is authorized to access. When members are not provided and the Group's `type` element is set to `practitioner`, the expression in the `member-filter` extension SHALL be applied to all of the Practitioner resources and Practitioner compartments the client is authorized to access.
+    A server MAY support the inclusion of one or more `member` elements that contain an `entity` element with a reference to a `Patient` resource, `Practitioner` resource, `RelatedPerson` resource, `Device` resource, or a `Group` resource that is a group of one of these resource types. When members are provided, the expression in the `member-filter` extension for the Group SHALL only be applied to the referenced resources and the compartments of the referenced resources, and the resources and compartments of the members of any referenced Groups. When members are not provided and the Group's `type` element is set to `person`, the expression in the `member-filter` extension SHALL be applied to all of the Patient resources and Patient compartments the client is authorized to access and/or all of the RelatedPerson resources and RelatedPerson compartments the client is authorized to access. When members are not provided and the Group's `type` element is set to `practitioner`, the expression in the `member-filter` extension SHALL be applied to all of the Practitioner resources and Practitioner compartments the client is authorized to access. When members are not provided and the Group's `type` element is set to `device`, the expression in the `member-filter` extension SHALL be applied to all of the Device resources and Device compartments the client is authorized to access.
     """
 * modifierExtension contains MemberFilter named member-filter 1..*
   * ^short = "Filter for members of this group" 
   * ^definition = """
-    A server SHALL support the inclusion of one or more `member-filter` modifier extensions containing a `valueExpression` with a language of `application/x-fhir-query` and an `expression` populated with a FHIR REST API query for a Patient or Practitioner resource or a resource type included in the Patient or Practitioner compartment. If multiple `member-filter` extensions are provided, servers SHALL filter the group to only include Patients or Practitioners whose resources and resources in their compartments meet the conditions in all of the expressions. A server MAY also support other expression languages such as `text/cql`. When more than one language is supported by a server a client SHALL use a single language type for all of the member-filter expressions included in a single Group.
+    A server SHALL support the inclusion of one or more `member-filter` modifier extensions containing a `valueExpression` with a language of `application/x-fhir-query` and an `expression` populated with a FHIR REST API query, and SHALL support REST queries for one or more of the Patient, Practitioner, RelatedPerson or Device resource types. For supported resource types, the server SHALL also support querying the resources in that resource type's compartment. If multiple `member-filter` extensions are provided, servers SHALL filter the group to only include resources that meet the conditions in all of the expressions or resources that have resources in their compartments that meet the conditions in all of the expressions. A server MAY also support other expression languages such as `text/cql`. When more than one language is supported by a server a client SHALL use a single language type for all of the member-filter expressions included in a single Group.
  
     FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `member-filter` criteria. Additionally, a query in the `member-filter` parameter SHALL have the search context of a single FHIR Resource Type. The contexts "all resource types" and "a specified compartment" are not allowed. Clients should consult the server's capability statement to identify supported search parameters. Servers SHALL reject Group creation requests that include unsupported search parameters in a `member-filter` expression. Implementation guides that reference the Bulk Cohort API, should specify required search parameters must be supported for their use case. Other implementations guides that incorporate the Bulk Export operation MAY provide a set of core search parameters that servers implementing the guide need to support.
     """
@@ -93,7 +91,9 @@ Usage: #example
 * name = "DM Dx and Jan. 2024 Ambulatory Encounter"
 * member.entity = Reference(http://example.org/fhir/Group/blue-cross-members)
 * extension[members-refreshed].valueDateTime = "2024-08-22T10:00:00Z"
+* modifierExtension[member-filter][0].valueExpression.language = #application/x-fhir-query
 * modifierExtension[member-filter][0].valueExpression.expression = "Condition?category=http://terminology.hl7.org/CodeSystem/condition-category|problem-list-item&clinical-status=http://terminology.hl7.org/CodeSystem/condition-clinical|active&code=http://hl7.org/fhir/sid/icd-10-cm|E11.9"
+* modifierExtension[member-filter][1].valueExpression.language = #application/x-fhir-query
 * modifierExtension[member-filter][1].valueExpression.expression = "Encounter?class=http://terminology.hl7.org/CodeSystem/v3-ActCode|AMB&date=ge2024-01-01&date=le2024-01-31"
 * type = #person
 * actual = true
