@@ -26,6 +26,8 @@ When the Bulk Cohort API is supported, the server SHALL accept FHIR Group create
 
 Servers MAY support Group update requests. When update requests are supported, servers SHALL accept update requests that use the [FHIR Asynchronous Interaction Request](https://hl7.org/fhir/async-bundle.html) pattern and MAY accept synchronous update requests.
 
+When a client and server are using SMART on FHIR authorization, scopes relevant to a group related API transaction SHALL be requested by the client and granted by the server prior to the client making the request. For example, when using SMART on FHIR v2, creating and managing Groups can be represented with `system/Group.cud` and retrieving the groups accessible to the client can be represented with `system/Group.rs`.
+
 #### Group Profile
 
 **[Full Bulk Cohort Profile](StructureDefinition-bulk-cohort-group.html)**
