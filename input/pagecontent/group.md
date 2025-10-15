@@ -14,10 +14,10 @@ When considering Bulk Export use cases, the community has identified three commo
 
 ### Bulk Cohort API
 
-Servers supporting the Bulk Data Access IG MAY support the Bulk Cohort API which consists of an asynchronous Group creation REST interaction and a profile on the Group resource. The intent is to support the creation of characteristic based cohorts using coarse-grained filters to more efficiently export data on sets of patients from a source system. Post export, the client can use the FHIR resources returned for these cohorts for finer grained filtering to support use cases such as measure calculation or analytics that may necessitate more complex filter criteria.
+Servers supporting the Bulk Data Access IG MAY support the Bulk Cohort API which consists of an asynchronous Group creation REST interaction and a profile on the Group resource. The intent is to support the creation of characteristic based cohorts using coarse-grained filters to more efficiently export data on sets of patients from a source system. Post export, the client can use the FHIR resources returned for these cohorts for finer grained filtering to support use cases such as measure calculation or analytics that may necessitate more complex filter criteria. Groups complying with the Bulk Cohort profile must contain a `member-filter` modifier extension to define the members included in the group. Servers may concurrently support other group profiles that contain lists of members or use other methods to define group inclusion.
 
 <div class="dragon">
-While this overall implementation guide has a [maturity level] of FMM 5, the Bulk Cohort API is still experimental and has a maturity level of FMM 1.
+While this overall implementation guide has a <a href="https://hl7.org/fhir/R4/versions.html#maturity">maturity level</a> of FMM 5, the Bulk Cohort API is still experimental and has a maturity level of FMM 1.
 </div>
 
 #### REST Interactions
