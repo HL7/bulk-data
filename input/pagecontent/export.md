@@ -577,7 +577,7 @@ The output manifest is a JSON object providing metadata and links to the generat
       <td>
         When the <code>allowPartialManifests</code> kickoff parameter is <code>true</code>, the manifest MAY include a <code>link</code> array with a single object containing a <code>relation</code> field with a value of <code>next</code>, and a <code>url</code> field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the <code>output</code>, <code>deleted</code> and <code>link</code> arrays.
         <br/><br/>
-        In response to a request to a <code>next link</code>, a server MAY return an error as described <a href="#response---error-status-1">Error Status</a> section above. For non-transient errors, a client MAY process resources that have already retrieved prior to re-running the export job or MAY discard them.
+        If the export has failed or a transient error has occurred, a server MAY return an error in response to a request for the <code>next link</code>, as described in the <a href="#response---error-status-1">Error Status</a> section above. For non-transient errors, a client MAY process resources that have already retrieved prior to re-running the export job or MAY discard them.
       </td>
     </tr>
     <tr>
