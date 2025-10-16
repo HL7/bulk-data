@@ -521,7 +521,7 @@ The output manifest is a JSON object providing metadata and links to the generat
       <td>An array of file items with one entry for each generated file. If no resources are returned from the kick-off request, the server SHOULD return an empty array.
         <br/>
         <br/>
-        The <code>url</code> field SHALL be populated for each output item. When a resource type is not specified in the <code>organizeOutputBy</code> kick-off parameter, the <code>type</code> field SHALL also be populated for each item. When a resource type is specified in the <code>organizeOutputBy</code> kick-off parameter and resources related to a resource of this type continue into another output file, the <code>continuesInFile</code> field SHALL be populated with the URL of that output file.
+        The <code>url</code> field SHALL be populated for each output item. When the kick-off request does not contain an <code>organizedOutputBy</code> parameter, the <code>type</code> field SHALL be populated for each item. When the kick-off request does contain the <code>organizeOutputBy</code> parameter, the <code>type</code> field SHALL NOT be populated. When the kick-off request contains the <code>organizeOutputBy</code> parameter and resources related to a resource of this type continue into another output file, the <code>continuesInFile</code> field SHALL be populated with the URL of that output file.
         <br/>
         <br/>
         <ul>
