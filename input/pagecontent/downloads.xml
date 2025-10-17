@@ -11,17 +11,17 @@
 				<th>Artifact Definitions</th>
 {% unless excludexml == 'y' %}
 				<td>
-					<a href="definitions.xml.zip">XML</a>
+					<a href="../definitions.xml.zip">XML</a>
 				</td>
 {% endunless %}
 {% unless excludejson == 'y' %}
 				<td>
-					<a href="definitions.json.zip">JSON</a>
+					<a href="../definitions.json.zip">JSON</a>
 				</td>
 {% endunless %}
 {% unless excludettl == 'y' %}
 				<td>
-					<a href="definitions.ttl.zip">Turtle</a>
+					<a href="../definitions.ttl.zip">Turtle</a>
 				</td>
 {% endunless %}
 			</tr>
