@@ -118,7 +118,11 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 
 - `Prefer` (string)
 
-  Specifies whether the response is immediate or asynchronous. Currently, only a value of <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> is supported. A client SHOULD provide this header. If omitted, the server MAY return an error or MAY process the request as if respond-async was supplied.
+  A client SHOULD include this header with a value of <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> to indicate that the export will be processed asynchronously. If omitted, the server MAY return an error or MAY process the request as if respond-async was supplied.
+
+  A client MAY also provide a second prefer header value of `separate-export-status`, so the combined prefer header for the kickoff request is `Prefer: respond-async,separate-export-status`. If this header value is included by a client and is supported by a server, the server SHALL return the header `Preference-Applied` with values of `respond-async` and `separate-export-status` in its response. These may be provided as comma delimited values or the header may be repeated for each value.
+
+  When a prefer header value of `separate-export-status` is provided in the kickoff request and supported by the server, the HTTP status code in the response to an bulk data status request SHALL reflect the status request itself, and not the export job. In this case, when the HTTP status code of the bulk data status request is `200 OK`, the response SHALL also include an `X-Export-Status` header with an HTTP status code that reflects the status of the export job.
 
 ##### Query Parameters
 
@@ -335,6 +339,7 @@ _* In the case of a Group level export, the server may retain resources modified
 
 - HTTP Status Code of `202 Accepted`
 - `Content-Location` header with the absolute URL of an endpoint for subsequent status requests (polling location)
+- When a prefer header value of `separate-export-status` is provided in the kickoff request and supported by the server, the response SHALL include the header `Preference-Applied` with values of `respond-async` and `separate-export-status`. These may be provided as comma delimited values or the header may be repeated for each value.
 - Optionally, a FHIR `OperationOutcome` resource in the body in JSON format
 
 ##### Response - Error (e.g., unsupported search parameter)
@@ -368,7 +373,7 @@ After a Bulk Data request has been started, a client MAY send a DELETE request t
 
 After a Bulk Data request has been started, the client MAY poll the status URL provided in the `Content-Location` header as described in the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html).
 
-Clients SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach when polling for status. A server SHOULD supply a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header with a with a delay time in seconds (e.g., `120` to represent two minutes) or a http-date (e.g., `Fri, 31 Dec 1999 23:59:59 GMT`). When provided, clients SHOULD use this information to inform the timing of future polling requests. The server SHOULD keep an accounting of status queries received from a given client, and if a client is polling too frequently, the server SHOULD respond with a `429 Too Many Requests` status code in addition to a `Retry-After` header, and optionally a FHIR `OperationOutcome` resource with further explanation.  If excessively frequent status queries persist, the server MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP `4XX` as well as `5XX` status codes may be used to identify errors as mentioned.
+Clients SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach when polling for status. A server SHOULD supply a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header with a with a delay time in seconds (e.g., `120` to represent two minutes) or a http-date (e.g., `Fri, 31 Dec 1999 23:59:59 GMT`). When provided, clients SHOULD use this information to inform the timing of future polling requests. The server SHOULD keep an accounting of status queries received from a given client, and if a client is polling too frequently, the server SHOULD respond with a `429 Too Many Requests` status code in addition to a `Retry-After` header, and optionally a FHIR `OperationOutcome` resource with further explanation.  If excessively frequent status queries persist, the server MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP `4XX` as well as `5XX` status codes may be used to identify errors as mentioned below.
 
 When requesting status, the client SHOULD use an `Accept` header indicating a content type of  `application/json`. In the case that errors prevent the export from completing, the server SHOULD respond with a FHIR `OperationOutcome` resource in JSON format.
 
@@ -382,23 +387,39 @@ When requesting status, the client SHOULD use an `Accept` header indicating a co
   <thead>
     <th>Response Type</th>
     <th>Description</th>
-    <th>Example Response Headers + Body</th>
+    <th>Example Response</th>
   </thead>
   <tbody>
     <tr>
       <td><a href="#response---in-progress-status">In-Progress</a></td>
       <td>Returned by the server while it is processing the $export request.</td>
-      <td><pre><code>Status: 202 Accepted
+      <td>
+      Response headers - no <code>Prefer: separate-export-status</code> header on kickoff
+      <pre><code>Status: 202 Accepted
 X-Progress: “50% complete”
-Retry-After: 120</code></pre></td>
+Retry-After: 120</code></pre>
+      Response headers - <code>Prefer: separate-export-status</code> header on kickoff
+      <pre><code>Status: 200 OK
+X-Export-Status: 202 Accepted
+X-Progress: “50% complete”
+Retry-After: 120</code></pre>
+    </td>
     </tr>
     <tr>
       <td><a href="#response---error-status-1">Error</a></td>
       <td>Returned by the server if the export operation fails.</td>
-      <td><pre><code>Status: 500 Internal Server Error
+      <td>
+      Response headers - no <code>Prefer: separate-export-status</code> header on kickoff
+      <pre><code>Status: 500 Internal Server Error
 Content-Type: application/fhir+json
-
-{
+</code></pre>
+      Response headers - <code>Prefer: separate-export-status</code> header on kickoff
+      <pre><code>Status: 200 OK
+X-Export-Status: 500 Internal Server Error
+Content-Type: application/fhir+json
+</code></pre>
+Body
+<pre><code>{
 &nbsp;"resourceType": "OperationOutcome",
 &nbsp;"id": "1",
 &nbsp;"issue": [
@@ -415,11 +436,20 @@ Content-Type: application/fhir+json
     <tr>
       <td><a href="#response---complete-status">Complete</a></td>
       <td>Returned by the server when the export operation has completed.</td>
-      <td><pre><code>Status: 200 OK
+      <td>
+      Response headers - no <code>Prefer: separate-export-status</code> header on kickoff
+      <pre><code>Status: 200 OK
 Expires: Mon, 22 Jul 2019 23:59:59 GMT
 Content-Type: application/json
-
-{
+</code></pre>
+      Response headers - <code>Prefer: separate-export-status</code> header on kickoff
+      <pre><code>Status: 200 OK
+X-Export-Status: 200 OK
+Expires: Mon, 22 Jul 2019 23:59:59 GMT
+Content-Type: application/json
+</code></pre>
+Body
+<pre><code>{
 &nbsp;"transactionTime": "2021-01-01T00:00:00Z",
 &nbsp;"request" : "https://example.com/fhir/Patient/$export?_type=Patient,Observation",
 &nbsp;"requiresAccessToken" : true,
@@ -449,13 +479,15 @@ Content-Type: application/json
 
 ##### Response - In-Progress Status
 
-- HTTP Status Code of `202 Accepted`
+- HTTP Status Code of `202 Accepted` (when a prefer header value of `separate-export-status` was not provided in the kickoff)
+- When a prefer header value of `separate-export-status` was provided in the kickoff and is supported by a server, HTTP status code of `200 OK` and an `X-Export-Status` header of `202 Accepted`
 - Optionally, the server MAY return an `X-Progress` header with a text description of the status of the request that is less than 100 characters. The format of this description is at the server's discretion and MAY be a percentage complete value, or MAY be a more general status such as "in progress". The client MAY parse the description, display it to the user, or log it.
 - When the `allowPartialManifests` kickoff parameter is `true`, the server MAY return a `Content-Type` header of `application/json` and a body containing an output manifest in the format [described below](#response---output-manifest), populated with a partial set of output files for the export. When provided, a manifest SHALL only contain files that are available for retrieval by the client. Once returned, the server SHALL NOT alter a manifest when it is returned in subsequent requests, with the exception of optionally adding a `link` field pointing to a manifest with additional output files or updating output file URLs that have expired. The output files referenced in the manifest SHALL NOT be altered once they have been included in a manifest that has been returned to a client.
 
 ##### Response - Error Status
 
-- HTTP status code of `4XX` or `5XX`
+- HTTP status code of `4XX` or `5XX` (when a prefer header value of `separate-export-status` was not provided in the kickoff)
+- When a prefer header value of `separate-export-status` was provided in the kickoff and is supported by a server, HTTP status code of `200 OK` and an `X-Export-Status` header of of `4XX` or `5XX`
 - `Content-Type` header of `application/fhir+json` when body is a FHIR `OperationOutcome` resource
 - The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON format. If this is not possible (for example, the infrastructure layer returning the error is not FHIR aware), the server MAY return an error message in another format and include a corresponding value for the `Content-Type` header.
 
@@ -466,6 +498,7 @@ In the case of a polling failure that does not indicate failure of the export jo
 ##### Response - Complete Status
 
 - HTTP status of `200 OK`
+- When a prefer header value of `separate-export-status` was provided in the kickoff and is supported by a server, an `X-Export-Status` header of `200 OK`
 - `Content-Type` header of `application/json`
 - The server SHOULD return an `Expires` header indicating when the files listed will no longer be available for access.
 - A body containing the output manifest described below.
