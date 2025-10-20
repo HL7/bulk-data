@@ -1,6 +1,6 @@
 ### Audience and Scope
 
-This implementation guide is intended to be used by developers of backend services (clients) and FHIR Resource Servers (e.g., EHR systems, data warehouses, and other clinical and administrative systems) that aim to interoperate by sharing large FHIR datasets. The guide defines the application programming interfaces (APIs) through which an authenticated and authorized client may request a Bulk Data Export from a server, receive status information regarding progress in the generation of the requested files, and retrieve these files.  It also includes recommendations regarding the FHIR resources that might be exposed through the export interface.  
+This implementation guide is intended to be used by developers of backend services (clients) and FHIR Resource Servers (e.g., EHR systems, data warehouses, and other clinical and administrative systems) that aim to interoperate by sharing large FHIR datasets. The guide defines the application programming interfaces (APIs) through which an authenticated and authorized client may request a Bulk Data Export from a server, receive status information regarding progress in the generation of the requested files, and retrieve these files.  It also includes recommendations regarding the FHIR resources that might be exposed through the export interface.
 
 The scope of this document does NOT include:
 
@@ -27,13 +27,13 @@ The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMME
 
 ### Privacy and Security Considerations
 
-All exchanges described herein between a client and a server SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS.  Use of mutual TLS is OPTIONAL.  
+All exchanges described herein between a client and a server SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS.  Use of mutual TLS is OPTIONAL.
 
-With each of the requests described herein, implementers SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). When SMART Backend Services Authorization is used, Bulk Data Status Request and Bulk Data Output File Requests with `requiresAccessToken=true` SHALL be protected the same way the Bulk Data Kick-off Request, including an access token with scopes that cover all resources being exported. A server MAY additionally restrict Bulk Data Status Request and Bulk Data Output File Requests by limiting them to the client that originated the export. Implementations MAY include endpoints that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.     
+With each of the requests described herein, implementers SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). When SMART Backend Services Authorization is used, Bulk Data Status Request and Bulk Data Output File Requests with `requiresAccessToken=true` SHALL be protected the same way the Bulk Data Kick-off Request, including an access token with scopes that cover all resources being exported. A server MAY additionally restrict Bulk Data Status Request and Bulk Data Output File Requests by limiting them to the client that originated the export. Implementations MAY include endpoints that use authorization schemes other than OAuth 2.0, such as mutual-TLS or signed URLs.
 
 For Group level exports, in addition to requiring authorization to access the resources included in the export, a server SHOULD restrict clients from exporting data for Group resources they are not authorized to read (e.g., via `system/Group.rs` in SMART on FHIR v2). Servers SHALL also restrict access to specific groups based on underlying business rules.
 
-This implementation guide does not address protection of a server from potential compromise. An adversary who successfully captures administrative rights to the server will have full control over that server and can use those rights to undermine the server's security protections. In the Bulk Data Export workflow, the file server will be a particularly attractive target, as it holds highly sensitive and valued PHI. An adversary who successfully takes control of a file server may choose to continue to deliver files in response to client requests, so that neither the client nor the FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own malicious purposes.   
+This implementation guide does not address protection of a server from potential compromise. An adversary who successfully captures administrative rights to the server will have full control over that server and can use those rights to undermine the server's security protections. In the Bulk Data Export workflow, the file server will be a particularly attractive target, as it holds highly sensitive and valued PHI. An adversary who successfully takes control of a file server may choose to continue to deliver files in response to client requests, so that neither the client nor the FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own malicious purposes.
 
 Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches can be used to accomplish this, not all of which would be visible at the API level. This specification does not dictate a particular approach at this time, though it does support the use of an `Expires` header to limit the time period a file will be available for client download (removal of the file from the server is left up to the server implementer). A server SHOULD NOT delete files from a Bulk Data response that a client is actively in the process of downloading regardless of the pre-specified expiration time.
 
@@ -59,7 +59,7 @@ There are two primary roles involved in a Bulk Data transaction:
 
   2. **Bulk Data Client** - system that requests and receives access tokens and Bulk Data files
 
-#### Sequence Overview 
+#### Sequence Overview
 
  <figure>
   {% include bulk-flow.svg %}
@@ -80,7 +80,7 @@ For Patient-level requests and Group-level requests associated with groups of pa
 
 Binary Resources whose content is associated with an individual patient SHALL be serialized as DocumentReference Resources with the `content.attachment` element populated as described in the [Attachments](#attachments) section below. Binary Resources not associated with an individual patient MAY be included in a System Level export.
 
-References in the resources returned MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or MAY be absolute URLs with the same structure rooted in the base URL for the server from which the export was performed. 
+References in the resources returned MAY be relative URLs with the format <code>&lt;resource type&gt;/&lt;id&gt;</code>, or MAY be absolute URLs with the same structure rooted in the base URL for the server from which the export was performed.
 
 ##### Endpoint - All Patients
 
@@ -265,11 +265,11 @@ To obtain new and updated resources for patients in a group, as well as all data
 
   - Client retains a list of patient ids returned
   - Client compares response to patient ids from first query request and identifies new patient ids
-  - Client submits a group export request via POST for patients who are new members of the group: 
+  - Client submits a group export request via POST for patients who are new members of the group:
 
     ```
     POST [baseurl]/Group/[id]/$export
-    
+
     {"resourceType" : "Parameters",
       "parameter" : [{
         "name" : "patient",
@@ -281,11 +281,11 @@ To obtain new and updated resources for patients in a group, as well as all data
       }]
     }
     ```
-    
-  - Client submits a group export request for updated group data: 
+
+  - Client submits a group export request for updated group data:
 
     `[baseurl]/Group/[id]/$export?_since=[initial transaction time]`
-    
+
     Note that data returned from this request may overlap with that returned from the prior step.
 
   - Client retains the transactionTime value from the response.
@@ -296,7 +296,7 @@ The `_typeFilter` parameter enables finer-grained filtering out of resources in 
 
 Filtering resources based on the dates associated with a clinical or administrative event, such as exporting encounters that occurred within a certain time period, should be done using the `_typeFilter` parameter and not the `_since` and `_until` parameters, since the resource modification date used in those filters may not correspond to the date of the clinical or administrative event.
 
-The value of the `_typeFilter` parameter is a FHIR REST API query. Resources with a resource type specified in this query that do not meet the criteria in the search expression in the query SHALL NOT be returned, with the exception of related resources being included by a server to provide context about the resources being exported (see [processing model](#processing-model)). A client MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When more than one `_typeFilter` parameter is provided with a query for the same resource type, the server SHALL include resources of that resource type that meet the criteria in any of the parameters (a logical "or").  
+The value of the `_typeFilter` parameter is a FHIR REST API query. Resources with a resource type specified in this query that do not meet the criteria in the search expression in the query SHALL NOT be returned, with the exception of related resources being included by a server to provide context about the resources being exported (see [processing model](#processing-model)). A client MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When more than one `_typeFilter` parameter is provided with a query for the same resource type, the server SHALL include resources of that resource type that meet the criteria in any of the parameters (a logical "or").
 
 FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `_typeFilter` criteria. Additionally, a query in the `_typeFilter` parameter SHALL have the [search context](https://hl7.org/fhir/search.html#searchcontexts) of a single FHIR Resource Type. The contexts "all resource types" and "a specified compartment" are not allowed. Clients should consult the server's capability statement to identify supported search parameters (see [server capability documentation](#server-capability-documentation)). Since support for `_typeFilter` is OPTIONAL for a FHIR server, clients SHOULD be robust to servers that ignore `_typeFilter`.
 
@@ -558,7 +558,7 @@ The output manifest is a JSON object providing metadata and links to the generat
         <br/>
         <br/>
         <ul>
-          <li><code>type</code> - the FHIR resource type that is contained in the file.<br/></li>    
+          <li><code>type</code> - the FHIR resource type that is contained in the file.<br/></li>
           <li><code>url</code> - the absolute path to the file. The format of the file SHOULD reflect that requested in the <code>_outputFormat</code> parameter of the initial kick-off request.<br/></li>
           <li><code>continuesInFile</code> - url of the output file when resources associated with a FHIR resource of the type specified in the <code>organizeOutputBy</code> kick-off parameter in this file continue into another file. <a href="#bulk-data-output-file-organization">See details below</a>.<br/></li>
           <li><code>count</code> (optional) - the number of resources in the file, represented as a JSON number.<br/></li>
@@ -610,7 +610,7 @@ The output manifest is a JSON object providing metadata and links to the generat
       <td>
         When the <code>allowPartialManifests</code> kickoff parameter is <code>true</code>, the manifest MAY include a <code>link</code> array with a single object containing a <code>relation</code> field with a value of <code>next</code>, and a <code>url</code> field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the <code>output</code>, <code>deleted</code> and <code>link</code> arrays.
         <br/><br/>
-        If the export has failed or a transient error has occurred, a server MAY return an error in response to a request for the <code>next link</code>, as described in the <a href="#response---error-status-1">Error Status</a> section above. For non-transient errors, a client MAY process resources that have already retrieved prior to re-running the export job or MAY discard them.
+        If the export has failed or a transient error has occurred, a server MAY return an error in response to a request for the <code>next link</code>, as described in the <a href="#response---error-status-1">Error Status</a> section above. For non-transient errors, a client MAY process resources that have already been retrieved before re-running the export job or MAY discard them.
       </td>
     </tr>
     <tr>
@@ -645,7 +645,7 @@ Example manifest, `organizeOutputBy` kickoff parameter is not populated:
     }],
     "deleted": [{
       "type" : "Bundle",
-      "url" : "https://example.com/output/del_file_1.ndjson"      
+      "url" : "https://example.com/output/del_file_1.ndjson"
     }],
     "error" : [{
       "type" : "OperationOutcome",
@@ -675,7 +675,7 @@ Example manifest, `organizeOutputBy` kickoff parameter is `Patient`, and `allowP
     }],
     "deleted": [{
       "type" : "Bundle",
-      "url" : "https://example.com/output/del_file_1.ndjson"      
+      "url" : "https://example.com/output/del_file_1.ndjson"
     }],
     "error" : [{
       "type" : "OperationOutcome",
@@ -692,11 +692,11 @@ Example manifest, `organizeOutputBy` kickoff parameter is `Patient`, and `allowP
 ---
 #### Bulk Data Output File Request
 
-Using the URLs supplied by the FHIR server in the manifest, a client MAY download the generated Bulk Data files (one or more per resource type) within the time period specified in the `Expires` header (if present). A client MAY re-fetch the output manifest if output links have expired, and a server MAY provide updated links and/or an updated timestamp in the `Expires` header in the response. 
+Using the URLs supplied by the FHIR server in the manifest, a client MAY download the generated Bulk Data files (one or more per resource type) within the time period specified in the `Expires` header (if present). A client MAY re-fetch the output manifest if output links have expired, and a server MAY provide updated links and/or an updated timestamp in the `Expires` header in the response.
 
 As long as a server is following relevant security guidance, it MAY generate output manifests where the `requiresAccessToken` field is `true` or `false`; this applies even for servers available on the public internet.
 
-If the `requiresAccessToken` field in the manifest is set to `true`, the request SHALL include a valid access token.  See [Privacy and Security Considerations](#privacy-and-security-considerations) above.  
+If the `requiresAccessToken` field in the manifest is set to `true`, the request SHALL include a valid access token.  See [Privacy and Security Considerations](#privacy-and-security-considerations) above.
 
 If the `requiresAccessToken` field is set to `false` and no additional authorization-related extensions are present in the manifest's output entry, then the output URLs SHALL be dereferenceable directly (a "capability URL"), and SHALL follow expiration timing requirement that have been documented for bearer tokens in SMART Backend Services. A client SHALL NOT provide a SMART Backend Services access token when dereferencing an output URL where `requiresAccessToken` is `false`.
 
@@ -728,14 +728,14 @@ Specifies the format of the file being requested.
 
 Output files may be organized by resource type, or by instances of a resource type specified in the `organizeOutputBy` kickoff parameter.
 
-When the `organizeOutputBy` kickoff parameter is not populated, each output file SHALL contain resources of only one type, and a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers and files. 
+When the `organizeOutputBy` kickoff parameter is not populated, each output file SHALL contain resources of only one type, and a server MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between servers and files.
 
-When the `organizeOutputBy` kickoff parameter is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type in the kickoff parameter, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resource's block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` field in the relevant `output` array items. 
+When the `organizeOutputBy` kickoff parameter is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type in the kickoff parameter, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resource's block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` field in the relevant `output` array items.
 
-Resources that would otherwise be included in the export, but do not have references to the resource type specified in the `organizeOutputBy` parameter, MAY be included in a resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the export.  
+Resources that would otherwise be included in the export, but do not have references to the resource type specified in the `organizeOutputBy` parameter, MAY be included in a resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the export.
 
 <div class="stu-note">
-When the <code>organizeOutputBy</code> parameter is set <code>Patient</code>, servers SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.  
+When the <code>organizeOutputBy</code> parameter is set <code>Patient</code>, servers SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.
 
 For other resource types, we are soliciting feedback on the best approach for documenting the set of resources in a resource block. Implementation Guides MAY reference a <a hre="https://www.hl7.org/fhir/compartmentdefinition.html">Compartment Definition</a>, populate a <a href="https://www.hl7.org/fhir/graphdefinition.html">GraphDefinition Resource</a>, include narrative text, or use another approach.
 </div>
@@ -770,13 +770,13 @@ Example NDJSON file when the `organizeOutputBy` parameter in the kickoff request
 
 If resources in an output file contain elements of the type `Attachment`, the server SHOULD populate the `Attachment.contentType` code as well as either the `data` element or the `url` element. If the data element is not populated and the url element is populated, the url element SHALL be an absolute url that can be de-referenced to the attachment's content.
 
-When the `url` element is populated with an absolute URL and the `requiresAccessToken` field in the Complete Status body is set to `true`, the url location must be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the `url` element is populated and the `requiresAccessToken` field in the Complete Status body is set to `false`, the url location must be accessible by a client without an access token. 
+When the `url` element is populated with an absolute URL and the `requiresAccessToken` field in the Complete Status body is set to `true`, the url location must be accessible by a client with a valid access token, and SHALL NOT require the use of additional authentication credentials.  When the `url` element is populated and the `requiresAccessToken` field in the Complete Status body is set to `false`, the url location must be accessible by a client without an access token.
 
 Note that if a server copies files to the Bulk Data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the `Attachment.url` element when generating the Bulk Data output files.
 
 ### Server Capability Documentation
 
-This implementation guide is structured to support a wide variety of Bulk Data Export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the implemented Bulk Data Operations. Additionally, the server's Capability Statement SHOULD list the resource types available for export in the `rest.resource` element, and SHOULD list the search parameters that can be used in the `_typeFilter` parameter in `rest.resource.searchParam` elements. 
+This implementation guide is structured to support a wide variety of Bulk Data Export use cases and server architectures. To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the implemented Bulk Data Operations. Additionally, the server's Capability Statement SHOULD list the resource types available for export in the `rest.resource` element, and SHOULD list the search parameters that can be used in the `_typeFilter` parameter in `rest.resource.searchParam` elements.
 
 Servers SHOULD indicate resource types and search parameters that are accessible on the server with the REST API, but not available using the Bulk Export operation, with one or more extensions that have a URL of `http://hl7.org/fhir/uv/bulkdata/Extension/operation-not-supported` and a `valueCanonical` with the canonical URL for the [OperationDefinition](artifacts.html#behavior-operation-definitions) of the bulk operation that is not supported. Alternatively, the extension may be populated with the canonical URL for the FHIR Bulk Data Access Implementation Guide [CapabilityStatement](CapabilityStatement-bulk-data.html) when none of the bulk operations are supported.
 
