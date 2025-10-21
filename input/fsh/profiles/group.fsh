@@ -46,23 +46,25 @@ Context: Group
 
 
 Profile: BulkCohortGroup
-Parent: Group 
+Parent: Group
 Id: bulk-cohort-group
 Title: "Bulk Cohort Group"
 Description: "Group that provides characteristic based cohorts through coarse-grained, REST search expression based filters to support constraining bulk export requests"
 * type from GroupTypeSubset (required)
   * ^definition = """
-    A client SHALL populate this element with `person` when creating a group of Patient resources or RelatedPerson resources, `practitioner` when creating a group of Practitioner resources, or `device` when creating a group of Device resources.
+    A client SHALL populate this element with `person` when creating a group of Patient resources, `practitioner` when creating a group of Practitioner resources, or `device` when creating a group of Device resources.
     """
 * member
   * ^definition = """
-    A server MAY support the inclusion of one or more `member` elements that contain an `entity` element with a reference to a `Patient` resource, `Practitioner` resource, `RelatedPerson` resource, `Device` resource, or a `Group` resource that is a group of one of these resource types. When members are provided, the expression in the `member-filter` extension for the Group SHALL only be applied to the referenced resources and the compartments of the referenced resources, and the resources and compartments of the members of any referenced Groups. When members are not provided and the Group's `type` element is set to `person`, the expression in the `member-filter` extension SHALL be applied to all of the Patient resources and Patient compartments the client is authorized to access and/or all of the RelatedPerson resources and RelatedPerson compartments the client is authorized to access. When members are not provided and the Group's `type` element is set to `practitioner`, the expression in the `member-filter` extension SHALL be applied to all of the Practitioner resources and Practitioner compartments the client is authorized to access. When members are not provided and the Group's `type` element is set to `device`, the expression in the `member-filter` extension SHALL be applied to all of the Device resources and Device compartments the client is authorized to access.
+    A server MAY support the inclusion of one or more `member` elements that contain an `entity` element with a reference to a `Patient` resource, `Practitioner` resource, `Device` resource, or a `Group` resource that is a group of one of these resource types. When members are provided, the expression in the `member-filter` extension for the Group SHALL only be applied to the referenced resources and the compartments of the referenced resources, and the resources and compartments of the members of any referenced Groups. When members are not provided and the Group's `type` element is set to `person`, the expression in the `member-filter` extension SHALL be applied to all of the Patient resources and Patient compartments the client is authorized to access. When members are not provided and the Group's `type` element is set to `practitioner`, the expression in the `member-filter` extension SHALL be applied to all of the Practitioner resources and Practitioner compartments the client is authorized to access. When members are not provided and the Group's `type` element is set to `device`, the expression in the `member-filter` extension SHALL be applied to all of the Device resources and Device compartments the client is authorized to access.
     """
+  * entity only Reference (Patient or Practitioner or Device or Group)
+
 * modifierExtension contains MemberFilter named member-filter 1..*
-  * ^short = "Filter for members of this group" 
+  * ^short = "Filter for members of this group"
   * ^definition = """
-    A server SHALL support the inclusion of one or more `member-filter` modifier extensions containing a `valueExpression` with a language of `application/x-fhir-query` and an `expression` populated with a FHIR REST API query, and SHALL support REST queries for one or more of the Patient, Practitioner, RelatedPerson or Device resource types. For supported resource types, the server SHALL also support querying the resources in that resource type's compartment. If multiple `member-filter` extensions are provided, servers SHALL filter the group to only include resources that meet the conditions in all of the expressions or resources that have resources in their compartments that meet the conditions in all of the expressions. A server MAY also support other expression languages such as `text/cql`. When more than one language is supported by a server a client SHALL use a single language type for all of the member-filter expressions included in a single Group.
- 
+    A server SHALL support the inclusion of one or more `member-filter` modifier extensions containing a `valueExpression` with a language of `application/x-fhir-query` and an `expression` populated with a FHIR REST API query, and SHALL support REST queries for one or more of the Patient, Practitioner, or Device resource types. For supported resource types, the server SHALL also support querying the resources in that resource type's compartment. If multiple `member-filter` extensions are provided, servers SHALL filter the group to only include resources that meet the conditions in all of the expressions or resources that have resources in their compartments that meet the conditions in all of the expressions. A server MAY also support other expression languages such as `text/cql`. When more than one language is supported by a server a client SHALL use a single language type for all of the member-filter expressions included in a single Group.
+
     FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `member-filter` criteria. Additionally, a query in the `member-filter` parameter SHALL have the search context of a single FHIR Resource Type. The contexts "all resource types" and "a specified compartment" are not allowed. Clients should consult the server's capability statement to identify supported search parameters. Servers SHALL reject Group creation requests that include unsupported search parameters in a `member-filter` expression. Implementation guides that reference the Bulk Cohort API, should specify required search parameters must be supported for their use case. Other implementations guides that incorporate the Bulk Export operation MAY provide a set of core search parameters that servers implementing the guide need to support.
     """
 * extension contains MembersRefreshed named members-refreshed 0..1
@@ -78,7 +80,7 @@ Description: "Group that provides characteristic based cohorts through coarse-gr
 * actual
   * ^short = "True if the member element is populated, otherwise false."
   * ^definition = "True if the member element is populated, otherwise false."
-  
+
 Instance: BulkCohortGroupExample
 InstanceOf: BulkCohortGroup
 Title: "Bulk Cohort Group Example"
