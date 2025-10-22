@@ -1,6 +1,6 @@
 ValueSet: GroupTypeSubset
 Id: group-type-subset
-Title: "Person and Practitioner from GroupType Value Set"
+Title: "Subset of GroupType Value Set"
 Description: "Valuset to constrain the type element in a Group to person, practitioner and device"
 * ^experimental = false
 * ^jurisdiction = http://unstats.un.org/unsd/methods/m49/m49.htm#001 "World"
