@@ -49,7 +49,7 @@ Profile: BulkCohortGroup
 Parent: Group
 Id: bulk-cohort-group
 Title: "Bulk Cohort Group"
-Description: "Group that provides characteristic based cohorts through coarse-grained, REST search expression based filters to support constraining bulk export requests"
+Description: "This Group resource profile enables the creation of patient cohorts, practitioner cohorts, and sets of devices based on characteristics defined using FHIR RESTful search filters. It can be used to constrain the population included in a bulk export request."
 * type from GroupTypeSubset (required)
   * ^definition = """
     A client SHALL populate this element with `person` when creating a group of Patient resources, `practitioner` when creating a group of Practitioner resources, or `device` when creating a group of Device resources.
