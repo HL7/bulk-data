@@ -1,10 +1,10 @@
 {
     "package-id" : "hl7.fhir.uv.bulkdata",
-	"version" : "3.0.0-ballot",
-	"path" : "http://hl7.org/fhir/uv/bulkdata/2025Sep",
-	"mode" : "working",
-	"status": "ballot",
-    "sequence": "STU3",
-    "desc": "STU 3 with optional new functionality and additional guidance. Since all of the new capabilities are optional for servers to support and for clients to use, valid Bulk Export STU 2 servers are also valid STU 3 servers and clients that work with STU 2 servers will also work with STU 3 servers.\nAdditional features defined in STU 3 includes include the ability to organize output resources in export files by a focal resource such as Patient instead of by resource type, the ability to return of partial export manifests during an export and after it is complete, an `_until` kickoff parameter, a capability statement extension for servers to indicate supported _typeFilter search parameters, and a Group profile and extension to support the creation of characteristic based cohorts using coarse-grained filters.\nClarifications to the `_typeFilter` parameter cover search expression support, boolean logic, and interactions with other filters. Additional guidance covers the use of capability urls and content encoding when providing and retrieving bulk files, and the use of FHIR Groups with Bulk Export.",
-    "changes": "changes.html"
+	"version" : "3.0.0",
+	"path" : "http://hl7.org/fhir/uv/bulkdata/STU3",
+	"mode" : "milestone",
+	"status": "trial-use",
+	"sequence": "STU3",
+	"desc": "STU 3 Publication",
+	"changes": "changes.html"
 }
