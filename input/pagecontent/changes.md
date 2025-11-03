@@ -3,6 +3,11 @@
 	h4:before {content: none}
 </style>
 
+### Future
+
+The Argonaut FHIR accelerator is leading a community effort to specify two new operations, [Bulk Submit ($bulk-submit)](https://hackmd.io/@argonaut/rJoqHZrPle) and [Bulk Publish ($bulk-publish)](https://hackmd.io/@argonaut/Sy7wjS81Wg), that will be incorporated into a future release of this specification (discuss at [chat.fhir.org](https://chat.fhir.org/#narrow/channel/179250-bulk-data)).
+
+
 ### STU3 - v3.0.0
 * Added support for partial export manifests to enable servers to make some files available prior to all of the files being ready and to split large lists of files across multiple manifests. Clients can select this behavior using the new `allowPartialManifests` kick-off request parameter. 
 * Added support for organizing the resources in output files by instances of the specified resource type, with a header for each instance of the resource type followed by the resource and resources in the output that reference it. Clients can select this behavior using the new `organizeOutputBy` kick-off request parameter.
