@@ -4,10 +4,10 @@ name: BulkDataAccessIG
 title: Bulk Data Access IG
 description: FHIR based approach for exporting large data sets from a FHIR server to a client application
 status: active
-version: 3.0.0-ballot
+version: 3.0.0
 fhirVersion: 4.0.1
-copyrightYear: 2021+
-releaseLabel: "STU 3 - Ballot" # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
+copyrightYear: 2025+
+releaseLabel: "STU 3" # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
 license: CC0-1.0 # https://www.hl7.org/fhir/valueset-spdx-license.html
 jurisdiction: http://unstats.un.org/unsd/methods/m49/m49.htm#001
 publisher:
