@@ -59,8 +59,8 @@ resources:
     name: Patient Level Export Operation Definition
   ValueSet/include-associated-data:
     name: Include Associated Data Value Set
-  CodeSystem/include-associated-data:
-    name: Include Associated Data Code System
+  # CodeSystem/include-associated-data:
+  #   name: Include Associated Data Code System
 
 extension:
   - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-wg
