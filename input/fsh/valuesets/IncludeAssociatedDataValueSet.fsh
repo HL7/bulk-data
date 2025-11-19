@@ -8,4 +8,4 @@ Description: "Metadata inclusion options for Bulk Data Access Export Operation i
 * ^experimental = false
 * ^jurisdiction = $m49.htm#001 "World"
 * ^immutable = true
-* include codes from system http://terminology.hl7.org/CodeSystem/include-associated-data
+* include codes from system IncludeAssociatedDataCodeSystem

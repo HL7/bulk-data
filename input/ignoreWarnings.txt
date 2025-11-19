@@ -21,6 +21,5 @@ The extension http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValue
 # 04. Group profile - this code system is used by the Group resource
 Reference to draft CodeSystem http://hl7.org/fhir/group-type|4.0.1
 
-# 05. Created UTG tracker to create code system in UTG: UP-759 - Create an Include Associated Data Code System  based on discussion with TMSG (11/13/2025 minutes: https://confluence.hl7.org/spaces/TSMG/pages/403868663/2025-11-13+TSMG+Agenda+and+Minutes)
-
-No definition could be found for URL value 'http://terminology.hl7.org/CodeSystem/include-associated-data'
+# 05. The includeAssociatedData code system and valueset are specific to this IG and extremely unlikely to be used elsewhere. TSMG approved variance: <minutes-link>.
+Most code systems defined in HL7 IGs will need to move to THO later during the process. Consider giving this code system a THO URL now (See https://confluence.hl7.org/display/TSMG/Terminology+Play+Book, and/or talk to TSMG)
