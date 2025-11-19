@@ -1,0 +1,2 @@
+In future versions, this code system will be hosted by [HL7 Terminology (THO)](https://terminology.hl7.org/index.html) and the FHIR URI to identify it will change to `http://terminology.hl7.org/CodeSystem/include-associated-data`
+{:.stu-note}

@@ -4,18 +4,23 @@
 # 01. An inline example is provided in the extension description
 WARNING: StructureDefinition.where(url = 'http://hl7.org/fhir/uv/bulkdata/StructureDefinition/operation-not-supported'): The Implementation Guide contains no examples for this extension
 
-# 02. This valueset is defined on the Expression type, not in this IG
-A definition could not be found for Canonical URL 'http://www.rfc-editor.org/bcp/bcp13.txt'
 
 # Hints
 
-# 03.This extension is defined in the Expression type, not in this IG
-The extension http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet|5.3.0-ballot-tc1 is deprecated with the note Use additionalBinding extension or element instead
+# 02. This new feature will be added in future versions of this IG
+
+The html source contains the word 'SHOULD' but it is not in a text phrase marked as a conformance clause
+The html source contains the word 'SHALL' but it is not in a text phrase marked as a conformance clause
+
+
+# 03. This extension is defined in the Expression type, not in this IG
+The extension http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet|5.2.0 is deprecated
 
 # Hints - Terminology
 
 # 04. Group profile - this code system is used by the Group resource
 Reference to draft CodeSystem http://hl7.org/fhir/group-type|4.0.1
 
-# 05. The includeAssociatedData code system and valueset are specific to this IG and extremely unlikely to be used elsewhere. We will request TSMG approval.
+# 05. Created UTG tracker to create code system in UTG: UP-759 - "Create an Include Associated Data Code System" based on discussion with TMSG (11/13/2025 minutes: https://confluence.hl7.org/spaces/TSMG/pages/403868663/2025-11-13+TSMG+Agenda+and+Minutes). To preserve the expansion and links in the ValueSet definition, this version will use the current code system defined in this IG and will update to the THO code system URL when it is published. Since the current operation parameter that uses these codes is of type `code` and documented as experimental, this is not considered a breaking change and does not need community input. An STU note was added to alert implementers that that the code system will be migrating to THO.
+
 Most code systems defined in HL7 IGs will need to move to THO later during the process. Consider giving this code system a THO URL now (See https://confluence.hl7.org/display/TSMG/Terminology+Play+Book, and/or talk to TSMG)
