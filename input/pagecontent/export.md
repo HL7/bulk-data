@@ -74,7 +74,7 @@ As discussed in See [Privacy and Security Considerations](#privacy-and-security-
 
 The Resource FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html). A server SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
-A client MAY repeat kick-off parameters that accept comma delimited values multiple times in a kick-off request. The server SHALL treat the values provided as if they were comma delimited values within a single instance of the parameter. Note that we will be soliciting feedback on the use of comma delimited values within parameters, and depending on the response may consider deprecating this input approach in favor of repeating parameters in a future version of this IG.
+If a parameter has a cardinality of greater than one, a client MAY repeat the kick-off a parameter multiple times or MAY include a single instance of the parameter with multiple values delimited by commas. The server SHALL treat comma delimited values within a single instance of the parameter as if the parameter was repeated. The use of comma delimited values within a parameter is deprecated in favor of repeating parameters and will be removed in a future version of this IG.
 
 For Patient-level requests and Group-level requests associated with groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
 
@@ -126,6 +126,41 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
 
 ##### Query Parameters
 
+{% sqlToData params
+	WITH raw_params AS (
+		SELECT
+		param.parent,
+		MAX(CASE WHEN param.key = 'name' THEN atom END) AS param_name,
+		MAX(CASE WHEN param.key = 'documentation' THEN atom END) AS param_doc,
+		MAX(CASE WHEN param.key = 'type' THEN atom END) AS param_type,
+		MAX(CASE WHEN param.key = 'min' THEN atom END) AS param_min,
+		MAX(CASE WHEN param.key = 'max' THEN atom END) AS param_max
+		FROM Resources,
+			json_tree(Resources.Json, '$.parameter') AS param
+		WHERE Resources.Id = 'group-export'
+		GROUP BY param.parent
+	)
+	SELECT *,
+	param_min || '..' || param_max AS cardinality,
+	CASE
+		WHEN param_doc LIKE 'Support is required%' THEN 'required'
+		WHEN param_doc LIKE 'Experimental%' THEN 'optional, experimental'
+		ELSE 'optional'
+	END AS server_optionality,
+	CASE
+		WHEN param_doc LIKE '%, required for a client%' THEN 'required'
+		ELSE 'optional'
+	END AS client_optionality,
+	CASE
+		WHEN instr(param_doc, char(10) || char(10)) > 0
+		THEN substr(param_doc, instr(param_doc, char(10) || char(10)) + 2)
+		ELSE param_doc
+	END AS description
+	FROM raw_params
+	WHERE param_name IS NOT NULL
+	ORDER BY parent
+%}
+
 <table class="table">
   <thead>
     <th>Query Parameter</th>
@@ -136,108 +171,15 @@ Export data from a FHIR server, whether or not it is associated with a patient. 
     <th>Description</th>
   </thead>
   <tbody>
-    <tr>
-      <td><code>_outputFormat</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>0..1</td>
-      <td>String</td>
-      <td>The format for the requested Bulk Data files to be generated as per <a href="http://hl7.org/fhir/R4/async.html">FHIR Asynchronous Request Pattern</a>. Defaults to <code>application/fhir+ndjson</code>. The server SHALL support <a href="https://github.com/ndjson/ndjson-spec">Newline Delimited JSON</a>, but MAY choose to support additional output formats. The server SHALL accept the full content type of <code>application/fhir+ndjson</code> as well as the abbreviated representations <code>application/ndjson</code> and <code>ndjson</code>.</td>
+{% for p in params %}{% if p.param_name %}    <tr>
+      <td><code>{{ p.param_name }}</code>{% if p.param_name == 'patient' %}<br/>(POST requests only){% endif %}</td>
+      <td><span class="label label-{% if p.server_optionality == 'required' %}success{% else %}info{% endif %}">{{ p.server_optionality }}</span></td>
+      <td><span class="label label-{% if p.client_optionality == 'required' %}success{% else %}info{% endif %}">{{ p.client_optionality }}</span></td>
+      <td>{{ p.cardinality }}</td>
+      <td>{{ p.param_type }}</td>
+      <td>{{ p.description | markdownify }}</td>
     </tr>
-    <tr>
-      <td><code>_since</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>0..1</td>
-      <td>FHIR instant</td>
-      <td>Resources will be included in the response if their state has changed after the supplied time (e.g., if <code>Resource.meta.lastUpdated</code> is later than the supplied <code>_since</code> time). In the case of a Group level export, the server MAY return additional resources modified prior to the supplied time if the resources belong to the patient compartment of a patient added to the Group after the supplied time (this behavior SHOULD be clearly documented  by the server). The server MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated. For resources where the server does not maintain a last updated time, the server MAY include these resources in a response irrespective of the <code>_since</code> value supplied by a client.</td>
-    </tr>
-    <tr>
-      <td><code>_until</code></td>
-      <td><span class="label label-info">optional</span></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>0..1</td>
-      <td>FHIR instant</td>
-      <td>Resources will be included in the response if their state has changed before the supplied time (e.g., if <code>Resource.meta.lastUpdated</code> is earlier than the supplied <code>_until</code> time). The server MAY return resources that are referenced by the resources being returned regardless of when the referenced resources were last updated. For resources where the server does not maintain a last updated time, the server MAY include these resources in a response irrespective of the <code>_until</code> value supplied by a client.</td>
-    </tr>
-    <tr>
-      <td><code>_type</code></td>
-      <td><span class="label label-info">optional</span></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>0..*</td>
-      <td>string of comma-delimited FHIR resource types</td>
-      <td>The response SHALL be filtered to only include resources of the specified resource types(s).<br /><br />
-      If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the <a href="http://www.hl7.org/fhir/us/core/">US Core Implementation Guide</a>. For Patient- and Group-level requests, the <a href='https://www.hl7.org/fhir/compartmentdefinition-patient.html'>Patient Compartment</a> SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the Patient Compartment that are referenced by the resources being returned and would be helpful in interpreting the patient data MAY also be returned (such as Organization and Practitioner). When this behavior is supported, a server SHOULD document this support (for example, as narrative text, or by including a <a href="https://www.hl7.org/fhir/graphdefinition.html">GraphDefinition Resource</a>).<br /><br />
-      A server that is unable to support <code>_type</code> SHOULD return an error and FHIR <code>OperationOutcome</code> resource so the client can re-submit a request omitting the <code>_type</code> parameter. If the client explicitly asks for export of resources that the Bulk Data server doesn't support, or asks for only resource types that are outside the Patient Compartment, the server SHOULD return details via a FHIR <code>OperationOutcome</code> resource in an error response to the request. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.<br /><br />
-      For example <code>_type=Observation</code> could be used to filter a given export response to return only FHIR <code>Observation</code> resources.</td>
-    </tr>
-    <tr>
-      <td><code>_elements</code></td>
-      <td><span class="label label-info">optional, experimental</span></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>0..*</td>
-      <td>string of comma-delimited FHIR Elements</td>
-      <td>When provided, the server SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements SHOULD be of the form <code>[resource type].[element name]</code> (e.g., <code>Patient.id</code>) or <code>[element name]</code> (e.g., <code>id</code>) and only root elements in a resource are permitted. If the resource type is omitted, the element SHOULD be returned for all resources in the response where it is applicable.<br /><br />
-      A server is not obliged to return just the requested elements. A server SHOULD always return mandatory elements whether they are requested or not. A server SHOULD mark the resources with the tag SUBSETTED to ensure that the incomplete resource is not actually used to overwrite a complete resource.<br/><br/>
-      A server that is unable to support <code>_elements</code> SHOULD return an error and FHIR <code>OperationOutcome</code> resource so the client can re-submit a request omitting the <code>_elements</code> parameter. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
-      </td>
-    </tr>
-    <tr>
-      <td><code>patient</code><br/>(POST requests only)</td>
-      <td><span class="label label-info">optional</span></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>0..*</td>
-      <td>FHIR Reference</td>
-      <td>Not applicable to system level export requests. When provided, the server SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a client requests patients who are not present on the server (or in the case of a group level export, who are not members of the group), the server SHOULD return details via a FHIR <code>OperationOutcome</code> resource in an error response to the request.<br /><br />
-      A server that is unable to support <code>patient</code> SHOULD return an error and FHIR <code>OperationOutcome</code> resource so the client can re-submit a request omitting the <code>patient</code> parameter. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
-      </td>
-    </tr>
-    <tr>
-      <td><code>includeAssociatedData</code><br/></td>
-      <td><span class="label label-info">optional, experimental</span></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>0..*</td>
-      <td>string of comma delimited values</td>
-      <td>When provided, a server with support for the parameter and requested values SHALL return or omit a pre-defined set of FHIR resources associated with the request.<br /><br />
-      A server that is unable to support the requested <code>includeAssociatedData</code> values SHOULD return an error and FHIR <code>OperationOutcome</code> resource so the client can re-submit a request that omits those values (for example, if a server does not retain provenance data). When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.<br /><br />
-      A client MAY include one or more of the following values. If multiple conflicting values are included, the server SHALL apply the least restrictive value (value that will return the largest dataset).
-      <ul>
-        <li><code>LatestProvenanceResources</code>: Export will include the most recent Provenance resources associated with each of the non-provenance resources being returned. Other Provenance resources will not be returned.</li>
-        <li><code>RelevantProvenanceResources</code>: Export will include all Provenance resources associated with each of the non-provenance resources being returned.</li>
-        <li><code>_[custom value]</code>: A server MAY define and support custom values that are prefixed with an underscore (e.g., <code>_myCustomPreset</code>).</li>
-      </ul>
-      </td>
-    </tr>
-    <tr>
-      <td><code>_typeFilter</code><br/></td>
-      <td><span class="label label-info">optional</span></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>0..*</td>
-      <td>string of a FHIR REST API query</td>
-      <td>When provided, a server with support for the parameter and the requested search parameters SHALL filter the data in the response for resource types referenced in the typeFilter expression to only include resources that meet the specified criteria. FHIR search result parameters such as <code>_include</code> and <code>_sort</code> SHALL NOT be used. <a href="#_typefilter-query-parameter">See details below</a>.<br /><br />
-      A server unable to support the requested <code>_typeFilter</code> queries SHOULD return an error and FHIR <code>OperationOutcome</code> resource so the client can re-submit a request that omits those queries. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
-      </td>
-    </tr>
-    <tr>
-      <td><code>organizeOutputBy</code><br/></td>
-      <td><span class="label label-info">optional</span></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>0..1</td>
-      <td><a href="https://hl7.org/fhir/valueset-resource-types.html">string of a FHIR resource type</a></td>
-      <td>When provided, a server with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, servers SHALL organize each output file with resources of only single type. See <a href="#bulk-data-output-file-organization">details</a>, <a href="#organize-output-by-manifest-example">example manifest</a>, and <a href="#organize-output-by-file-example">example output file</a> below.<br /><br />
-      A server unable to structure output by the requested <code>organizeOutputBy</code> resource SHOULD return an error and FHIR <code>OperationOutcome</code> resource. When a <code>Prefer: handling=lenient</code> header is included in the request, the server MAY process the request instead of returning an error.
-      </td>
-    </tr>
-    <tr>
-      <td><code>allowPartialManifests</code><br/></td>
-      <td><span class="label label-info">optional</span></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>0..1</td>
-      <td>boolean</td>
-      <td>When provided, a server with support for the parameter MAY distribute the bulk data output files among multiple manifests, providing links for clients to page through the manifests (<a href="#manifest-link">see details below)</a>. Prior to all of the files in the export being available, the server MAY return a manifest with files that are available along with a <code>202 Accepted</code> HTTP response status, and subsequently update the manifest with a paging link to a new manifest when additional files are ready for download (<a href="#response---in-progress-status">see details below</a>).
-      </td>
-    </tr>
-  </tbody>
+{% endif %}{% endfor %}  </tbody>
 </table>
 
 *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). If the client explicitly asks for export of resources that the Bulk Data server doesn't support, the server SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
@@ -507,124 +449,144 @@ In the case of a polling failure that does not indicate failure of the export jo
 
 The output manifest is a JSON object providing metadata and links to the generated Bulk Data files. The files SHALL be accessible to the client at the URLs advertised. These URLs MAY be served by file servers other than a FHIR-specific server.
 
+{% sqlToData manifest_fields
+	WITH snapshot AS (
+		SELECT
+		CAST(element.key AS integer) AS ordinal,
+		json_extract(element.value, '$.path') AS full_path,
+		replace(json_extract(element.value, '$.path'), 'BulkDataManifest.', '') AS rel_path,
+		json_extract(element.value, '$.definition') AS el_def,
+		CAST(json_extract(element.value, '$.min') AS text) AS el_min,
+		json_extract(element.value, '$.max') AS el_max,
+		json_extract(element.value, '$.type[0].code') AS el_type
+		FROM Resources,
+			json_each(Resources.Json, '$.snapshot.element') AS element
+		WHERE Resources.Id = 'BulkDataManifest'
+	),
+	filtered AS (
+		SELECT
+		ordinal,
+		full_path,
+		rel_path,
+		el_def,
+		el_min,
+		el_max,
+		COALESCE(el_type, '') AS el_type,
+		LENGTH(rel_path) - LENGTH(REPLACE(rel_path, '.', '')) AS level,
+		CASE WHEN el_min = '1' THEN 0 ELSE 1 END AS required_sort,
+		CASE
+			WHEN instr(rel_path, '.') > 0 THEN substr(rel_path, 1, instr(rel_path, '.') - 1)
+			ELSE rel_path
+		END AS seg1,
+		CASE
+			WHEN LENGTH(rel_path) - LENGTH(REPLACE(rel_path, '.', '')) >= 1 THEN
+				CASE
+					WHEN instr(substr(rel_path, instr(rel_path, '.') + 1), '.') > 0 THEN
+						substr(
+							substr(rel_path, instr(rel_path, '.') + 1),
+							1,
+							instr(substr(rel_path, instr(rel_path, '.') + 1), '.') - 1
+						)
+					ELSE substr(rel_path, instr(rel_path, '.') + 1)
+				END
+			ELSE NULL
+		END AS seg2,
+		CASE
+			WHEN LENGTH(rel_path) - LENGTH(REPLACE(rel_path, '.', '')) >= 2 THEN
+				substr(
+					rel_path,
+					instr(rel_path, '.') + instr(substr(rel_path, instr(rel_path, '.') + 1), '.') + 1
+				)
+			ELSE NULL
+		END AS seg3
+		FROM snapshot
+		WHERE rel_path IS NOT NULL
+		AND rel_path != 'BulkDataManifest'
+		AND rel_path != ''
+		AND rel_path NOT LIKE '%.id'
+		AND rel_path NOT LIKE '%.extension'
+		AND rel_path NOT LIKE '%.modifierExtension'
+		AND rel_path NOT IN ('id', 'extension', 'modifierExtension')
+	),
+	enriched AS (
+		SELECT
+		f.*,
+		top.required_sort AS top_required_sort,
+		top.ordinal AS top_ordinal,
+		child.required_sort AS child_required_sort,
+		child.ordinal AS child_ordinal
+		FROM filtered f
+		LEFT JOIN filtered top
+			ON top.rel_path = f.seg1
+			AND top.level = 0
+		LEFT JOIN filtered child
+			ON child.rel_path = CASE
+				WHEN f.seg2 IS NOT NULL THEN f.seg1 || '.' || f.seg2
+				ELSE NULL
+			END
+	)
+	SELECT
+	CASE
+		WHEN level = 0 THEN rel_path
+		WHEN level = 1 THEN seg2
+		ELSE seg3
+	END AS field_name,
+	level,
+	level * 18 AS indent_px,
+	el_type AS field_type,
+	el_min || '..' || el_max AS cardinality,
+	el_def AS description
+	FROM enriched
+	ORDER BY
+		top_required_sort,
+		top_ordinal,
+		CASE WHEN level = 0 THEN 0 ELSE 1 END,
+		CASE WHEN level = 0 THEN 0 ELSE child_required_sort END,
+		CASE WHEN level = 0 THEN 0 ELSE child_ordinal END,
+		CASE WHEN level < 2 THEN 0 ELSE 1 END,
+		required_sort,
+		ordinal
+%}
+
 <table class="table">
   <thead>
     <th>Field</th>
-    <th>Optionality</th>
+    <th>Cardinality</th>
     <th>Type</th>
     <th>Description</th>
   </thead>
   <tbody>
-    <tr>
-      <td><code>transactionTime</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td>FHIR instant</td>
-      <td>Indicates the server's time when the query is run. The response SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant.
-      <br/>
-      <br/>
-      Note: To properly meet these constraints, a FHIR server might need to wait for any pending transactions to resolve in its database before starting the export process.
-      </td>
+{% for f in manifest_fields %}    <tr>
+      <td><span style="padding-left: {{ f.indent_px }}px; display: inline-block;">{% if f.level > 0 %}&#8627; {% endif %}<code>{{ f.field_name }}</code></span></td>
+      <td>{{ f.cardinality }}</td>
+      <td>{{ f.field_type }}</td>
+      <td>{{ f.description | markdownify }}</td>
     </tr>
-    <tr>
-      <td><code>request</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td>String</td>
-      <td>The full URL of the original Bulk Data kick-off request. In the case of a POST request, this URL will not include the request parameters. Note: this field may be removed in a future version of this IG.</td>
-    </tr>
-    <tr>
-      <td><code>requiresAccessToken</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td>Boolean</td>
-      <td>Indicates whether downloading the generated files requires the same authorization mechanism as the <code>$export</code> operation itself.
-      <br/>
-      <br/>
-      Value SHALL be <code>true</code> if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be <code>false</code> for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall.
-      </td>
-    </tr>
-    <tr>
-      <td><code>outputOrganizedBy</code></td>
-      <td><span class="label label-success">required</span> when <code>organizeOutputBy</code> was populated</td>
-      <td>String</td>
-      <td>The organizeOutputBy value from the Bulk Data kick-off request when populated and supported.</td>
-    </tr>
-    <tr>
-      <td><code>output</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td>JSON array</td>
-      <td>An array of file items with one entry for each generated file. If no resources are returned from the kick-off request, the server SHOULD return an empty array.
-        <br/>
-        <br/>
-        The <code>url</code> field SHALL be populated for each output item. When the kick-off request does not contain an <code>organizedOutputBy</code> parameter, the <code>type</code> field SHALL be populated for each item. When the kick-off request does contain the <code>organizeOutputBy</code> parameter, the <code>type</code> field SHALL NOT be populated. When the kick-off request contains the <code>organizeOutputBy</code> parameter and resources related to a resource of this type continue into another output file, the <code>continuesInFile</code> field SHALL be populated with the URL of that output file.
-        <br/>
-        <br/>
-        <ul>
-          <li><code>type</code> - the FHIR resource type that is contained in the file.<br/></li>
-          <li><code>url</code> - the absolute path to the file. The format of the file SHOULD reflect that requested in the <code>_outputFormat</code> parameter of the initial kick-off request.<br/></li>
-          <li><code>continuesInFile</code> - url of the output file when resources associated with a FHIR resource of the type specified in the <code>organizeOutputBy</code> kick-off parameter in this file continue into another file. <a href="#bulk-data-output-file-organization">See details below</a>.<br/></li>
-          <li><code>count</code> (optional) - the number of resources in the file, represented as a JSON number.<br/></li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td><code>deleted</code></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>JSON array</td>
-      <td>An array of deleted file items following the same structure as the <code>output</code> array.
-      <br/>
-      <br/>
-        The ability to convey deleted resources is important in cases when a server may have previously exported data and wishes to indicate that these data should be removed from downstream systems. When a <code>_since</code> timestamp is supplied in the export request, this array SHOULD be populated with output files containing FHIR Transaction Bundles that indicate which FHIR resources match the kick-off request criteria, but have been deleted subsequent to the <code>_since</code> date. If no resources have been deleted, or the <code>_since</code> parameter was not supplied, or the server has other reasons to avoid exposing these data, the server MAY omit this key or MAY return an empty array. Resources that appear in the 'deleted' section of an export manifest SHALL NOT appear in the 'output' section of the manifest.
-      <br/>
-      <br/>
-        Each line in the output file SHALL contain a FHIR Bundle with a type of <code>transaction</code> which SHALL contain one or more entry items that reflect a deleted resource. In each entry, the <code>request.url</code> and <code>request.method</code> elements SHALL be populated. The <code>request.method</code> element SHALL be set to <code>DELETE</code>.
-      <br/>
-      <br/>
-        Example deleted resource bundle (represents one line in output file):
-      <pre><code>{
-&nbsp;"resourceType": "Bundle",
-&nbsp;"id": "bundle-transaction",
-&nbsp;"meta": {"lastUpdated: "2020-04-27T02:56:00Z},
-&nbsp;"type": "transaction",
-&nbsp;"entry":[{
-&nbsp;&nbsp;"request": {"method": "DELETE", "url": "Patient/123"}
-&nbsp;&nbsp;...
-&nbsp;}]
-}</code></pre>
-      </td>
-    </tr>
-    <tr>
-      <td><code>error</code></td>
-      <td><span class="label label-success">required</span></td>
-      <td>Array</td>
-      <td>Array of message file items following the same structure as the <code>output</code> array.
-      <br/>
-      <br/>
-        Error, warning, and information messages related to the export SHOULD be included here (not in output). If there are no relevant messages, the server SHOULD return an empty array. Only the FHIR <code>OperationOutcome</code> resource type is currently supported, so the server SHALL generate files in the same format as Bulk Data output files that contain FHIR <code>OperationOutcome</code> resources.<br/><br/>
-        If the request contained invalid or unsupported parameters along with a <code>Prefer: handling=lenient</code> header and the server processed the request, the server SHOULD include a FHIR <code>OperationOutcome</code> resource for each of these parameters.
-        <br/><br/>Note: this field may be renamed in a future version of this IG to reflect the inclusion of FHIR <code>OperationOutcome</code> resources with severity levels other than error.
-      </td>
-    </tr>
-    <tr>
-      <td><code id="manifest-link">link</code></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>JSON array</td>
-      <td>
-        When the <code>allowPartialManifests</code> kickoff parameter is <code>true</code>, the manifest MAY include a <code>link</code> array with a single object containing a <code>relation</code> field with a value of <code>next</code>, and a <code>url</code> field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the <code>output</code>, <code>deleted</code> and <code>link</code> arrays.
-        <br/><br/>
-        If the export has failed or a transient error has occurred, a server MAY return an error in response to a request for the <code>next link</code>, as described in the <a href="#response---error-status-1">Error Status</a> section above. For non-transient errors, a client MAY process resources that have already been retrieved before re-running the export job or MAY discard them.
-      </td>
-    </tr>
-    <tr>
-      <td><code>extension</code></td>
-      <td><span class="label label-info">optional</span></td>
-      <td>JSON object</td>
-      <td>To support extensions, this implementation guide reserves the name <code>extension</code> and will never define a field with that name, allowing server implementations to use it to provide custom behavior and information. For example, a server may choose to provide a custom extension that contains a decryption key for encrypted NDJSON files. The value of an extension element SHALL be a pre-coordinated JSON object.
-      <br/>
-      <br/>
-      Note: In addition to extensions being supported on the root object level, extensions may also be included within the fields above (e.g., in the 'output' object).
-      </td>
-    </tr>
-  </tbody>
+{% endfor %}  </tbody>
 </table>
+
+Implementation notes:
+
+- For `transactionTime`, to properly meet the inclusion constraints above, a FHIR server might need to wait for any pending transactions to resolve in its database before starting the export process.
+- Error, warning, and information messages related to the export SHOULD be included in `error` and not in `output`. If there are no relevant messages, the server SHOULD return an empty array. If the request contained invalid or unsupported parameters along with a `Prefer: handling=lenient` header and the server processed the request, the server SHOULD include a FHIR `OperationOutcome` resource for each of these parameters.
+- When the `_since` timestamp is supplied in the export request, the `deleted` array SHOULD be populated with files containing FHIR transaction Bundles for resources that match the kick-off request criteria but were deleted after the `_since` date. If no resources have been deleted, if `_since` was not supplied, or if the server has other reasons to avoid exposing these data, the server MAY omit this key or return an empty array. Resources that appear in `deleted` SHALL NOT also appear in `output`.
+- Example deleted resource bundle (represents one line in an output file):
+
+```json
+{
+  "resourceType": "Bundle",
+  "id": "bundle-transaction",
+  "meta": {"lastUpdated": "2020-04-27T02:56:00Z"},
+  "type": "transaction",
+  "entry": [{
+    "request": {"method": "DELETE", "url": "Patient/123"}
+  }]
+}
+```
+
+- When the `allowPartialManifests` kickoff parameter is `true`, the manifest MAY include a `link` array with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, and `link` arrays.
+- If the export has failed or a transient error has occurred, a server MAY return an error in response to a request for the `next` link, as described in the [Error Status](#response---error-status-1) section above. For non-transient errors, a client MAY process resources that have already been retrieved before re-running the export job or MAY discard them.
+
 
 Example manifest, `organizeOutputBy` kickoff parameter is not populated:
 
