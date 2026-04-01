@@ -36,7 +36,18 @@ When a client and server are using SMART on FHIR authorization, scopes relevant 
 ##### Key Elements
 
 {% sqlToData elements
-	WITH elements AS (
+	WITH diff AS (
+		SELECT
+		element.parent,
+		MAX(CASE WHEN element.key = 'id' THEN atom END) AS el_id,
+		MAX(CASE WHEN element.key = 'path' THEN atom END) AS el_path,
+		MAX(CASE WHEN element.key = 'definition' THEN atom END) AS el_def
+		FROM Resources,
+			json_tree(Resources.Json, '$.differential.element') AS element
+		WHERE Resources.Id = 'bulk-cohort-group'
+		GROUP BY element.parent
+	),
+	snapshot AS (
 		SELECT
 		element.parent,
 		MAX(CASE WHEN element.key = 'id' THEN atom END) AS el_id,
@@ -47,33 +58,31 @@ When a client and server are using SMART on FHIR authorization, scopes relevant 
 		FROM Resources,
 			json_tree(Resources.Json, '$.snapshot.element') AS element
 		WHERE Resources.Id = 'bulk-cohort-group'
-		GROUP BY 1
+		GROUP BY element.parent
 	)
-	SELECT *,
-	el_min || '..' || el_max AS cardinality
-	FROM elements
+	SELECT
+	CASE
+		WHEN s.el_id LIKE '%:%' THEN
+			substr(s.el_id, instr(s.el_id, ':') + 1) ||
+			CASE WHEN s.el_path = 'Group.modifierExtension' THEN ' ModifierExtension'
+			     WHEN s.el_path = 'Group.extension' THEN ' Extension'
+			     ELSE ''
+			END
+		ELSE replace(s.el_path, 'Group.', '')
+	END AS display_name,
+	s.el_min || '..' || s.el_max AS cardinality,
+	COALESCE(d.el_def, base_diff.el_def, s.el_def) AS el_def
+	FROM snapshot s
+	INNER JOIN diff d ON s.el_id = d.el_id
+	LEFT JOIN diff base_diff ON s.el_path = base_diff.el_path AND base_diff.el_id NOT LIKE '%:%'
+	WHERE s.el_path != 'Group'
+	AND s.el_path NOT LIKE '%.%.%'
+	AND NOT (s.el_path IN ('Group.extension', 'Group.modifierExtension') AND s.el_id NOT LIKE '%:%')
 %}
 
-{% assign element = elements | find: 'el_id', 'Group.member' %}
-{{ '<br/><code>member</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.modifierExtension' %}
-{{ '<br/><code>member-filter</code> ModifierExtension (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.extension' %}
-{{ '<br/><code>members-refreshed</code> Extension (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.type' %}
-{{ '<br/><code>type</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.name' %}
-{{ '<br/><code>name</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.characteristic' %}
-{{ '<br/><code>characteristic</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.actual' %}
-{{ '<br/><code>actual</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
+{% for element in elements %}
+{{ '<br/><code>' | append: element.display_name | append: '</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
+{% endfor %}
 
 #### Example
 
