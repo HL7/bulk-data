@@ -46,8 +46,6 @@ RuleSet: ExportParam_type
   * documentation = """
     Support is optional for a server, optional for a client.
 
-    A string of comma-delimited FHIR resource types.
-
     The response SHALL be filtered to only include resources of the specified resource types(s).
 
     If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the Patient Compartment that are referenced by the resources being returned and would be helpful in interpreting the patient data MAY also be returned (such as Organization and Practitioner). When this behavior is supported, a server SHOULD document this support (for example, as narrative text, or by including a [GraphDefinition Resource](https://www.hl7.org/fhir/graphdefinition.html)).
@@ -66,8 +64,6 @@ RuleSet: ExportParam_elements
   * max = "*"
   * documentation = """
     Experimental support is optional for a server, optional for a client.
-
-    String of comma-delimited FHIR Elements.
 
     When provided, the server SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements SHOULD be of the form `[resource type].[element name]` (e.g., `Patient.id`) or `[element name]` (e.g., `id`) and only root elements in a resource are permitted. If the resource type is omitted, the element SHOULD be returned for all resources in the response where it is applicable.
 
@@ -101,8 +97,6 @@ RuleSet: ExportParam_includeAssociatedData
   * max = "*"
   * documentation = """
     Experimental support is optional for a server, optional for a client.
-
-    String of comma-delimited values.
 
     When provided, a server with support for the parameter and requested values SHALL return or omit a pre-defined set of FHIR resources associated with the request.
 

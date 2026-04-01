@@ -25,8 +25,6 @@ Usage: #definition
   * documentation = """
     Support is optional for a server, optional for a client.
 
-    A string of comma-delimited FHIR resource types.
-
     The response SHALL be filtered to only include resources of the specified resource types(s).
 
     If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/).
