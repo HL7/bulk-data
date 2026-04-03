@@ -361,19 +361,9 @@ X-Export-Status: 500 Internal Server Error
 Content-Type: application/fhir+json
 </code></pre>
 Body
-<pre><code>{
-&nbsp;"resourceType": "OperationOutcome",
-&nbsp;"id": "1",
-&nbsp;"issue": [
-&nbsp;&nbsp;{
-&nbsp;&nbsp;&nbsp;"severity": "error",
-&nbsp;&nbsp;&nbsp;"code": "processing",
-&nbsp;&nbsp;&nbsp;"details": {
-&nbsp;&nbsp;&nbsp;&nbsp;"text": "An internal timeout has occurred"
-&nbsp;&nbsp;&nbsp;}
-&nbsp;&nbsp;}
-&nbsp;]
-}</code></pre></td>
+<div class="language-json">
+{% fragment OperationOutcome/export-error-operationoutcome-example JSON ELIDE:language|text %}
+</div></td>
     </tr>
     <tr>
       <td><a href="#response---complete-status">Complete</a></td>
@@ -391,30 +381,10 @@ Expires: Mon, 22 Jul 2019 23:59:59 GMT
 Content-Type: application/json
 </code></pre>
 Body
-<pre><code>{
-&nbsp;"transactionTime": "2021-01-01T00:00:00Z",
-&nbsp;"request" : "https://example.com/fhir/Patient/$export?_type=Patient,Observation",
-&nbsp;"requiresAccessToken" : true,
-&nbsp;"output" : [{
-&nbsp;&nbsp;"type" : "Patient",
-&nbsp;&nbsp;"url" : "https://example.com/output/patient_file_1.ndjson"
-&nbsp;},{
-&nbsp;&nbsp;"type" : "Observation",
-&nbsp;&nbsp;"url" : "https://example.com/output/observation_file_1.ndjson"
-&nbsp;},{
-&nbsp;&nbsp;"type" : "Observation",
-&nbsp;&nbsp;"url" : "https://example.com/output/observation_file_2.ndjson"
-&nbsp;}],
-&nbsp;"deleted" : [{
-&nbsp;&nbsp;"type" : "Bundle",
-&nbsp;&nbsp;"url" : "https://example.com/output/del_file_1.ndjson"
-&nbsp;}],
-&nbsp;"error" : [{
-&nbsp;&nbsp;"type" : "OperationOutcome",
-&nbsp;&nbsp;"url" : "https://example.com/output/err_file_1.ndjson"
-&nbsp;}],
-&nbsp;"extension":{"https://example.com/extra-property": true}
-}</code></pre></td>
+<div class="language-json">
+{% include Binary-BulkDataManifestMinimalExample-html.xhtml %}
+</div>
+</td>
     </tr>
   </tbody>
 </table>
@@ -570,86 +540,36 @@ Implementation notes:
 - For `transactionTime`, to properly meet the inclusion constraints above, a FHIR server might need to wait for any pending transactions to resolve in its database before starting the export process.
 - Error, warning, and information messages related to the export SHOULD be included in `error` and not in `output`. If there are no relevant messages, the server SHOULD return an empty array. If the request contained invalid or unsupported parameters along with a `Prefer: handling=lenient` header and the server processed the request, the server SHOULD include a FHIR `OperationOutcome` resource for each of these parameters.
 - When the `_since` timestamp is supplied in the export request, the `deleted` array SHOULD be populated with files containing FHIR transaction Bundles for resources that match the kick-off request criteria but were deleted after the `_since` date. If no resources have been deleted, if `_since` was not supplied, or if the server has other reasons to avoid exposing these data, the server MAY omit this key or return an empty array. Resources that appear in `deleted` SHALL NOT also appear in `output`.
-- Example deleted resource bundle (represents one line in an output file):
 
-```json
-{
-  "resourceType": "Bundle",
-  "id": "bundle-transaction",
-  "meta": {"lastUpdated": "2020-04-27T02:56:00Z"},
-  "type": "transaction",
-  "entry": [{
-    "request": {"method": "DELETE", "url": "Patient/123"}
-  }]
-}
-```
+<a name="manifest-link" />
 
 - When the `allowPartialManifests` kickoff parameter is `true`, the manifest MAY include a `link` array with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, and `link` arrays.
 - If the export has failed or a transient error has occurred, a server MAY return an error in response to a request for the `next` link, as described in the [Error Status](#response---error-status-1) section above. For non-transient errors, a client MAY process resources that have already been retrieved before re-running the export job or MAY discard them.
 
-
 Example manifest, `organizeOutputBy` kickoff parameter is not populated:
-
-```json
-  {
-    "transactionTime": "2021-01-01T00:00:00Z",
-    "request" : "https://example.com/fhir/Patient/$export?_type=Patient,Observation",
-    "requiresAccessToken" : true,
-    "output" : [{
-      "type" : "Patient",
-      "url" : "https://example.com/output/patient_file_1.ndjson"
-    },{
-      "type" : "Observation",
-      "url" : "https://example.com/output/observation_file_1.ndjson"
-    },{
-      "type" : "Observation",
-      "url" : "https://example.com/output/observation_file_2.ndjson"
-    }],
-    "deleted": [{
-      "type" : "Bundle",
-      "url" : "https://example.com/output/del_file_1.ndjson"
-    }],
-    "error" : [{
-      "type" : "OperationOutcome",
-      "url" : "https://example.com/output/err_file_1.ndjson"
-    }],
-    "extension":{"https://example.com/extra-property": true}
-  }
-```
+<div class="language-json">
+{% include Binary-BulkDataManifestByTypeExample-html.xhtml %}
+</div>
+[View Example](Binary-BulkDataManifestByTypeExample.html)
 
 <a name="organize-output-by-manifest-example" />
 
 Example manifest, `organizeOutputBy` kickoff parameter is `Patient`, and `allowPartialManifests` kickoff parameter is `true`:
 
-```json
-  {
-    "transactionTime": "2021-01-01T00:00:00Z",
-    "request" : "https://example.com/fhir/Patient/$export?_type=Patient,Observation",
-    "requiresAccessToken" : true,
-    "outputOrganizedBy": "Patient",
-    "output" : [{
-      "url" : "https://example.com/output/file_1.ndjson"
-    },{
-      "url" : "https://example.com/output/file_2.ndjson",
-      "continuesInFile": "https://example.com/output/file_3.ndjson"
-    },{
-      "url" : "https://example.com/output/file_3.ndjson"
-    }],
-    "deleted": [{
-      "type" : "Bundle",
-      "url" : "https://example.com/output/del_file_1.ndjson"
-    }],
-    "error" : [{
-      "type" : "OperationOutcome",
-      "url" : "https://example.com/output/err_file_1.ndjson"
-    }],
-    "extension":{"https://example.com/extra-property": true},
-    "link": [{
-      "relation": "next",
-      "url": "https://example.com/output/manifest-2.json"
-    }]
-  }
-```
+<div class="language-json">
+{% include Binary-BulkDataManifestOrganizedByPatientExample-html.xhtml %}
+</div>
+
+[View Example](Binary-BulkDataManifestOrganizedByPatientExample.html)
+
+Example deleted resource bundle (represents one line in an output file):
+
+<div class="language-json">
+{% fragment Bundle/deleted-resource-transaction-bundle-example JSON ELIDE:language %}
+</div>
+
+[View Example](Bundle-deleted-resource-transaction-bundle-example.html)
+
 
 ---
 #### Bulk Data Output File Request

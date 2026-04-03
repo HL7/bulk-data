@@ -15,7 +15,7 @@ Description: "Logical model describing a standard format to provide links to FHI
 * outputOrganizedBy 0..1 string "Resource type used to organize output files" "When resources in the output files are organized by instances of a resource type, that resource type is specified here. When each output file contains a single resource type, this element SHALL be omitted and an individual type element SHALL be included for each file in the output array."
 * outputOrganizedByDetail 0..1 string "Output Organized By Detail" "Narrative text providing detail on the organizing resource listed in outputOrganizedBy. SHALL NOT be populated in the absence of the outputOrganizedBy element."
 
-* output 0..* BackboneElement "Output Files" "An array of file items with one entry for each generated file. If no resources are returned, the server SHOULD return an empty array."
+* output 0..* BackboneElement "Output Files" "An array of file items with one entry for each generated file."
   * type 0..1 string "FHIR Resource Type" "The FHIR resource type contained in the file. When the manifest does not include an outputOrganizedBy value, this element SHALL be populated. When the manifest includes the outputOrganizedBy element, this element SHALL NOT be populated."
   * url 1..1 url "File URL" "The absolute path to the file. The format of the file SHOULD reflect that requested in the _outputFormat parameter of the initial kick-off request and the outputFormat element in this manifest."
   * continuesInFile 0..1 url "Continuation File URL" "URL of the next output file when resources for an organizing resource span multiple files."
