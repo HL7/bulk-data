@@ -57,6 +57,12 @@ resources:
     name: Group Level Export Operation Definition
   OperationDefinition/patient-export:
     name: Patient Level Export Operation Definition
+  OperationDefinition/bulk-submit:
+    name: Bulk Submit Operation Definition
+  OperationDefinition/bulk-submit-status:
+    name: Bulk Submit Status Operation Definition
+  OperationDefinition/bulk-publish:
+    name: Bulk Publish Operation Definition
   ValueSet/include-associated-data:
     name: Include Associated Data Value Set
   CodeSystem/include-associated-data:
