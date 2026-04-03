@@ -20,6 +20,8 @@ pages:
     title: Home
   export.md:
     title: Export
+  publish.md:
+    title: Publish
   group.md:
     title: Groups
   authorization.md:
@@ -42,6 +44,7 @@ menu:
   Home: index.html
   Export: export.html
   Groups: group.html
+  Publish: publish.html
   Authorization: authorization.html
   FHIR Artifacts: artifacts.html
   Downloads: downloads.html

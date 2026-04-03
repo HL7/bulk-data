@@ -1,0 +1,41 @@
+@startuml
+
+partition "Initial request" {
+  start
+  :GET /$bulk-publish;
+  :Download all files included in manifest;
+  :Process output array files in order;\nkeep the last instance from the last file\nwhen the same resource id appears more than once;
+  :Process deleted array files,\nremoving resources;
+  :Review error array files;
+  if (updateCadence in manifest?) then (Yes)
+    :Choose polling interval <= updateCadence;
+  else (No)
+    :Use a default interval;
+  endif
+  stop
+}
+
+partition "Subsequent requests" {
+  start
+  :GET /$bulk-publish with\nIf-None-Match = prior request ETag;
+  if (304 Not Modified?) then (Yes)
+    stop
+  else (No)
+    if (epochStartTime present and\nmatches prior request?) then (Yes)
+      :Download only files not in the prior manifest;
+      :Process output array files in order;\nkeep the last instance from the last file\nwhen the same resource id appears more than once;
+      :Process deleted array files,\nremoving resources;
+      :Review error array files;
+      stop
+    else (No)
+      :Remove prior data;
+      :Download all files included in manifest;
+      :Process output array files in order;\nkeep the last instance from the last file\nwhen the same resource id appears more than once;
+      :Process deleted array files,\nremoving resources;
+      :Review error array files;
+      stop
+    endif
+  endif
+}
+
+@enduml
