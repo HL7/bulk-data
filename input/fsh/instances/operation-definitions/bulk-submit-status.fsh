@@ -10,7 +10,7 @@ Usage: #definition
 * date = "2025-01-27"
 * jurisdiction = $m49.htm#001 "World"
 * description = """
-    After a Data Provider has kicked off a Bulk Submit operation, they may use this operation to receive updates on the status of the submission. The Data Recipient may indicate files it was unable to retrieve, resources that failed validation, or resources that could not be merged into an existing data set. Additionally, the Data Recipient may return processed data such as computed quality measures or de-identified versions of the submitted data. The response follows the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html).
+    After a Data Provider has kicked off a Bulk Submit operation, they may use this operation to receive updates on the status of the submission. The Data Consumer may indicate files it was unable to retrieve, resources that failed validation, or resources that could not be merged into an existing data set. Additionally, the Data Consumer may return processed data such as computed quality measures or de-identified versions of the submitted data. The response follows the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html).
     """
 * code = #bulk-submit-status
 * system = true
@@ -23,7 +23,7 @@ Usage: #definition
   * min = 1
   * max = "1"
   * documentation = """
-    The submitter must match a system and code specified by the Data Recipient (coordinated out-of-band or in an implementation guide specific to a use case).
+    The submitter must match a system and code specified by the Data Consumer (coordinated out-of-band or in an implementation guide specific to a use case).
     """
   * type = #Identifier
 

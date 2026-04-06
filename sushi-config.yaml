@@ -22,6 +22,8 @@ pages:
     title: Export
   publish.md:
     title: Publish
+  submit.md:
+    title: Submit
   group.md:
     title: Groups
   authorization.md:
@@ -44,6 +46,7 @@ menu:
   Home: index.html
   Export: export.html
   Groups: group.html
+  Submit: submit.html
   Publish: publish.html
   Authorization: authorization.html
   FHIR Artifacts: artifacts.html
