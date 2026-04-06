@@ -9,7 +9,7 @@ Usage: #definition
 * kind = #operation
 * date = "2021-07-29"
 * jurisdiction = $m49.htm#001 "World"
-* description = "FHIR Operation to export data from a FHIR server whether or not it is associated with a patient. This supports use cases like backing up a server, or exporting terminology data by restricting the resources returned using the _type parameter. The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html)"
+* description = "FHIR Operation through which an authenticated and authorized Data Consumer may request bulk FHIR data from a Data Provider, whether or not the data is associated with a patient. This supports use cases like backing up a Data Provider's FHIR server, or exporting terminology data by restricting the resources returned using the _type parameter. The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html)"
 * code = #export
 * system = true
 * type = false
@@ -23,13 +23,13 @@ Usage: #definition
   * min = 0
   * max = "*"
   * documentation = """
-    Support is optional for a server, optional for a client.
+    Support is optional for a Data Provider, optional for a Data Consumer.
 
     The response SHALL be filtered to only include resources of the specified resource types(s).
 
-    If this parameter is omitted, the server SHALL return all supported resources within the scope of the client authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/).
+    If this parameter is omitted, the Data Provider SHALL return all supported resources within the scope of the Data Consumer's authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/).
 
-    A server that is unable to support `_type` SHOULD return an error and FHIR `OperationOutcome` resource so the client can re-submit a request omitting the `_type` parameter. If the client explicitly asks for export of resources that the Bulk Data server doesn't support, or asks for only resource types that are outside the Patient Compartment, the server SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request. When a `Prefer: handling=lenient` header is included in the request, the server MAY process the request instead of returning an error.
+    A Data Provider that is unable to support `_type` SHOULD return an error and FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request omitting the `_type` parameter. If the Data Consumer explicitly asks for export of resources that the Data Provider does not support, or asks for only resource types that are outside the Patient Compartment, the Data Provider SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
 
     For example `_type=Observation` could be used to filter a given export response to return only FHIR `Observation` resources.
     """

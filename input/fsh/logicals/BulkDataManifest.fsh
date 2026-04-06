@@ -7,9 +7,9 @@ Description: "Logical model describing a standard format to provide links to FHI
 * ^jurisdiction = $m49.htm#001 "World"
 
 * manifestType 0..1 canonical "OperationDefinition that resulted in this manifest" "Canonical URL of the OperationDefinition for the operation associated with the provision of this manifest. E.g., `http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-publish|1.0.0`. This element will be mandatory in a future release of this IG."
-* transactionTime 1..1 instant "Timestamp for the data included in this manifest" "Indicates the server's time when the query is run or files were generated. The bulk data files referenced in this manifest SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant."
+* transactionTime 1..1 instant "Timestamp for the data included in this manifest" "Indicates the Data Provider's time when the query is run or files were generated. The bulk data files referenced in this manifest SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant."
 * request 0..1 string "Deprecated" "Deprecated - this element should not be used and will be removed in a future release of this IG. When populated for backward compatibility, it contains the full URL of the original Bulk Data kick-off request. In the case of a POST request, this URL does not include the request parameters."
-* requiresAccessToken 1..1 boolean "Token required to retrieve bulk data files" "Indicates whether downloading the files referenced in this manifest requires the same authorization mechanism as the operation that resulted in the manifest. Value SHALL be true if both the file server and the FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be false for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall."
+* requiresAccessToken 1..1 boolean "Token required to retrieve bulk data files" "Indicates whether downloading the files referenced in this manifest requires the same authorization mechanism as the operation that resulted in the manifest. Value SHALL be true if both the Data Provider's file server and the Data Provider's FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be false for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall."
 
 * outputFormat 0..1 string "MIME type of the referenced bulk data files" "MIME type of the referenced bulk data output files. Defaults to application/fhir+ndjson when omitted. Corresponds to the _outputFormat parameter in a Bulk Export operation."
 * outputOrganizedBy 0..1 string "Resource type used to organize output files" "When resources in the output files are organized by instances of a resource type, that resource type is specified here. When each output file contains a single resource type, this element SHALL be omitted and an individual type element SHALL be included for each file in the output array."
@@ -20,17 +20,17 @@ Description: "Logical model describing a standard format to provide links to FHI
   * url 1..1 url "File URL" "The absolute path to the file. The format of the file SHOULD reflect that requested in the _outputFormat parameter of the initial kick-off request and the outputFormat element in this manifest."
   * continuesInFile 0..1 url "Continuation File URL" "URL of the next output file when resources for an organizing resource span multiple files."
   * count 0..1 integer "Resource Count" "The number of resources in the file."
-  * fileSize 0..1 integer "File Size" "The size of the file in bytes. This provides clients with information about the storage and processing requirements for downloading and parsing the file."
+  * fileSize 0..1 integer "File Size" "The size of the file in bytes. This provides Data Consumers with information about the storage and processing requirements for downloading and parsing the file."
 
 * deleted 0..* BackboneElement "Deleted Resource Files" "References to files containing pointers to deleted resources in the form of FHIR Transaction Bundles. Each line in the output files SHALL contain a FHIR Bundle with a type of transaction which SHALL contain one or more entry items that reflect a deleted resource. In each entry, the request.url and request.method elements SHALL be populated and request.method SHALL be set to DELETE."
   * url 1..1 url "File URL" "The absolute path to the file."
   * count 0..1 integer "Resource Count" "The number of resources in the file."
-  * fileSize 0..1 integer "File Size" "The size of the file in bytes. This provides clients with information about the storage and processing requirements for downloading and parsing the file."
+  * fileSize 0..1 integer "File Size" "The size of the file in bytes. This provides Data Consumers with information about the storage and processing requirements for downloading and parsing the file."
 
 * error 0..* BackboneElement "Status information" "Files containing OperationOutcome resources. Error, success, warning, information and other messages related to the operation SHOULD be included here (not in output). This element will be renamed to status in a future release of this IG."
   * url 1..1 url "File URL" "The absolute path to the file."
   * count 0..1 integer "Resource Count" "The number of resources in the file."
-  * fileSize 0..1 integer "File Size" "The size of the file in bytes. This provides clients with information about the storage and processing requirements for downloading and parsing the file."
+  * fileSize 0..1 integer "File Size" "The size of the file in bytes. This provides Data Consumers with information about the storage and processing requirements for downloading and parsing the file."
   * countSeverity 0..* BackboneElement "Count by severity" "Count of OperationOutcome resources grouped by severity level."
     * code 1..1 code "Severity" "Severity level from OperationOutcome.issue.severity (fatal, error, warning, information, success)"
     * code from http://hl7.org/fhir/ValueSet/issue-severity (required)

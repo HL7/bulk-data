@@ -9,7 +9,7 @@ Usage: #definition
 * kind = #operation
 * date = "2021-07-29"
 * jurisdiction = $m49.htm#001 "World"
-* description = "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients. The FHIR server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html)"
+* description = "FHIR Operation through which an authenticated and authorized Data Consumer may request a detailed set of FHIR resources of diverse resource types pertaining to all patients from a Data Provider. The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html)"
 * code = #export
 * resource = #Patient
 * system = false
