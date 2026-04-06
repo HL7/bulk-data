@@ -60,6 +60,19 @@
 	enriched AS (
 		SELECT
 		f.*,
+		CASE
+			WHEN EXISTS (
+				SELECT 1
+				FROM filtered excluded
+				WHERE excluded.el_min = '0'
+				AND excluded.el_max = '0'
+				AND (
+					f.rel_path = excluded.rel_path
+					OR f.rel_path LIKE excluded.rel_path || '.%'
+				)
+			) THEN 1
+			ELSE 0
+		END AS omit_from_table,
 		CASE f.seg1
 			WHEN 'manifestType' THEN 1
 			WHEN 'transactionTime' THEN 2
@@ -102,6 +115,7 @@
 	el_min || '..' || el_max AS cardinality,
 	el_def AS description
 	FROM enriched
+	WHERE omit_from_table = 0
 	ORDER BY
 		top_sort,
 		CASE WHEN level = 0 THEN 0 ELSE 1 END,
