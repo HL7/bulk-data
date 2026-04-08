@@ -1,32 +1,16 @@
-## FHIR Bulk Submit Operation
-
 ### Audience and Scope
 
-This implementation guide is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. The guide defines the application programming interfaces (APIs) through which an authenticated and authorized system (Data Provider) may submit bulk FHIR data to a server (Data Consumer) and receive status information regarding the Data Consumer's receipt and processing of the data and, where applicable, processed data. The general purpose Bulk Submit operation can be implemented as defined here, or further profiled in implementation guides that constrain the options available in order to address a specific scenario.
+The Bulk Submit operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which an authenticated and authorized system (Data Provider) may submit bulk FHIR data to a server (Data Consumer) and receive status information regarding the Data Consumer's receipt and processing of the data and, where applicable, processed data. The general purpose Bulk Submit operation can be implemented as defined here, or further profiled in implementation guides that constrain the options available in order to address a specific scenario.
 
-Use cases include:
-- A healthcare organization submitting data to a regulatory agency to meet a reporting requirement
-- A healthcare organization sending healthcare data to a payer organization to support a quality measurement calculation
-- A payer organization sharing data on claim status with a healthcare organization
-- A healthcare organization moving data from a clinical system onto a standalone FHIR server to consolidate data from multiple systems in order to run analytic queries
-- An organization providing FHIR data to an internal or external service to process the data for de-identification or other transformation
-- An organization sharing a pre-defined dataset from a clinical system with another application, such as a care management tool
-
-The scope of this document does NOT include:
-- The activities a Data Consumer needs to do to validate and process the submitted data
-- A legal framework for sharing data between partners, such as Business Associate Agreements, Service Level Agreements, and Data Use Agreements, though these may be required for some use cases
-- Real-time data exchange
-- Patient matching, although identifiers may be included in the submitted FHIR resources
+For a high-level comparison of Bulk Export, Bulk Submit, and Bulk Publish, see [Choosing a Bulk Operation](index.html#choosing-a-bulk-operation).
 
 #### Relationship to Bulk Export
 
-The [FHIR Bulk Export API](https://build.fhir.org/ig/HL7/bulk-data/en/export.html) represents a pull-based approach. The client (Data Consumer) makes a kick-off request to a server (Data Provider), polls for export status, and, when files are ready, retrieves them from the Data Provider. This model is well suited for ad hoc data requests, where a client is trusted by the server and is able to provide filters describing the data required for a particular use.
+Bulk Submit is the push-based complement to the pull-based [Bulk Export operation](export.html). In Bulk Submit, the Data Provider sends one or more manifests describing a pre-coordinated dataset to the Data Consumer. This is a better fit than Bulk Export when the sender already knows what must be delivered and the receiver needs in-band status or processing feedback. 
 
-In contrast, the Bulk Submit operation is a push-based approach where the Data Provider sends one or more manifests to the Data Consumer that describe a pre-coordinated data set. This model is well suited for cases where the required data is not ad hoc, and the Data Provider can determine the correct timing for sending data to the Data Consumer.
+Bulk Export is the better fit for ad hoc, data consumer-driven requests where the recipient needs to specify the cohort, filters, or time window.
 
-The Bulk Submit operation described in this document may be used together with Bulk Export through an intermediary application that first requests a bulk export to obtain a data set from a Bulk Export server, retrieves the data, optionally transforms it, and then submits the resulting data to the Data Consumer.
-
-Note that a future update to the Bulk Export specification may incorporate the ability to specify a Bulk Submit endpoint in a Bulk Export [kick-off request](https://build.fhir.org/ig/HL7/bulk-data/export.html#bulk-data-kick-off-request) and have the export server directly initiate submission with the Bulk Submit operation when the export is complete.
+Bulk Submit may also be used in conjunction with Bulk Export through an intermediary application that first requests a bulk export, retrieves the data, optionally transforms it, and then submits the resulting dataset to the Data Consumer.
 
 ### Roles
 
@@ -49,6 +33,12 @@ There are two primary roles involved in a Bulk Submit transaction:
    c. **File Retrieval Client**: Retrieves files listed in manifests from the Data Provider.
 
    d. **File Processor**: Processes submitted files with operations such as validation, quality metric calculation, and/or merging into an existing data set.
+
+### Privacy and Security Considerations
+
+All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL.
+
+The Data Consumer SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](https://www.hl7.org/fhir/smart-app-launch/backend-services.html). When SMART Backend Services Authorization is used, the Data Provider SHALL use a token with a scope of `system/bulk-submit` when kicking off the `$bulk-submit` operation, kicking off the `$bulk-submit-status` operation, making a polling request to the endpoint provided from the kickoff, or retrieving files from status manifests returned by the operation.
 
 ### Bulk Submit Operation
 
@@ -82,9 +72,7 @@ The Data Provider uses the `submissionStatus` parameter to indicate the state of
 
 If a specific portion of the data is incorrect, the Data Provider should not cancel the entire submission. Instead, it should send a request that populates the `replacesManifestUrl` parameter. This tells the Data Consumer to discard the data from that specific previous manifest, and optionally replace it with a new `manifestUrl` when that element is also populated, while keeping the other manifests in the submission valid.
 
-##### Security
-
-The Data Consumer SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](https://www.hl7.org/fhir/smart-app-launch/backend-services.html). When SMART Backend Services Authorization is used, the Data Provider SHALL use a token with a scope of `system/bulk-submit` when kicking off the `$bulk-submit` operation, kicking off the `$bulk-submit-status` operation, making a polling request to the endpoint provided from the kickoff, or retrieving files from status manifests returned by the operation.
+##### Manifest and File Security
 
 If the `oauthMetadataUrl` parameter in the request is populated with the path to an [OAuth 2.0 Protected Resource Metadata file](https://datatracker.ietf.org/doc/rfc9728/), such as a [FHIR Authorization Endpoint and Capabilities Discovery file](https://hl7.org/fhir/smart-app-launch/conformance.html#using-well-known) for [SMART Backend Services](https://www.hl7.org/fhir/smart-app-launch/backend-services.html), the Data Consumer SHALL obtain and use a valid token when retrieving the manifest at `manifestUrl`. If `requiresAccessToken` in the retrieved manifest is also set to `true`, the Data Consumer SHALL obtain and use a token scoped to read the resource types included in the manifest when retrieving the referenced files.
 
@@ -207,30 +195,4 @@ This example represents the workflow for a submission comprised of two manifests
   <figcaption>PlantUML rendering of the Bulk Submit workflow</figcaption>
 </figure>
 
-### Underlying Standards
 
-* [HL7 FHIR](https://www.hl7.org/fhir/)
-* [Newline-delimited JSON](https://github.com/ndjson/ndjson-spec)
-* [RFC5246, Transport Layer Security (TLS) Protocol Version 1.2](https://tools.ietf.org/html/rfc5246)
-* [RFC6749, The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
-* [RFC6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
-* [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
-* [RFC7240, Prefer Header for HTTP](https://tools.ietf.org/html/rfc7240)
-
-### Terminology
-
-This profile inherits terminology from the standards referenced above. The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
-
-### Privacy and Security Considerations
-
-All exchanges described herein between a client and a server SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL.
-
-The Bulk Submit Operation and Bulk Submit Status Operation SHOULD support OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). When SMART Backend Services Authorization is used, Bulk Submit Status requests SHALL be protected the same way the Bulk Submit kick-off request is protected, including an access token with scopes that cover all resources being exported or returned. A server MAY additionally restrict Bulk Submit Status requests by limiting them to the client that originated the submission. Implementations MAY include endpoints that use authorization schemes other than OAuth 2.0, such as mutual TLS or signed URLs.
-
-This implementation guide does not address protection of a server from potential compromise. An adversary who successfully captures administrative rights to the server will have full control over that server and can use those rights to undermine the server's security protections. In the Bulk Submit workflow, the file server will be a particularly attractive target, as it holds highly sensitive and valued PHI. An adversary who successfully takes control of a file server may choose to continue delivering files in response to client requests, so that neither the client nor the FHIR server is aware of the takeover. Meanwhile, the adversary is able to put the PHI to use for its own malicious purposes.
-
-Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches can be used to accomplish this, not all of which would be visible at the API level. This specification does not dictate a particular approach at this time, though it does support the use of an `Expires` header to limit the time period a file will be available for client download. Removal of the file from the server is left to the server implementer. A server SHOULD NOT delete files from a bulk data response that a client is actively in the process of downloading regardless of the pre-specified expiration time.
-
-Data access control obligations can be met with a combination of in-band restrictions such as OAuth scopes and out-of-band restrictions, where the server limits the data returned to a specific client in accordance with local considerations such as policies or regulations. The FHIR server SHALL limit the data returned to only those FHIR resources for which the client is authorized. Implementers SHOULD incorporate technology that preserves and respects an individual's wishes to share their data with desired privacy protections. For example, some clients are authorized to access sensitive mental health information and some are not; this authorization is defined out of band, but when a client requests a full data set, filtering is automatically applied by the server, restricting the data that the client receives.
-
-Bulk Submit can be a resource-intensive operation. Developers SHOULD consider and mitigate the risk of intentional or inadvertent denial-of-service attacks, though the details are beyond the scope of this specification. For example, transactional systems may wish to provide bulk data access to a read-only mirror of the database or may distribute processing over time to avoid loads that could impact clinical operations.

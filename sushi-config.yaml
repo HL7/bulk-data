@@ -44,10 +44,10 @@ parameters:
 
 menu:
   Home: index.html
-  Export: export.html
+  Export Operation: export.html
   Groups: group.html
-  Submit: submit.html
-  Publish: publish.html
+  Submit Operation: submit.html
+  Publish Operation: publish.html
   Authorization: authorization.html
   FHIR Artifacts: artifacts.html
   Downloads: downloads.html

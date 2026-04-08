@@ -1,14 +1,16 @@
-
 ### Audience and Scope
 
-This implementation guide is intended to be used by developers of backend services acting as Data Consumers and systems acting as Data Providers that aim to interoperate by sharing large FHIR datasets. The guide defines the application programming interfaces (APIs) through which a Data Consumer may retrieve FHIR bulk-data files from a Data Provider. These files may be provided at an open endpoint, or may require the Data Consumer to authenticate and authorize access to retrieve the data.
+The Bulk Publish operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which a Data Consumer may retrieve FHIR bulk-data files from a Data Provider. These files may be provided at an open endpoint, or may require the Data Consumer to authenticate and authorize access to retrieve the data.
 
-In contrast to the [Bulk Export Operation](export.html), the Bulk Publish operation ($bulk-publish) returns static manifests and bulk data files, and does not provide a mechanism for a Data Consumer to retrieve a filtered subset of the available data. Systems that return infrequently updated reference information may wish to use the Bulk Publish operation instead of the Bulk Export operation to reduce the complexity and cost involved in hosting and providing this information. 
+The Bulk Publish API does not require a FHIR server implementation, and Data Providers may implement it using a simple HTTP server that returns a Bulk Publish manifest in response to GET requests at a path that ends in `/$bulk-publish`, and a set of HTTP endpoints that serve the bulk data files referenced from that manifest.
+
+For a high-level comparison of Bulk Export, Bulk Submit, and Bulk Publish, see [Choosing a Bulk Operation](index.html#choosing-a-bulk-operation).
+
+#### Relationship to Bulk Export
+
+In contrast to the [Bulk Export operation](export.html), the Bulk Publish operation returns static manifests and bulk data files, and does not provide a mechanism for a Data Consumer to retrieve a filtered subset of the available data. Systems that return infrequently updated reference information may wish to use the Bulk Publish operation instead of the Bulk Export operation to reduce the complexity and cost involved in hosting and providing this information. 
 
 Expected use cases include the publication of provider directory information, formulary information and open scheduling slots.
-
-The Bulk Publish API does not require a FHIR server implementation, and many Data Providers may implement it using a simple HTTP server that returns a Bulk Publish manifest in response to GET requests at a path that ends in `/$bulk-publish`, and a set of HTTP endpoints that serve the bulk data files referenced from that manifest.
-
 
 ### Security Considerations
 

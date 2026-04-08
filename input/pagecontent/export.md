@@ -1,29 +1,11 @@
 ### Audience and Scope
 
-This implementation guide is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. The guide defines the application programming interfaces (APIs) through which an authenticated and authorized system (Data Consumer) may request a Bulk Data Export from another system (Data Provider), receive status information regarding progress in the generation of the requested files, and retrieve those files. It also includes recommendations regarding the FHIR resources that might be exposed through the export interface.
+The Bulk Export operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which an authenticated and authorized system (Data Consumer) may request a FHIR Data Export from another system (Data Provider), receive status information regarding progress in the generation of the requested files, and retrieve those files.  The data consumer can control the data being returned by optionally selecting the cohort, resource types, filters, data elements, and time window.
 
-The scope of this document does NOT include:
+Many Bulk Export workflows are cohort-driven. A Data Provider may expose one or more FHIR Group resources representing payer rosters, research cohorts, quality-measure populations, care management panels, or other recurring populations. As described on [the Group page](group.html), implementations may expose read-only groups managed by the Data Provider, member-based groups managed by the Data Consumer, or criteria-based groups whose membership is computed from characteristics. Some Data Providers may also support the Bulk Cohort API described in this guide for asynchronous creation of characteristic-based cohorts by a Data Consumer. A group-level export, described below, provides a standard way to request data on patients in any of these types of groups.
 
-* A legal framework for sharing data between partners, such as Business Associate Agreements, Service Level Agreements, and Data Use Agreements, though these may be required for some use cases.
-* Real-time data exchange
-* Data transformations that may be required by the Data Consumer
-* Patient matching (although identifiers may be included in the exported FHIR resources)
-* Management of FHIR groups (although some Bulk Data operations require a FHIR Group id, this guide does not specify how Group resources are created and maintained within a system)
+For a high-level comparison of Bulk Export, Bulk Submit, and Bulk Publish, see [Choosing a Bulk Operation](index.html#choosing-a-bulk-operation).
 
-### Underlying Standards
-
-* [HL7 FHIR](https://www.hl7.org/fhir/)
-* [Newline-delimited JSON](https://github.com/ndjson/ndjson-spec)
-* [RFC5246, Transport Layer Security (TLS) Protocol Version 1.2](https://tools.ietf.org/html/rfc5246)
-* [RFC6749, The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
-* [RFC6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
-* [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
-* [RFC7240, Prefer Header for HTTP](https://tools.ietf.org/html/rfc7240)
-
-### Terminology
-
-This profile inherits terminology from the standards referenced above.
-The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
 
 ### Privacy and Security Considerations
 
