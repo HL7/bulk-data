@@ -1,33 +1,23 @@
-This page contains a list of abbreviations mentioned in this implementation guide.
+This page contains a list of abbreviations used in this implementation guide.
 
-### Healthcare Abbreviations
-* CQL - Clinical Quality Language
-* DSTU - Draft Standard for Trial Use
-* EHR - Electronic Health Record
-* HL7 - Health Layer 7
-* IG - Implementation Guide
-* FHIR - Fast Healthcare Interoperability Resources
-* PHI - Protected Health Information
-* PTSD - Post Traumatic Stress Disorder
-* RIM - Reference Information Model
-* SMART - Substitutable Medical Apps, Reusable Technology
-* STU - Standard for Trial Use
-
-### External
 * API - Application Programming Interface
+* CSV - Comma-Separated Values
+* EHR - Electronic Health Record
+* FHIR - Fast Healthcare Interoperability Resources
 * HTTP - Hypertext Transfer Protocol
-* HTTPS - Hypertext Transfer Protocol Secure
+* IANA - Internet Assigned Numbers Authority
+* IG - Implementation Guide
+* ISO - International Organization for Standardization
 * JSON - JavaScript Object Notation
-* JWT - JSON Web Token
-* JWK - JSON Web Keys
-* MIT - Massachusetts Institute of Technology
-* NDJSON - Newline Delimited JavaScript Object Notation
-* OID - Object Identifier
+* JWKS - JSON Web Key Set
+* MIME - Multipurpose Internet Mail Extensions
+* NDJSON - Newline-Delimited JSON
+* OAuth - Open Authorization Standard
+* PHI - Protected Health Information
+* R4 - FHIR Release 4
+* R5 - FHIR Release 5
 * REST - Representational State Transfer
-* RFC - Request for Comments
-* RSA - Rivest, Shamir, and Adelman (inventors of the RSA public-key encryption algorithm)
+* S3 - Simple Storage Service
+* STU - Standard for Trial Use (used in version labels such as STU1-STU4)
 * TLS - Transport Layer Security
 * URL - Uniform Resource Locator
-* URI - Universal Resource Identifier
-* UTF - Unicode Transformation Format
-* XML - Extensible Markup Language
