@@ -28,6 +28,8 @@ pages:
     title: Groups
   authorization.md:
     title: SMART Backend Services Authorization
+  async.md:
+    title: Asynchronous Bulk Interaction Pattern
   abbreviations.md:
     title: Abbreviations
   changes.md:

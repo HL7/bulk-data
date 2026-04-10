@@ -12,6 +12,12 @@ Bulk Export is the better fit for ad hoc, data consumer-driven requests where th
 
 Bulk Submit may also be used in conjunction with Bulk Export through an intermediary application that first requests a bulk export, retrieves the data, optionally transforms it, and then submits the resulting dataset to the Data Consumer.
 
+### Privacy and Security Considerations
+
+All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL.
+
+The Data Consumer SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](https://www.hl7.org/fhir/smart-app-launch/backend-services.html). When SMART Backend Services Authorization is used, the Data Provider SHALL use a token with a scope of `system/bulk-submit` when kicking off the `$bulk-submit` operation, kicking off the `$bulk-submit-status` operation, making a polling request to the endpoint provided from the kickoff, or retrieving files from status manifests returned by the operation.
+
 ### Roles
 
 There are two primary roles involved in a Bulk Submit transaction:
@@ -34,13 +40,17 @@ There are two primary roles involved in a Bulk Submit transaction:
 
    d. **File Processor**: Processes submitted files with operations such as validation, quality metric calculation, and/or merging into an existing data set.
 
-### Privacy and Security Considerations
+### Sequence Overview
 
-All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL.
+This example represents the workflow for a submission comprised of two manifests. As described above, the number of manifests in a submission may differ based on the use case and the volume of data being submitted.
 
-The Data Consumer SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](https://www.hl7.org/fhir/smart-app-launch/backend-services.html). When SMART Backend Services Authorization is used, the Data Provider SHALL use a token with a scope of `system/bulk-submit` when kicking off the `$bulk-submit` operation, kicking off the `$bulk-submit-status` operation, making a polling request to the endpoint provided from the kickoff, or retrieving files from status manifests returned by the operation.
+<figure>
+  {% include bulk-submit-workflow.svg %}
+  <figcaption>Diagram showing an example of the Bulk Submit request flow</figcaption>
+</figure>
 
-### Bulk Submit Operation
+
+### Bulk Submit Request Flow
 
 #### Request (Data Consumer Endpoint)
 
@@ -86,24 +96,24 @@ When populated, the `manifestUrl` parameter SHALL contain a URL pointing to a va
 
 Alternatively, the Data Provider MAY call the Bulk Submit operation multiple times, each with a different `manifestUrl`, using the same `submitter` and `submissionId` parameters to indicate that the contents of those manifests are part of a single submission. All operation parameters other than `submitter`, `submissionId`, and `submissionStatus` relate to the `manifestUrl` being sent and, when applicable, SHALL be included in the request even if they were populated in a previous request.
 
-#### Request Headers
+##### Headers
 
 - `Accept` (string)
   Specifies the format of the optional FHIR `OperationOutcome` resource response to the request. Support for `application/fhir+json` is required. A client SHOULD provide this header. If omitted, the server MAY return an error or MAY process the request as if `application/fhir+json` was supplied.
 
-#### Response - Success
+##### Response - Success
 
 - HTTP status code `200 OK`
 - Optionally, a FHIR `OperationOutcome` resource in the body
 
-#### Response - Error
+##### Response - Error
 
 - HTTP status code `4XX` or `5XX`
 - The body SHALL be a FHIR `OperationOutcome` resource
 
 If a server wants to prevent a client from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests` and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header, following the rate-limiting advice described in [Bulk Data Status Request](https://build.fhir.org/ig/HL7/bulk-data/export.html#bulk-data-status-request).
 
-### Bulk Submit Status Operation
+### Bulk Submit Status Request
 
 After a Data Provider has kicked off a Bulk Submit operation, it may wish to receive updates on the status of the submission. For example, a Data Consumer may indicate files it was unable to retrieve, resources that failed validation, or resources that were not able to be merged into an existing data set. Additionally, the Data Consumer may need to return processed data back to the Data Provider, such as computed quality measures or a de-identified version of the submitted data. The Bulk Submit Status operation provides a way for a Data Provider to request resources related to a submission from the Data Consumer.
 
@@ -129,22 +139,23 @@ The request body SHALL be a FHIR [Parameters resource](https://hl7.org/fhir/para
 - `Prefer` (string)
   Specifies whether the response is immediate or asynchronous. Currently, only a value of <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> is supported. A client SHOULD provide this header. If omitted, the server MAY return an error or MAY process the request as if `respond-async` was supplied.
 
-#### Response - Success
+##### Response - Success
 
 - HTTP status code `202 Accepted`
 - `Content-Location` header with the absolute URL of an endpoint for subsequent status requests
 - Optionally, a FHIR `OperationOutcome` resource in the body in JSON format
 
-#### Response - Error
+##### Response - Error
 
 - HTTP status code `4XX` or `5XX`
 - The body SHALL be a FHIR `OperationOutcome` resource in JSON format
 
 If a server wants to prevent a client from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests` and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header, following the rate-limiting advice for a [Bulk Data Status Request](https://build.fhir.org/ig/HL7/bulk-data/export.html#bulk-data-status-request).
 
-### Bulk Data Status Polling Request
+---
+{% include async-status-polling-request.md %}
 
-After a Bulk Submit Status request has been started, the request and response flow follows the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html).
+##### Response - Output Manifest
 
 The Data Consumer MAY return a partial status manifest and an HTTP status of `202 Accepted` while the submission is incomplete or is still being processed.
 
@@ -186,13 +197,9 @@ Example OperationOutcome (manifest-level status):
 
 [View Example](OperationOutcome-submit-status-manifest-operationoutcome-example.html)
 
-### Bulk Submit Workflow
+---
+{% include async-delete-request.md %}
 
-This example represents the workflow for a submission comprised of two manifests. As described above, the number of manifests in a submission may differ based on the use case and the volume of data being submitted.
-
-<figure>
-  {% include bulk-submit-workflow.svg %}
-  <figcaption>PlantUML rendering of the Bulk Submit workflow</figcaption>
-</figure>
-
-
+---
+{% include async-output-file-request.md %}
+{% include async-attachments.md %}

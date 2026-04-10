@@ -96,6 +96,11 @@ Common datasets to exchanged through bulk operations include:
 * Financial data such as the Patient, ExplanationOfBenefit, Coverage, and Claim resources profiled in [CMS Blue Button](https://bluebutton.cms.gov)
 * Terminology data, such the CodeSystem and ValueSet resources stored in a [FHIR terminology service](https://hl7.org/fhir/terminology-service.html)
 
+### FHIR Asynchronous Bulk Data Request Pattern
+
+The [Bulk Export Operation](export.html) builds on the [FHIR Asynchronous Bulk Interaction Pattern](async.html), a FHIR request and response flow that servers can implement for any [Operation](https://hl7.org/fhir/operations.html) or [Defined Interaction](https://hl7.org/fhir/http.html) that needs to return a large dataset. This pattern is described in the FHIR R4 and FHIR R5 versions of the [FHIR specification](https://hl7.org/fhir), and has been moved into this Implementation Guide going forward.
+
+Use cases that return small amounts of data but may take a lot of time to process may prefer to use the related [Asynchronous Interaction Request Pattern](https://hl7.org/fhir/async-bundle.html).
 
 ### Additional Documentation
 * [Discussion Group (FHIR Zulip "Bulk Data" Track)](https://chat.fhir.org/#narrow/stream/bulk.20data)

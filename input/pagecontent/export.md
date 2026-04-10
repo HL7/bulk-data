@@ -23,11 +23,7 @@ Data access control obligations can be met with a combination of in-band restric
 
 Bulk Data Export can be a resource-intensive operation. Data Providers SHOULD consider and mitigate the risk of intentional or inadvertent denial-of-service attacks, though the details are beyond the scope of this specification. For example, transactional systems may wish to provide Bulk Data access to a read-only mirror of the database or may distribute processing over time to avoid loads that could impact clinical operations.
 
-### Bulk Data Export Operation Request Flow
-
-This implementation guide builds on the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html), and in some places may extend the pattern.
-
-#### Roles
+### Roles
 
 There are two primary roles involved in a Bulk Data transaction:
 
@@ -45,20 +41,20 @@ There are two primary roles involved in a Bulk Data transaction:
 
    b. **File Retrieval Client**: Retrieves bulk data files and attachments from the Data Provider.
 
-#### Sequence Overview
+### Sequence Overview
 
  <figure>
   {% include bulk-flow.svg %}
   <figcaption>Diagram showing an overview of the Bulk Data Export operation request flow</figcaption>
 </figure>
 
-#### Bulk Data Kick-off Request
+#### Kick-off Request
 
 The Bulk Data Export Operation initiates the asynchronous generation of a requested export data set, whether that be data for all patients, data for a subset (defined group) of patients, or all FHIR data available from the Data Provider.
 
 As discussed in [Privacy and Security Considerations](#privacy-and-security-considerations) above, a Data Provider SHALL limit the data returned to only those FHIR resources for which the Data Consumer is authorized.
 
-The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html). A Data Provider SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
+The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](async.html). A Data Provider SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
 If a parameter has a cardinality of greater than one, a Data Consumer MAY repeat the kick-off parameter multiple times or MAY include a single instance of the parameter with multiple values delimited by commas. The Data Provider SHALL treat comma-delimited values within a single instance of the parameter as if the parameter was repeated. The use of comma-delimited values within a parameter is deprecated in favor of repeating parameters and will be removed in a future version of this IG.
 
@@ -224,23 +220,7 @@ _* In the case of a Group level export, the Data Provider may retain resources m
 If a Data Provider wants to prevent a Data Consumer from beginning a new export before an in-progress export is completed, it SHOULD respond with a `429 Too Many Requests` status and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header, following the rate-limiting advice for "Bulk Data Status Request" below.
 
 ---
-#### Bulk Data Delete Request
-
-After a Bulk Data request has been started, a Data Consumer MAY send a DELETE request to the URL provided in the `Content-Location` header to cancel the request as described in the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html). If the request has been completed, a Data Provider MAY use the request as a signal that the Data Consumer is done retrieving files and that it is safe for the Data Provider to remove those from storage. Following the delete request, when subsequent requests are made to the polling location, the Data Provider SHALL return a `404 Not Found` error and an associated FHIR `OperationOutcome` in JSON format.
-
-##### Endpoint
-
-`DELETE [polling content location]`
-
-##### Response - Success
-
-- HTTP Status Code of `202 Accepted`
-- Optionally a FHIR `OperationOutcome` resource in the body in JSON format
-
-##### Response - Error Status
-
-- HTTP status code of `4XX` or `5XX`
-- The body SHALL be a FHIR `OperationOutcome` resource in JSON format
+{% include async-delete-request.md %}
 
 ---
 #### Bulk Data Status Request
@@ -390,89 +370,11 @@ Example deleted resource bundle (represents one line in an output file):
 
 
 ---
-#### Bulk Data Output File Request
+{% include async-output-file-request.md %}
 
-Using the URLs supplied by the Data Provider in the manifest, a Data Consumer MAY download the generated Bulk Data files (one or more per resource type) within the time period specified in the `Expires` header (if present). A Data Consumer MAY re-fetch the output manifest if output links have expired, and a Data Provider MAY provide updated links and/or an updated timestamp in the `Expires` header in the response.
+{% include async-output-file-organization.md %}
 
-As long as a Data Provider is following relevant security guidance, it MAY generate output manifests where the `requiresAccessToken` field is `true` or `false`; this applies even for Data Providers available on the public internet.
-
-If the `requiresAccessToken` field in the manifest is set to `true`, the request SHALL include a valid access token.  See [Privacy and Security Considerations](#privacy-and-security-considerations) above.
-
-If the `requiresAccessToken` field is set to `false` and no additional authorization-related extensions are present in the manifest's output entry, then the output URLs SHALL be dereferenceable directly (a "capability URL"), and SHALL follow expiration timing requirements that have been documented for bearer tokens in SMART Backend Services. A Data Consumer SHALL NOT provide a SMART Backend Services access token when dereferencing an output URL where `requiresAccessToken` is `false`.
-
-The exported data SHALL include only the most recent version of any exported resources unless the Data Consumer explicitly requests different behavior in a fashion supported by the Data Provider (e.g., via a new query parameter yet to be defined). Inclusion of the `Resource.meta` information in the resources is at the discretion of the Data Provider (as it is for all FHIR interactions).
-
-A Data Consumer SHOULD provide an `Accept-Encoding` header when requesting output files and SHOULD include `gzip` compression as one of the encoding options in the header. A Data Provider SHALL provide output files as uncompressed, with `gzip` compression, or with another compression format from the `Accept-Encoding` header. When compression is used, a Data Provider SHALL communicate this to the Data Consumer by including a `Content-Encoding` header in the response. A Data Consumer SHALL accept files that are uncompressed or encoded with `gzip` compression, and MAY accept files encoded with other compression formats.
-
-##### Endpoint
-
-`GET [url from status request output field]`
-
-##### Headers
-
-- `Accept` (optional, defaults to `application/fhir+ndjson`)
-
-Specifies the format of the file being requested.
-
-##### Response - Success
-
-- HTTP status of `200 OK`
-- `Content-Type` header that matches the file format being delivered.  For files in NDJSON format, SHALL be `application/fhir+ndjson`
-- Body of FHIR resources in newline delimited json - [NDJSON](https://github.com/ndjson/ndjson-spec) or other requested format
-
-##### Response - Error
-
-- HTTP Status Code of `4XX` or `5XX`
-
-##### Bulk Data Output File Organization
-
-Output files may be organized by resource type, or by instances of a resource type specified in the `organizeOutputBy` kickoff parameter.
-
-When the `organizeOutputBy` kickoff parameter is not populated, each output file SHALL contain resources of only one type, and a Data Provider MAY create more than one file for each resource type returned. The number of resources contained in a file MAY vary between Data Providers and files.
-
-When the `organizeOutputBy` kickoff parameter is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type in the kickoff parameter, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resource's block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` field in the relevant `output` array items.
-
-Resources that would otherwise be included in the export, but do not have references to the resource type specified in the `organizeOutputBy` parameter, MAY be included in resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the export.
-
-<div class="stu-note">
-When the <code>organizeOutputBy</code> parameter is set <code>Patient</code>, Data Providers SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.
-
-For other resource types, we are soliciting feedback on the best approach for documenting the set of resources in a resource block. Implementation Guides MAY reference a <a href="https://www.hl7.org/fhir/compartmentdefinition.html">Compartment Definition</a>, populate a <a href="https://www.hl7.org/fhir/graphdefinition.html">GraphDefinition Resource</a>, include narrative text, or use another approach.
-</div>
-
-Example NDJSON file when the `organizeOutputBy` parameter in the kickoff request is not populated:
-
-```js
-{"id":"p-1","resourceType":"Patient", "name":[{"given":["Brenda"],"family":"Jackson"}],"gender":"female", ...}
-{"id":"p-2","resourceType":"Patient", "name":[{"given":["Bram"],"family":"Sandeep"}],"gender":"male", ...}
-{"id":"p-3","resourceType":"Patient", "name":[{"given":["Sandy"],"family":"Hamlin"}],"gender":"female", ...}
-{...}
-```
-
-<a name="organize-output-by-file-example" />
-
-Example NDJSON file when the `organizeOutputBy` parameter in the kickoff request is set to `Patient`:
-
-```js
-  {"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-1"}}]}
-  {"id": "p-1", "resourceType": "Patient", ...}
-  {"id": "c-1", "resourceType": "Condition", "subject":{"reference": "Patient/p-1"}, ...}
-  {"id": "o-1", "resourceType": "Observation", "subject":{"reference": "Patient/p-1"}, ...}
-  {...}
-  {"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-2"}}]}
-  {"id": "p-2", "resourceType": "Patient", ...}
-  {"id": "c-101", "resourceType": "Condition", "subject":{"reference": "Patient/p-2"}, ...}
-  {"id": "o-102", "resourceType": "Observation", "subject":{"reference": "Patient/p-2"}, ...}
-  {...}
-```
-
-##### Attachments
-
-If resources in an output file contain elements of the type `Attachment`, the Data Provider SHOULD populate the `Attachment.contentType` code as well as either the `data` element or the `url` element. If the `data` element is not populated and the `url` element is populated, the `url` element SHALL be an absolute URL that can be dereferenced to the attachment's content.
-
-When the `url` element is populated with an absolute URL and the `requiresAccessToken` field in the Complete Status body is set to `true`, the URL location must be accessible by a Data Consumer with a valid access token, and SHALL NOT require the use of additional authentication credentials. When the `url` element is populated and the `requiresAccessToken` field in the Complete Status body is set to `false`, the URL location must be accessible by a Data Consumer without an access token.
-
-Note that if a Data Provider copies files to the Bulk Data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the `Attachment.url` element when generating the Bulk Data output files.
+{% include async-attachments.md %}
 
 ### Data Provider Capability Documentation
 
