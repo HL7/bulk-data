@@ -6,6 +6,8 @@ Usage: #definition
 * name = "BulkDataPublish"
 * title = "FHIR Bulk Data Publish"
 * status = #active
+* extension[+].url = $fmm
+* extension[=].valueInteger = 2
 * kind = #operation
 * date = "2025-01-27"
 * jurisdiction = $m49.htm#001 "World"

@@ -4,10 +4,10 @@ name: BulkDataAccessIG
 title: Bulk Data Access IG
 description: FHIR based approach for exporting large data sets from a FHIR server to a client application
 status: active
-version: 3.0.0
+version: 4.0.0
 fhirVersion: 4.0.1
 copyrightYear: 2025+
-releaseLabel: "STU 3" # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
+releaseLabel: "STU 4" # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
 license: CC0-1.0 # https://www.hl7.org/fhir/valueset-spdx-license.html
 jurisdiction: http://unstats.un.org/unsd/methods/m49/m49.htm#001
 publisher:
@@ -20,16 +20,34 @@ pages:
     title: Home
   export.md:
     title: Export
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
   publish.md:
     title: Publish
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
   submit.md:
     title: Submit
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
   group.md:
     title: Groups
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
   authorization.md:
     title: SMART Backend Services Authorization
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
   async.md:
     title: Asynchronous Bulk Interaction Pattern
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
   abbreviations.md:
     title: Abbreviations
   changes.md:

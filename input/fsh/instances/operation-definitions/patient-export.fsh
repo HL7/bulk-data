@@ -2,10 +2,12 @@ Instance: patient-export
 InstanceOf: OperationDefinition
 Usage: #definition
 * url = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/patient-export"
-* version = "2.0.0"
+* version = "4.0.0"
 * name = "PatientLevelExport"
 * title = "FHIR Bulk Data Patient Level Export"
 * status = #active
+* extension[+].url = $fmm
+* extension[=].valueInteger = 5
 * kind = #operation
 * date = "2021-07-29"
 * jurisdiction = $m49.htm#001 "World"

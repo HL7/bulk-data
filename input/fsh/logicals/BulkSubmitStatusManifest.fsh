@@ -3,7 +3,9 @@ Parent: BulkDataManifest
 Id: BulkSubmitStatusManifest
 Title: "Bulk Submit Manifest"
 Description: "Logical model describing the status manifest returned by a Data Recipient in response to a $bulk-submit-status polling request. Extends BulkDataManifest with a submissionId linking the manifest to the originating submission, and a manifestUrl on output and error items linking them back to the Data Provider's submitted manifests."
-* ^status = #draft
+* ^status = #active
+* ^extension[+].url = $fmm
+* ^extension[=].valueInteger = 2
 * ^jurisdiction = $m49.htm#001 "World"
 
 * submissionId 1..1 string "Submission Identifier" "Identifier for the submission this status manifest relates to, matching the submissionId provided by the Data Provider in the $bulk-submit kick-off request."

@@ -2,10 +2,12 @@ Instance: bulk-submit
 InstanceOf: OperationDefinition
 Usage: #definition
 * url = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-submit"
-* version = "2.0.0"
+* version = "1.0.0"
 * name = "BulkSubmit"
 * title = "FHIR Bulk Data Submit"
-* status = #draft
+* status = #active
+* extension[+].url = $fmm
+* extension[=].valueInteger = 2
 * kind = #operation
 * date = "2025-01-27"
 * jurisdiction = $m49.htm#001 "World"

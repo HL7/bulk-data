@@ -2,10 +2,12 @@ Instance: group-export
 InstanceOf: OperationDefinition
 Usage: #definition
 * url = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export"
-* version = "2.0.0"
+* version = "4.0.0"
 * name = "GroupLevelExport"
 * title = "FHIR Bulk Data Group Level Export"
 * status = #active
+* extension[+].url = $fmm
+* extension[=].valueInteger = 5
 * kind = #operation
 * date = "2020-07-29"
 * jurisdiction = $m49.htm#001 "World"

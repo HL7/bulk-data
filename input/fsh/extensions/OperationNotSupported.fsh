@@ -15,5 +15,7 @@ Description: """
   ```
 """
 Context: "CapabilityStatement.rest.resource | CapabilityStatement.rest.resource.searchParam"
+* ^extension[+].url = $fmm
+* ^extension[=].valueInteger = 5
 * value[x] only canonical
   * ^short = "Canonical URL for unsupported operation"

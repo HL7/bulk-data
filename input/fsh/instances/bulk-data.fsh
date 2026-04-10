@@ -2,10 +2,12 @@ Instance: bulk-data
 InstanceOf: CapabilityStatement
 Usage: #definition
 * url = "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data"
-* version = "2.0.0"
+* version = "4.0.0"
 * name = "BulkDataIGCapabilityStatement"
 * title = "FHIR Bulk Data Access Implementation Guide"
 * status = #active
+* extension[+].url = $fmm
+* extension[=].valueInteger = 5
 * experimental = false
 * date = "2021-07-29"
 * description = "The expected capabilities of a Data Provider actor (e.g., EHR systems, data warehouses, and other clinical and administrative systems that aim to interoperate by sharing large FHIR datasets) which is responsible for providing responses to requests submitted by a Data Consumer actor. Systems implementing this capability statement should meet the requirements set by the Bulk Data Access Implementation Guide. A Data Consumer has the option of choosing from this list to access necessary data based on use cases and other contextual requirements."

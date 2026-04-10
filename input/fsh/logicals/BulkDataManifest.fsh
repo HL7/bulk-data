@@ -3,7 +3,9 @@ Parent: Element
 Id: BulkDataManifest
 Title: "Bulk Data Manifest"
 Description: "Logical model describing a standard format to provide links to FHIR Bulk Data files and related metadata."
-* ^status = #draft
+* ^status = #active
+* ^extension[+].url = $fmm
+* ^extension[=].valueInteger = 5
 * ^jurisdiction = $m49.htm#001 "World"
 
 * manifestType 0..1 canonical "OperationDefinition that resulted in this manifest" "Canonical URL of the OperationDefinition for the operation associated with the provision of this manifest. E.g., `http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-publish|1.0.0`. This element will be mandatory in a future release of this IG."
