@@ -24,19 +24,9 @@ The request will support the HTTP methods, URLs, headers, and other parameters t
 
 ##### Parameters
 
-- `_outputFormat` (string, optional, defaults to `application/fhir+ndjson`)
+{% include async-query-parameters.md %}
 
-  The format for the generated bulk data files. Currently, [NDJSON](http://ndjson.org/) SHALL be supported, though servers MAY also support other output formats. Servers SHALL support the full content type of `application/fhir+ndjson` as well as abbreviated representations including `application/ndjson` and `ndjson`.
-
-  For request types where the server supports either the Asynchronous Bulk Interaction Pattern or the [Asynchronous Interaction Request Pattern](https://hl7.org/fhir/async-bundle.html), requests that include the `_outputFormat` parameter SHALL trigger the Asynchronous Bulk Interaction Pattern.
-
-- `_minimumFileSize` (number, optional)
-
-  Specifies the minimum size in bytes for generated NDJSON files. The value SHALL be a positive integer. If a server supports this parameter, it SHOULD construct files that meet or exceed this size unless doing so would violate the `_maximumFileSize` constraint.
-
-- `_maximumFileSize` (number, optional)
-
-  Specifies the maximum size in bytes for generated NDJSON files. The value SHALL be a positive integer and SHALL be greater than `_minimumFileSize` if both are specified. If a server supports this parameter, it SHALL construct files that do not exceed this size. The server MAY use a lower internal maximum.
+[View OperationDefinition for FHIR Asynchronous Bulk Interaction Pattern](OperationDefinition-async.html)
 
 Implementation notes:
 

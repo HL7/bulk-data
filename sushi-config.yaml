@@ -61,6 +61,8 @@ resources:
     name: Capability Statement
   OperationDefinition/export:
     name: System Level Export Operation Definition
+  OperationDefinition/async:
+    name: FHIR Asynchronous Bulk Interaction Pattern Operation Definition
   OperationDefinition/group-export:
     name: Group Level Export Operation Definition
   OperationDefinition/patient-export:
