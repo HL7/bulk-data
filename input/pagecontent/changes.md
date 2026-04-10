@@ -3,10 +3,14 @@
 	h4:before {content: none}
 </style>
 
-### Future
-
-The Argonaut FHIR accelerator is leading a community effort to specify two new operations, [Bulk Submit ($bulk-submit)](https://hackmd.io/@argonaut/rJoqHZrPle) and [Bulk Publish ($bulk-publish)](https://hackmd.io/@argonaut/Sy7wjS81Wg), that will be incorporated into a future release of this specification (discuss at [chat.fhir.org](https://chat.fhir.org/#narrow/channel/179250-bulk-data)).
-
+### STU4 - v4.0.0
+* Defined a logical model for the Bulk Data Manifest JSON format. The wire format is unchanged from STU3 except for extensions. In STU3, the `extension` property on any manifest object had a value of a JSON object where the properties are the extension name and the values are the extension value. In STU4, the `extension` property contains an array of FHIR Extension elements.
+* Added Bulk Submit and Bulk Submit Status operations.
+* Added Bulk Publish operation.
+* Migrated the FHIR Asynchronous Bulk Interaction Pattern documentation from the core FHIR spec into to this IG.
+* Changes to Bulk Submit and Bulk Publish manifests from earlier draft versions:
+  - Parameters not used in Bulk Export are now root elements rather than extensions.
+  - `error.countSeverity` is now an array of `code` and `count` elements rather than a JSON object with codes as keys and counts as values.
 
 ### STU3 - v3.0.0
 * Added support for partial export manifests to enable servers to make some files available prior to all of the files being ready and to split large lists of files across multiple manifests. Clients can select this behavior using the new `allowPartialManifests` kick-off request parameter. 
