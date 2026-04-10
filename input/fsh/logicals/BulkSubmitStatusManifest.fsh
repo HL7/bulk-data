@@ -12,8 +12,4 @@ Description: "Logical model describing the status manifest returned by a Data Re
 
 * error.manifestUrl 1..1 url "Source Manifest URL" "URL of the manifest submitted by the Data Provider where the issues described in this error file occurred. Each item in the error section SHALL include this element. A single manifestUrl may be referenced from multiple items in the error section."
 
-* request 0..0 
-* outputOrganizedBy 0..0
-* outputOrganizedByDetail 0..0
-* output 0..0
-* deleted 0..0
+* request 0..0
