@@ -10,7 +10,7 @@ Usage: #definition
 * date = "2025-01-27"
 * jurisdiction = $m49.htm#001 "World"
 * description = """
-    After a Data Provider has kicked off a Bulk Submit operation, they may use this operation to receive updates on the status of the submission. The Data Consumer may indicate files it was unable to retrieve, resources that failed validation, or resources that could not be merged into an existing data set. Additionally, the Data Consumer may return processed data such as computed quality measures or de-identified versions of the submitted data. The response follows the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html).
+    After a Data Provider has kicked off a Bulk Submit operation, it may use this operation to receive status updates about the submission. For example, the Data Consumer may indicate files it was unable to retrieve, resources that failed validation, or resources that could not be merged into an existing data set. The Data Consumer may also return processed data such as computed quality measures or de-identified versions of the submitted data. The Data Provider receives a `202 Accepted` response with a `Content-Location` header and then polls that URL according to the [FHIR Asynchronous Bulk Interaction Pattern](async.html).
     """
 * code = #bulk-submit-status
 * system = true

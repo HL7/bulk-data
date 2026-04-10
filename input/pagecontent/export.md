@@ -54,7 +54,7 @@ The Bulk Data Export Operation initiates the asynchronous generation of a reques
 
 As discussed in [Privacy and Security Considerations](#privacy-and-security-considerations) above, a Data Provider SHALL limit the data returned to only those FHIR resources for which the Data Consumer is authorized.
 
-The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](async.html). A Data Provider SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
+The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Bulk Interaction Pattern](async.html). A Data Provider SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
 If a parameter has a cardinality of greater than one, a Data Consumer MAY repeat the kick-off parameter multiple times or MAY include a single instance of the parameter with multiple values delimited by commas. The Data Provider SHALL treat comma-delimited values within a single instance of the parameter as if the parameter was repeated. The use of comma-delimited values within a parameter is deprecated in favor of repeating parameters and will be removed in a future version of this IG.
 
@@ -225,7 +225,7 @@ If a Data Provider wants to prevent a Data Consumer from beginning a new export 
 ---
 #### Bulk Data Status Request
 
-After a Bulk Data request has been started, the Data Consumer MAY poll the status URL provided in the `Content-Location` header as described in the [FHIR Asynchronous Request Pattern](https://www.hl7.org/fhir/R4/async.html).
+After a Bulk Data request has been started, the Data Consumer MAY poll the status URL provided in the `Content-Location` header according to the [FHIR Asynchronous Bulk Interaction Pattern](async.html).
 
 Data Consumers SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach when polling for status. A Data Provider SHOULD supply a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header with a delay time in seconds (e.g., `120` to represent two minutes) or an HTTP-date (e.g., `Fri, 31 Dec 1999 23:59:59 GMT`). When provided, Data Consumers SHOULD use this information to inform the timing of future polling requests. The Data Provider SHOULD keep an accounting of status queries received from a given Data Consumer, and if a Data Consumer is polling too frequently, the Data Provider SHOULD respond with a `429 Too Many Requests` status code in addition to a `Retry-After` header, and optionally a FHIR `OperationOutcome` resource with further explanation. If excessively frequent status queries persist, the Data Provider MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP `4XX` and `5XX` status codes may be used to identify errors as mentioned below.
 

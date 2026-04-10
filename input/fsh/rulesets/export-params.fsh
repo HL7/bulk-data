@@ -7,7 +7,7 @@ RuleSet: ExportParam_outputFormat
   * documentation = """
     Support is required for a Data Provider, optional for a Data Consumer.
 
-    The format for the requested Bulk Data files to be generated as per [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html). Defaults to `application/fhir+ndjson`. The Data Provider SHALL support [Newline Delimited JSON](https://github.com/ndjson/ndjson-spec), but MAY choose to support additional output formats. The Data Provider SHALL accept the full content type of `application/fhir+ndjson` as well as the abbreviated representations `application/ndjson` and `ndjson`.
+    The format of the bulk data files generated through the [FHIR Asynchronous Bulk Interaction Pattern](async.html). Defaults to `application/fhir+ndjson`. The Data Provider SHALL support [Newline Delimited JSON](https://github.com/ndjson/ndjson-spec), but MAY choose to support additional output formats. The Data Provider SHALL accept the full content type of `application/fhir+ndjson` as well as the abbreviated representations `application/ndjson` and `ndjson`.
     """
   * type = #string
 

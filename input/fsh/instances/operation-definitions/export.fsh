@@ -9,7 +9,7 @@ Usage: #definition
 * kind = #operation
 * date = "2021-07-29"
 * jurisdiction = $m49.htm#001 "World"
-* description = "FHIR Operation through which an authenticated and authorized Data Consumer may request bulk FHIR data from a Data Provider, whether or not the data is associated with a patient. This supports use cases like backing up a Data Provider's FHIR server, or exporting terminology data by restricting the resources returned using the _type parameter. The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html)"
+* description = "FHIR Operation through which an authenticated and authorized Data Consumer may request bulk FHIR data from a Data Provider, whether or not the data is associated with a patient. This supports use cases like backing up a Data Provider's FHIR server, or exporting terminology data by restricting the resources returned using the _type parameter. The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Bulk Interaction Pattern](async.html)"
 * code = #export
 * system = true
 * type = false

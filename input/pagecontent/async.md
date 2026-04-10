@@ -1,4 +1,4 @@
-This FHIR Asynchronous Bulk Interaction Pattern, described below, represents a FHIR request and response flow that servers can implement for any [Operation](https://hl7.org/fhir/operations.html) or [Defined Interaction](https://hl7.org/fhir/http.html) that needs to return a large dataset.
+The FHIR Asynchronous Bulk Interaction Pattern, described below, is a FHIR request and response flow that servers can implement for any [Operation](https://hl7.org/fhir/operations.html) or [Defined Interaction](https://hl7.org/fhir/http.html) that needs to return a large dataset.
 
 The [Bulk Export Operation](export.html) builds on this pattern.
 
@@ -6,7 +6,7 @@ Use cases that return small amounts of data but may take a lot of time to proces
 
 This pattern is described in the FHIR R4 and FHIR R5 versions of the [FHIR specification](https://hl7.org/fhir), and has been moved into this Implementation Guide going forward.
 
-### FHIR Asynchronous Bulk Interaction Request Flow
+### FHIR Asynchronous Bulk Interaction Flow
 
 #### Kick-off Request
 

@@ -9,7 +9,7 @@ Usage: #definition
 * kind = #operation
 * date = "2020-07-29"
 * jurisdiction = $m49.htm#001 "World"
-* description = "FHIR Operation through which an authenticated and authorized Data Consumer may request a detailed set of FHIR resources of diverse resource types pertaining to all members of the specified [Group](https://www.hl7.org/fhir/group.html) from a Data Provider. The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Request Pattern](http://hl7.org/fhir/R4/async.html)"
+* description = "FHIR Operation through which an authenticated and authorized Data Consumer may request a detailed set of FHIR resources of diverse resource types pertaining to all members of the specified [Group](https://www.hl7.org/fhir/group.html) from a Data Provider. The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Bulk Interaction Pattern](async.html)"
 * code = #export
 * resource = #Group
 * system = false
