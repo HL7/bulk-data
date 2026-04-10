@@ -82,7 +82,7 @@ FHIR Operation to obtain a detailed set of FHIR resources of diverse resource ty
 
 If a Data Provider's FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables Data Consumers to discover available groups based on stable characteristics such as `Group.identifier`.
 
-Note: How these Groups are defined is specific to each FHIR system's implementation. For example, a payer may send a healthcare institution a roster file that can be imported into their EHR to create or update a FHIR group. Group membership could be based upon explicit attributes of the patient, such as age, sex or a particular condition such as PTSD or Chronic Opioid use, or on more complex attributes, such as a recent inpatient discharge or membership in the population used to calculate a quality measure. FHIR-based group management is out of scope for the current version of this implementation guide.
+As described on [the Group page](group.html), implementations may expose read-only groups managed by the Data Provider, member-based groups managed by the Data Consumer, or criteria-based groups whose membership is computed from characteristics. Some Data Providers may also support the Bulk Cohort API described in this guide for asynchronous creation of characteristic-based cohorts by a Data Consumer.
 
 ##### Endpoint - System Level Export
 
@@ -260,7 +260,7 @@ Retry-After: 120</code></pre>
     </td>
     </tr>
     <tr>
-      <td><a href="#response---error-status-1">Error</a></td>
+      <td><a href="#response---error-status">Error</a></td>
       <td>Returned by the Data Provider if the export operation fails.</td>
       <td>
       Response headers - no <code>Prefer: separate-export-status</code> header on kickoff
@@ -342,7 +342,7 @@ Implementation notes:
 <a name="manifest-link" />
 
 - When the `allowPartialManifests` kickoff parameter is `true`, the manifest MAY include a `link` array with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, and `link` arrays.
-- If the export has failed or a transient error has occurred, a Data Provider MAY return an error in response to a request for the `next` link, as described in the [Error Status](#response---error-status-1) section above. For non-transient errors, a Data Consumer MAY process resources that have already been retrieved before re-running the export job or MAY discard them.
+- If the export has failed or a transient error has occurred, a Data Provider MAY return an error in response to a request for the `next` link, as described in the [Error Status](#response---error-status) section above. For non-transient errors, a Data Consumer MAY process resources that have already been retrieved before re-running the export job or MAY discard them.
 
 Example manifest, `organizeOutputBy` kickoff parameter is not populated:
 <div class="language-json">
