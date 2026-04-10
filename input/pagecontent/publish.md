@@ -16,10 +16,20 @@ Expected use cases include the publication of provider directory information, fo
 
 All exchanges described herein between a Data Consumer and a Data Provider SHOULD be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL. With each of the requests described herein, implementers MAY implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html).
 
+### Roles
+
+There are two primary roles involved in a Bulk Publish transaction:
+
+1. **Data Provider**: Server that hosts the Bulk Publish manifest and file listed in the manifest.
+
+2. **Data Consumer**: Client that retrieves the Bulk Publish manifest and bulk data files and attachments.
+
 
 ### Manifest Request
 
 Request for fully static or periodically updated dataset in FHIR format. 
+
+#### Endpoint
 
 GET `[base]/$bulk-publish`
 
@@ -50,13 +60,6 @@ The Data Provider SHOULD populate the `updateCadence` period to indicate the fre
 
 Data Providers SHOULD set a reasonable `Cache-Control` header on the manifest (e.g., public, max-age=10) and SHOULD serve immutable files with long-lived caching headers (e.g., public, max-age=31536000, immutable).
 
-
-##### Incremental Updates
-
-The Data Provider MAY incrementally update a manifest by adding data files to the `output` array element that contain new resources and/or resources that replace versions of the resources in earlier files in the `output` array that have the same resource id. Additionally, the Data Provider MAY add files with Bundle resources indicating resources that have been deleted to the `deleted` array element (see details below), and MAY add files to the `error` array element. When generating a manifest that will be subsequently updated with these incremental changes, the Data Provider SHALL populate an `epochStartTime` element. When initially published, this value SHALL have the same value as the `transactionTime` element. Subsequently, adding files to the `output` array, `deleted` array, and `error` array of a manifest will cause the `transactionTime` element for that manifest to advance, but the `epochStartTime` value will remain the same. If a Data Provider is refreshing the manifest and no resources have been added, deleted, or updated since the `transactionTime` in the current manifest, the Data Provider SHOULD advance the `transactionTime` to the current time to indicate that the Data Provider is regularly publishing updates. Periodically, the Data Provider MAY generate a manifest that is a complete snapshot of the data (a new epoch), updating the `output` array and `error` array, emptying the `deleted` array, and setting new `epochStartTime` and `transactionTime` values. When a manifest is incrementally updated, apart from when it is reset to a new epoch, the order of files in the `output`, `deleted`, and `error` arrays in the manifest SHALL not change, the file contents SHALL not change, and the files SHALL remain retrievable.
-
-Data Providers SHALL structure the manifests such that a Data Consumer can obtain a complete data set when processing a manifest by (1) inserting or updating all FHIR resources in files in the `output` array that have not been previously processed, followed by (2) deleting all resources listed in files in the `deleted` array that have not been previously processed.
-
 ##### Elements
 
 {% include publish-manifest-fields.md %}
@@ -67,7 +70,16 @@ Implementation notes:
 - For `transactionTime`, to properly meet the inclusion constraints above, the Data Provider's FHIR server might need to wait for any pending transactions to resolve in its database before starting the export process.
 - Error, warning, and information messages related to the export SHOULD be included in `error` and not in `output`. If there are no relevant messages, the Data Provider SHOULD return an empty array. 
 
-Example, minimal, non-incremental manifest:
+
+##### Incremental Updates
+
+The Data Provider MAY incrementally update a manifest by adding data files to the `output` array element that contain new resources and/or resources that replace versions of the resources in earlier files in the `output` array that have the same resource id. Additionally, the Data Provider MAY add files with Bundle resources indicating resources that have been deleted to the `deleted` array element (see details below), and MAY add files to the `error` array element. When generating a manifest that will be subsequently updated with these incremental changes, the Data Provider SHALL populate an `epochStartTime` element. When initially published, this value SHALL have the same value as the `transactionTime` element. Subsequently, adding files to the `output` array, `deleted` array, and `error` array of a manifest will cause the `transactionTime` element for that manifest to advance, but the `epochStartTime` value will remain the same. If a Data Provider is refreshing the manifest and no resources have been added, deleted, or updated since the `transactionTime` in the current manifest, the Data Provider SHOULD advance the `transactionTime` to the current time to indicate that the Data Provider is regularly publishing updates. Periodically, the Data Provider MAY generate a manifest that is a complete snapshot of the data (a new epoch), updating the `output` array and `error` array, emptying the `deleted` array, and setting new `epochStartTime` and `transactionTime` values. When a manifest is incrementally updated, apart from when it is reset to a new epoch, the order of files in the `output`, `deleted`, and `error` arrays in the manifest SHALL not change, the file contents SHALL not change, and the files SHALL remain retrievable.
+
+Data Providers SHALL structure the manifests such that a Data Consumer can obtain a complete data set when processing a manifest by (1) inserting or updating all FHIR resources in files in the `output` array that have not been previously processed, followed by (2) deleting all resources listed in files in the `deleted` array that have not been previously processed.
+
+##### Examples
+
+Minimal, non-incremental manifest:
 <div class="language-json">
 {% include Binary-BulkPublishManifestMinimalExample-html.xhtml %}
 </div>
@@ -79,13 +91,13 @@ Example manifest at the epoch start:
 </div>
 [View Example](Binary-BulkPublishManifestEpochStartExample.html)
 
-Example manifest after first incremental update:
+Manifest after first incremental update:
 <div class="language-json">
 {% include Binary-BulkPublishManifestIncrementalUpdateExample-html.xhtml %}
 </div>
 [View Example](Binary-BulkPublishManifestIncrementalUpdateExample.html)
 
-Example deleted resource bundle (represents one line in an output file):
+Deleted resource bundle (represents one line in an output file):
 
 <div class="language-json">
 {% fragment Bundle/deleted-resource-transaction-bundle-example JSON ELIDE:language %}
@@ -126,6 +138,14 @@ Specifies the format of the file being requested.
 #### Response - Error
 
 - HTTP Status Code of `4XX` or `5XX`
+
+#### Attachments
+
+If resources in an output file contain elements of the type `Attachment`, the Data Provider SHOULD populate the `Attachment.contentType` code as well as either the `data` element or the `url` element. If the data element is not populated and the `url` element is populated, the `url` element SHALL be an absolute URL that can be dereferenced to the attachment's content.
+
+When the `url` element is populated with an absolute URL and the `requiresAccessToken` element in the manifest is set to `true`, the URL location must be accessible by a Data Consumer with a valid access token, and SHALL NOT require the use of additional authentication credentials. When the `url` element is populated and the `requiresAccessToken` element in the manifest is set to `false`, the URL location must be accessible by a Data Consumer without an access token.
+
+Note that if a Data Provider copies files to the Bulk Data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the `Attachment.url` element when generating the Bulk Data output files.
 
 ### Bulk Data Output File Organization
 
@@ -168,15 +188,6 @@ Example NDJSON file when `outputOrganizedBy` is set to `Patient`:
 {"id": "o-102", "resourceType": "Observation", "subject":{"reference": "Patient/p-2"}, ...}
 {...}
 ```
-
-#### Attachments
-
-If resources in an output file contain elements of the type `Attachment`, the Data Provider SHOULD populate the `Attachment.contentType` code as well as either the `data` element or the `url` element. If the data element is not populated and the `url` element is populated, the `url` element SHALL be an absolute URL that can be dereferenced to the attachment's content.
-
-When the `url` element is populated with an absolute URL and the `requiresAccessToken` element in the manifest is set to `true`, the URL location must be accessible by a Data Consumer with a valid access token, and SHALL NOT require the use of additional authentication credentials. When the `url` element is populated and the `requiresAccessToken` element in the manifest is set to `false`, the URL location must be accessible by a Data Consumer without an access token.
-
-Note that if a Data Provider copies files to the Bulk Data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the `Attachment.url` element when generating the Bulk Data output files.
-
 
 ### Data Consumer Workflow
 
