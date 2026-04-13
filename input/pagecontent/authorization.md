@@ -1,3 +1,5 @@
-Bulk Data Providers implementing the Bulk Data Export Operation SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](http://www.hl7.org/fhir/smart-app-launch/backend-services.html).
+Implementations of [Bulk Export](export.html) SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](https://hl7.org/fhir/smart-app-launch/backend-services.html). Implementations of [Bulk Submit](submit.html) and [Bulk Submit Status](submit.html#bulk-submit-status-request) SHOULD use the same profile when OAuth 2.0 is used. Implementations of [Bulk Publish](publish.html) MAY use the profile when access to the manifest or published files is restricted, though Bulk Publish may also use open endpoints or capability URLs as described on the Publish page.
 
-Note that that to reduce duplication, documentation for the SMART Backend Services Authorization Profile that was previously included in this IG and has been migrated and integrated into the SMART [App Launch Implementation Guide](http://www.hl7.org/fhir/smart-app-launch).
+Operation-specific authorization expectations, scopes, and rules for status and file retrieval are documented on the Bulk Export, Bulk Submit, Bulk Submit Status, and Bulk Publish pages and sections.
+
+To reduce duplication, the detailed SMART Backend Services documentation that was previously included in this IG has been migrated and integrated into the SMART [App Launch Implementation Guide](https://hl7.org/fhir/smart-app-launch/).
