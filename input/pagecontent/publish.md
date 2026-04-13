@@ -48,7 +48,7 @@ GET `[base]/$bulk-publish`
 #### Response - Output Manifest
 
 - HTTP status of `200 OK`
-- `Content-Type` header of `application/fhir+json`
+- `Content-Type` header of `application/json`
 - `ETag` header that changes when the manifest body changes
 - Body of output manifest (see below)
 
@@ -56,7 +56,7 @@ The output manifest is a JSON object providing metadata and links to the generat
 
 The Data Provider MAY update the manifest at any time and SHALL use the `transactionTime` element to indicate when the files were generated. The response SHOULD NOT include any FHIR resources modified after this instant, and SHALL include any matching resources modified up to and including this instant. File URLs SHALL not be reused between updates unless their contents have remained the same, and files SHOULD remain available for a grace period following an update to avoid interrupting downloads that are in progress.
 
-The Data Provider SHOULD populate the `updateCadence` period to indicate the frequency with which the Data Provider expects to update the manifest.
+The Data Provider SHOULD populate the `updateCadence` element to indicate the frequency with which the Data Provider expects to update the manifest.
 
 Data Providers SHOULD set a reasonable `Cache-Control` header on the manifest (e.g., public, max-age=10) and SHOULD serve immutable files with long-lived caching headers (e.g., public, max-age=31536000, immutable).
 
@@ -67,8 +67,8 @@ Data Providers SHOULD set a reasonable `Cache-Control` header on the manifest (e
 
 Implementation notes:
 
-- For `transactionTime`, to properly meet the inclusion constraints above, the Data Provider's FHIR server might need to wait for any pending transactions to resolve in its database before starting the export process.
-- Error, warning, and information messages related to the export SHOULD be included in `error` and not in `output`. If there are no relevant messages, the Data Provider SHOULD return an empty array. 
+- For `transactionTime`, to properly meet the inclusion constraints above, a Data Provider might need to wait for pending updates in its publishing pipeline or source systems to resolve before publishing a new manifest.
+- Error, warning, and information messages related to the published dataset or publication process SHOULD be included in `error` and not in `output`. If there are no relevant messages, the Data Provider SHOULD return an empty array. 
 
 
 ##### Incremental Updates
@@ -109,19 +109,19 @@ Deleted resource bundle (represents one line in an output file):
 ---
 ### Bulk Data Output File Request
 
-Using the URLs supplied by the Data Provider in the manifest, a Data Consumer MAY download the generated Bulk Data files.
+Using the URLs supplied by the Data Provider in the manifest, a Data Consumer MAY download the referenced output, deleted, and error files.
 
 If the `requiresAccessToken` element in the manifest is set to `true`, the request SHALL include a valid access token.  See [Security Considerations](#security-considerations) above.
 
-If the `requiresAccessToken` element is set to `false` and no additional authorization-related extensions are present in the manifest's output entry, then the output URLs SHALL be dereferenceable directly (a "capability URL"). A Data Consumer SHALL NOT provide a SMART Backend Services access token when dereferencing an output URL where `requiresAccessToken` is `false`.
+If the `requiresAccessToken` element is set to `false` and no additional authorization-related extensions are present in the relevant manifest entry, then the referenced URLs SHALL be dereferenceable directly (a "capability URL"). A Data Consumer SHALL NOT provide a SMART Backend Services access token when dereferencing a URL from a manifest entry where `requiresAccessToken` is `false`.
 
-The data files SHALL include only the most recent version of any resources unless the Data Consumer explicitly requests different behavior in a fashion supported by the Data Provider. Inclusion of the `Resource.meta` information in the resources is at the discretion of the Data Provider (as it is for all FHIR interactions).
+A single data file SHALL include only the most recent version of any resource, though manifests that are updated incrementally MAY include an updated version of the resource in a subsequent file. Inclusion of the `Resource.meta` information in the resources is at the discretion of the Data Provider (as it is for all FHIR interactions).
 
 A Data Consumer SHOULD provide an `Accept-Encoding` header when requesting output files and SHOULD include `gzip` compression as one of the encoding options in the header. A Data Provider SHALL provide output files as uncompressed, with `gzip` compression, or with another compression format from the `Accept-Encoding` header. When compression is used, a Data Provider SHALL communicate this to the Data Consumer by including a `Content-Encoding` header in the response. A Data Consumer SHALL accept files that are uncompressed or encoded with `gzip` compression, and MAY accept files encoded with other compression formats.
 
 #### Endpoint
 
-`GET [url from manifest output element]`
+`GET [url from manifest output, deleted, or error element]`
 
 #### Headers
 
