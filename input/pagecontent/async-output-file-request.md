@@ -14,7 +14,7 @@ A client SHOULD provide an `Accept-Encoding` header when requesting files and SH
 
 ##### Endpoint
 
-`GET [url from manifest output or error field]`
+`GET [url from manifest output, deleted, or error field]`
 
 ##### Headers
 

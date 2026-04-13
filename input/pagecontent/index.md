@@ -90,11 +90,11 @@ The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMME
 
 ### Datasets
 
-Common datasets to exchanged through bulk operations include:
+Common datasets to be exchanged through bulk operations include:
 
-* Clinical data such as the [US Core Data for Interoperability](https://www.healthit.gov/isa/united-states-core-data-interoperability-uscdi), as profiled by  in [US Core](http://www.hl7.org/fhir/us/core/)
+* Clinical data such as the [US Core Data for Interoperability](https://www.healthit.gov/isa/united-states-core-data-interoperability-uscdi), as profiled in [US Core](http://www.hl7.org/fhir/us/core/)
 * Financial data such as the Patient, ExplanationOfBenefit, Coverage, and Claim resources profiled in [Centers for Medicare & Medicaid Services Blue Button IG](https://bluebutton.cms.gov)
-* Terminology data, such the CodeSystem and ValueSet resources stored in a [FHIR terminology service](https://hl7.org/fhir/terminology-service.html)
+* Terminology data, such as the CodeSystem and ValueSet resources stored in a [FHIR terminology service](https://hl7.org/fhir/terminology-service.html)
 
 ### FHIR Asynchronous Bulk Interaction Pattern
 

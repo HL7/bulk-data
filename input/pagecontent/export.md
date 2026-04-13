@@ -112,7 +112,7 @@ Export data from a Data Provider's FHIR server, whether or not it is associated 
 
 *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). If the Data Consumer explicitly asks for export of resources that the Data Provider does not support, the Data Provider SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
 
-If an <code>includeAssociatedValue</code> value relevant to provenance is not specified, or if this parameter is not supported by the Data Provider, the Data Provider SHALL include all available Provenance resources whose `Provenance.target` is a resource in the Patient compartment in a patient level export request, and all available Provenance resources in a system level export request unless a specific resource set is specified using the <code>_type</code> parameter and this set does not include Provenance.
+If an <code>includeAssociatedData</code> value relevant to provenance is not specified, or if this parameter is not supported by the Data Provider, the Data Provider SHALL include all available Provenance resources whose `Provenance.target` is a resource in the Patient compartment in a patient level export request, and all available Provenance resources in a system level export request unless a specific resource set is specified using the <code>_type</code> parameter and this set does not include Provenance.
 
 ##### Group Membership Request Pattern
 

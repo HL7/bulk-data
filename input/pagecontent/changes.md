@@ -7,7 +7,7 @@
 * Defined a logical model for the Bulk Data Manifest JSON format. The wire format is unchanged from STU3 except for extensions. In STU3, the `extension` property on any manifest object had a value of a JSON object where the properties are the extension name and the values are the extension value. In STU4, the `extension` property contains an array of FHIR Extension elements.
 * Added Bulk Submit and Bulk Submit Status operations.
 * Added Bulk Publish operation.
-* Migrated the FHIR Asynchronous Bulk Interaction Pattern documentation from the core FHIR spec into to this IG.
+* Migrated the FHIR Asynchronous Bulk Interaction Pattern documentation from the core FHIR spec into this IG.
 * Changes to Bulk Submit and Bulk Publish manifests from earlier draft versions:
   - Parameters not used in Bulk Export are now root elements rather than extensions.
   - `error.countSeverity` is now an array of `code` and `count` elements rather than a JSON object with codes as keys and counts as values.
@@ -17,8 +17,8 @@
 * Added support for organizing the resources in output files by instances of the specified resource type, with a header for each instance of the resource type followed by the resource and resources in the output that reference it. Clients can select this behavior using the new `organizeOutputBy` kick-off request parameter.
 * Removed the "experimental" label from the `_typeFilter` kickoff parameter since it has been widely implemented, clarified its documentation and approach to boolean logic, and documented the interaction with other filters.
 * Added optional `_until` kickoff parameter on the Bulk Data kickoff request as an analog to the `_since` parameter to enable users to specify a cutoff modification timestamp for the resources in the response.
-* Added guidance on the use of FHIR Groups with Bulk Export, and added a Group profile to support the creation of characteristic based cohorts using coarse-grained filters to more efficiently export data on sets of patients from a source system.
-* Moved guidance on the use of capability urls from a separate confluence page into the Bulk Data Output File Request section of the IG and added guidance on content encoding.
+* Added guidance on the use of FHIR Groups with Bulk Export, and added a Group profile to support the creation of characteristic-based cohorts using coarse-grained filters to more efficiently export data on sets of patients from a source system.
+* Moved guidance on the use of capability URLs from a separate confluence page into the Bulk Data Output File Request section of the IG and added guidance on content encoding.
 * Defined an extension for a server to indicate search parameters in the capability statement that are accessible with the REST API, but not available when using the Bulk Export operation.
 
 
@@ -33,7 +33,7 @@
 * Added optional `_elements` kickoff parameter to filter resource data elements in the response
 * Added optional `patient` kickoff parameter to filter resources in the response by patient id
 * Added optional `includeAssociatedData` kickoff parameter and ValueSet for clients to indicate a set of pre-defined resources to omit or include with the response
-* Provided guidance on server handling of unsupported kickoff parameters when a `prefer: handling=lenient header` is or is not provided
+* Provided guidance on server handling of unsupported kickoff parameters when a `Prefer: handling=lenient` header is or is not provided
 * Added recommended approach for clients to obtain historical data on new group members when not automatically included by server in Group level requests
 * Clarified that resources associated with groups containing non-patient members (e.g., groups of practitioners or groups of devices) may be exported using a group-level bulk export request
 * Updated the `Accept` and `Prefer` header requirements from required to recommended for clients, with servers having discretion on whether to return an error or presume a default if omitted
@@ -44,7 +44,7 @@
 * Permitted an error response that does not contain an `OperationOutcome` in the body when servers are unable to provide this
 
 #### Export Complete Status Response
-* Permitted clients to send a HTTP `DELETE` request the the status endpoint following a complete status to signal to the server that it no longer needs to retain the output files
+* Permitted clients to send an HTTP `DELETE` request to the status endpoint following a complete status to signal to the server that it no longer needs to retain the output files
 * Clarified that the `output.url` field in the complete status response should be an absolute path
 * Clarified that the `error` field of the complete status response may include files containing `OperationOutcome` resources that are informational in nature
 * Added `deleted` field in complete status response where servers can list resources that should be removed from downstream systems
@@ -69,7 +69,7 @@
 
 * Updated the CapabilityStatement to move the Patient and Group level export operations from the `rest.operation` element to `rest.resource.operation` elements and correct the OperationDefinition URLs
 * Corrected conformance URL
-* Added note on export complete status extension field description to clarify that extensions may be placed under to any field in the export complete status response and not just at the root level of the response
+* Added a note on the export complete status extension field description to clarify that extensions may be placed under any field in the export complete status response and not just at the root level of the response
 
 
 ### STU1 - v1.0.0

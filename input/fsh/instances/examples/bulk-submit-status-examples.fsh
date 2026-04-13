@@ -39,7 +39,7 @@ Usage: #example
 
 Instance: SubmitStatusManifestOperationOutcomeExample
 InstanceOf: OperationOutcome
-Title: "Bulk Submit Manifest-Level Status OperationOutcome Example"
+Title: "Bulk Submit Status Manifest-Level OperationOutcome Example"
 Description: "Example OperationOutcome describing manifest-level submit status."
 Usage: #example
 * id = "submit-status-manifest-operationoutcome-example"
