@@ -1,4 +1,4 @@
-{% sqlToData manifest_fields
+{% sqlToData export_manifest_fields
 	WITH snapshot AS (
 		SELECT
 		CAST(element.key AS integer) AS ordinal,
@@ -119,7 +119,7 @@
     <th>Description</th>
   </thead>
   <tbody>
-{% for f in manifest_fields %}    <tr>
+{% for f in export_manifest_fields %}    <tr>
       <td><span style="padding-left: {{ f.indent_px }}px; display: inline-block;">{% if f.level > 0 %}&#8627; {% endif %}<code>{{ f.field_name }}</code></span></td>
       <td>{{ f.cardinality }}</td>
       <td>{{ f.field_type }}</td>
