@@ -1,3 +1,5 @@
+{% assign bulk_server_role = "server" %}
+{% assign bulk_client_role = "client" %}
 The FHIR Asynchronous Bulk Interaction Pattern, described below, is a FHIR request and response flow that servers can implement for any [Operation](https://hl7.org/fhir/operations.html) or [Defined Interaction](https://hl7.org/fhir/http.html) that needs to return a large dataset.
 
 The [Bulk Export Operation](export.html) builds on this pattern.
