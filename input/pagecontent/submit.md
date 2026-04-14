@@ -26,7 +26,7 @@ There are two primary roles involved in a Bulk Submit transaction:
 
 1. **Data Provider**:
 
-   a. **Submission Client**: Provides details on one or more bulk submission manifests to the Data Consumer and optionally tracks job status.
+   a. **Submission Client**: Provides details on one or more bulk submission manifests to the Data Consumer and optionally tracks job status and, when applicable, job output.
 
    b. **Submission File Server**: Returns files and attachments in response to URLs in the submission manifests. This may be integrated with a FHIR server, or the files may be independently hosted.
 
@@ -86,7 +86,7 @@ If a specific portion of the data is incorrect, the Data Provider should not can
 
 ##### Manifest and File Security
 
-If the `oauthMetadataUrl` parameter in the request is populated with the path to an [OAuth 2.0 Protected Resource Metadata file](https://datatracker.ietf.org/doc/rfc9728/), such as a [FHIR Authorization Endpoint and Capabilities Discovery file](https://hl7.org/fhir/smart-app-launch/conformance.html#using-well-known) for [SMART Backend Services](https://www.hl7.org/fhir/smart-app-launch/backend-services.html), the Data Consumer SHALL obtain and use a valid token when retrieving the manifest at `manifestUrl`. If `requiresAccessToken` in the retrieved manifest is also set to `true`, the Data Consumer SHALL obtain and use a token scoped to read the resource types included in the manifest when retrieving the referenced files.
+If the `oauthMetadataUrl` parameter in the request is populated with the path to an [OAuth 2.0 Protected Resource Metadata file](https://datatracker.ietf.org/doc/rfc9728/), such as a [FHIR Authorization Endpoint and Capabilities Discovery file](https://hl7.org/fhir/smart-app-launch/conformance.html#using-well-known) for [SMART Backend Services](authorization.html), the Data Consumer SHALL obtain and use a valid token when retrieving the manifest at `manifestUrl`. If `requiresAccessToken` in the retrieved manifest is also set to `true`, the Data Consumer SHALL obtain and use a token scoped to read the resource types included in the manifest when retrieving the referenced files.
 
 If the `fileEncryptionKey` parameter in the request is set to `jwe`, the Data Provider SHALL use the key in `fileEncryptionKey.value` to encrypt the manifest and each file listed in the manifest's `output` section, and the Data Consumer SHALL use this key to decrypt those files.
 
