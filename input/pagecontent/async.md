@@ -53,6 +53,9 @@ Implementation notes:
 ---
 {% include async-status-polling-request.md %}
 
+---
+{% include async-delete-request.md %}
+
 ##### Response - Output Manifest
 
 {% include async-output-manifest.md %}

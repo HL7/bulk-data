@@ -48,7 +48,7 @@ This example represents the workflow for a submission comprised of two manifests
 
 <figure>
   {% include bulk-submit-workflow.svg %}
-  <figcaption>Diagram showing an example of the Bulk Submit request flow</figcaption>
+  <figcaption>Example of the Bulk Submit request flow.</figcaption>
 </figure>
 
 

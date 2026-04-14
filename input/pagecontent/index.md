@@ -65,7 +65,7 @@ Multiple operations can be used to address a single use case. For example, an in
 
 ### Representing Cohorts
 
-Many bulk workflows are applicable to a specific cohort of patients rather than all patients in a system. These cohorts can be represented and managed as FHIR `Group` resources. For example, a payer roster, research cohort, care management panel, quality-measure population, recently discharged patients, or another recurring population that needs to be exchanged over time can be modeled as a FHIR group. As described on [the Group page](group.html), implementations may expose read-only groups managed by the Data Provider, member-based groups managed by the Data Consumer, or criteria-based groups whose membership is computed from characteristics. Some Data Providers may also support the Bulk Cohort API described in this guide for asynchronous creation of characteristic-based cohorts by a Data Consumer.
+Many Bulk Export workflows are applicable to a specific cohort of patients rather than all patients in a system. These cohorts can be represented and managed as FHIR `Group` resources. For example, a payer roster, research cohort, care management panel, quality-measure population, recently discharged patients, or another recurring population that needs to be exchanged over time can be modeled as a FHIR group. As described on [the Group page](group.html), implementations may expose read-only groups managed by the Data Provider, member-based groups managed by the Data Consumer, or criteria-based groups whose membership is computed from characteristics. Some Data Providers may also support the Bulk Cohort API described in this guide for asynchronous creation of characteristic-based cohorts by a Data Consumer.
 
 ### Conformance and Publication
 
@@ -98,7 +98,7 @@ Common datasets to be exchanged through bulk operations include:
 
 ### FHIR Asynchronous Bulk Interaction Pattern
 
-The [Bulk Export Operation](export.html) builds on the [FHIR Asynchronous Bulk Interaction Pattern](async.html), a FHIR request and response flow that servers can implement for any [Operation](https://hl7.org/fhir/operations.html) or [Defined Interaction](https://hl7.org/fhir/http.html) that needs to return a large dataset. This pattern is described in the FHIR R4 and FHIR R5 versions of the [FHIR specification](https://hl7.org/fhir), and has been moved into this Implementation Guide going forward.
+The [Bulk Export Operation](export.html) and the [Bulk Submit Status Operation](submit.html#bulk-submit-status-request) build on the [FHIR Asynchronous Bulk Interaction Pattern](async.html), a FHIR request and response flow that servers can implement for any [Operation](https://hl7.org/fhir/operations.html) or [Defined Interaction](https://hl7.org/fhir/http.html) that needs to return a large dataset. This pattern is described in the FHIR R4 and FHIR R5 versions of the [FHIR specification](https://hl7.org/fhir), and has been moved into this Implementation Guide going forward.
 
 Use cases that return small amounts of data but may take a lot of time to process may prefer to use the related [Asynchronous Interaction Request Pattern](https://hl7.org/fhir/async-bundle.html).
 

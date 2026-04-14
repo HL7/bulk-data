@@ -23,19 +23,19 @@ Example NDJSON file when the `organizeOutputBy` parameter in the kickoff request
 {...}
 ```
 
-<a name="organize-output-by-file-example" />
+<a name="organize-output-by-file-example"></a>
 
 Example NDJSON file when the `organizeOutputBy` parameter in the kickoff request is set to `Patient`:
 
 ```js
-  {"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-1"}}]}
-  {"id": "p-1", "resourceType": "Patient", ...}
-  {"id": "c-1", "resourceType": "Condition", "subject":{"reference": "Patient/p-1"}, ...}
-  {"id": "o-1", "resourceType": "Observation", "subject":{"reference": "Patient/p-1"}, ...}
-  {...}
-  {"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-2"}}]}
-  {"id": "p-2", "resourceType": "Patient", ...}
-  {"id": "c-101", "resourceType": "Condition", "subject":{"reference": "Patient/p-2"}, ...}
-  {"id": "o-102", "resourceType": "Observation", "subject":{"reference": "Patient/p-2"}, ...}
-  {...}
+{"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-1"}}]}
+{"id": "p-1", "resourceType": "Patient", ...}
+{"id": "c-1", "resourceType": "Condition", "subject":{"reference": "Patient/p-1"}, ...}
+{"id": "o-1", "resourceType": "Observation", "subject":{"reference": "Patient/p-1"}, ...}
+{...}
+{"resourceType": "Parameters", "parameter": [{"name": "header", "valueReference": {"reference": "Patient/p-2"}}]}
+{"id": "p-2", "resourceType": "Patient", ...}
+{"id": "c-101", "resourceType": "Condition", "subject":{"reference": "Patient/p-2"}, ...}
+{"id": "o-102", "resourceType": "Observation", "subject":{"reference": "Patient/p-2"}, ...}
+{...}
 ```

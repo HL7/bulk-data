@@ -27,7 +27,7 @@ There are two primary roles involved in a Bulk Publish transaction:
 
 ### Manifest Request
 
-Request for fully static or periodically updated dataset in FHIR format. 
+Request for fully static or periodically updated dataset in FHIR format. For a visual overview of how a Data Consumer processes a Bulk Publish manifest, see the [Data Consumer Workflow](#data-consumer-workflow) diagram below.
 
 #### Endpoint
 
@@ -139,14 +139,6 @@ Specifies the format of the file being requested.
 
 - HTTP Status Code of `4XX` or `5XX`
 
-#### Attachments
-
-If resources in an output file contain elements of the type `Attachment`, the Data Provider SHOULD populate the `Attachment.contentType` code as well as either the `data` element or the `url` element. If the data element is not populated and the `url` element is populated, the `url` element SHALL be an absolute URL that can be dereferenced to the attachment's content.
-
-When the `url` element is populated with an absolute URL and the `requiresAccessToken` element in the manifest is set to `true`, the URL location must be accessible by a Data Consumer with a valid access token, and SHALL NOT require the use of additional authentication credentials. When the `url` element is populated and the `requiresAccessToken` element in the manifest is set to `false`, the URL location must be accessible by a Data Consumer without an access token.
-
-Note that if a Data Provider copies files to the Bulk Data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the `Attachment.url` element when generating the Bulk Data output files.
-
 ### Bulk Data Output File Organization
 
 Output files may be organized by resource type, or by instances of a resource type specified in the `outputOrganizedBy` element.
@@ -188,6 +180,14 @@ Example NDJSON file when `outputOrganizedBy` is set to `Patient`:
 {"id": "o-102", "resourceType": "Observation", "subject":{"reference": "Patient/p-2"}, ...}
 {...}
 ```
+
+#### Attachments
+
+If resources in an output file contain elements of the type `Attachment`, the Data Provider SHOULD populate the `Attachment.contentType` code as well as either the `data` element or the `url` element. If the data element is not populated and the `url` element is populated, the `url` element SHALL be an absolute URL that can be dereferenced to the attachment's content.
+
+When the `url` element is populated with an absolute URL and the `requiresAccessToken` element in the manifest is set to `true`, the URL location must be accessible by a Data Consumer with a valid access token, and SHALL NOT require the use of additional authentication credentials. When the `url` element is populated and the `requiresAccessToken` element in the manifest is set to `false`, the URL location must be accessible by a Data Consumer without an access token.
+
+Note that if a Data Provider copies files to the Bulk Data output endpoint or proxies requests to facilitate access from this endpoint, it may need to modify the `Attachment.url` element when generating the Bulk Data output files.
 
 ### Data Consumer Workflow
 

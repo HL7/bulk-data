@@ -47,7 +47,7 @@ There are two primary roles involved in a Bulk Data transaction:
 
  <figure>
   {% include bulk-flow.svg %}
-  <figcaption>Diagram showing an overview of the Bulk Data Export operation request flow</figcaption>
+  <figcaption>Overview of the Bulk Data Export request flow.</figcaption>
 </figure>
 
 #### Kick-off Request
@@ -198,11 +198,11 @@ _Note that newlines and spaces have been added above for clarity, and would not 
 
 ##### Processing Model
 
-The following steps outline a logical model of how a Data Provider should process a bulk export request. The actual operations a Data Provider performs and the order in which they are performed may differ. Additionally, as documented elsewhere in this implementation guide, depending on the values and headers provided, some requests may cause a Data Provider to return an error rather than continuing to process the request.
+The following steps outline a model of how a Data Provider should process a bulk export request. The actual operations a Data Provider performs and the order in which they are performed may differ. Additionally, as documented elsewhere in this implementation guide, depending on the values and headers provided, some requests may cause a Data Provider to return an error rather than continuing to process the request.
 
  <figure>
   {% include processing-model.svg %}
-  <figcaption>Diagram outlining a logical model of how a Data Provider should process a bulk export request.</figcaption>
+  <figcaption>Model for processing a Bulk Data Export request.</figcaption>
 </figure>
 <br />
 _* In the case of a Group level export, the Data Provider may retain resources modified prior to the `_since` timestamp if the resources belong to the patient compartment of a patient added to the Group after the supplied time and this behavior is documented by the Data Provider._
@@ -220,9 +220,6 @@ _* In the case of a Group level export, the Data Provider may retain resources m
 - The body SHALL be a FHIR `OperationOutcome` resource in JSON format
 
 If a Data Provider wants to prevent a Data Consumer from beginning a new export before an in-progress export is completed, it SHOULD respond with a `429 Too Many Requests` status and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header, following the rate-limiting advice for "Bulk Data Status Request" below.
-
----
-{% include async-delete-request.md %}
 
 ---
 #### Bulk Data Status Request
@@ -341,7 +338,7 @@ Implementation notes:
 - Error, warning, and information messages related to the export SHOULD be included in `error` and not in `output`. If there are no relevant messages, the Data Provider SHOULD return an empty array. If the request contained invalid or unsupported parameters along with a `Prefer: handling=lenient` header and the Data Provider processed the request, the Data Provider SHOULD include a FHIR `OperationOutcome` resource for each of these parameters.
 - When the `_since` timestamp is supplied in the export request, the `deleted` array SHOULD be populated with files containing FHIR transaction Bundles for resources that match the kick-off request criteria but were deleted after the `_since` date. If no resources have been deleted, if `_since` was not supplied, or if the Data Provider has other reasons to avoid exposing these data, the Data Provider MAY omit this key or return an empty array. Resources that appear in `deleted` SHALL NOT also appear in `output`.
 
-<a name="manifest-link" />
+<a name="manifest-link"></a>
 
 - When the `allowPartialManifests` kickoff parameter is `true`, the manifest MAY include a `link` array with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, and `link` arrays.
 - If the export has failed or a transient error has occurred, a Data Provider MAY return an error in response to a request for the `next` link, as described in the [Error Status](#response---error-status) section above. For non-transient errors, a Data Consumer MAY process resources that have already been retrieved before re-running the export job or MAY discard them.
@@ -370,6 +367,9 @@ Example deleted resource bundle (represents one line in an output file):
 
 [View Example](Bundle-deleted-resource-transaction-bundle-example.html)
 
+
+---
+{% include async-delete-request.md %}
 
 ---
 {% include async-output-file-request.md %}
