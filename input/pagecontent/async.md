@@ -10,6 +10,11 @@ This pattern is described in the FHIR R4 and FHIR R5 versions of the [FHIR speci
 
 ### FHIR Asynchronous Bulk Interaction Flow
 
+ <figure>
+  {% include async-flow.svg %}
+  <figcaption>Overview of the FHIR Asynchronous Bulk Interaction request flow.</figcaption>
+</figure>
+
 #### Kick-off Request
 
 The request will support the HTTP methods, URLs, headers, and other parameters that normally apply to the interaction being invoked. Servers SHALL also support the `Prefer` header described below, and SHOULD support the `Accept` header and `_outputFormat` parameter described below.
