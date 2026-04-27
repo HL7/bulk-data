@@ -68,6 +68,7 @@ menu:
   Groups: group.html
   Submit Operation: submit.html
   Publish Operation: publish.html
+  Async Pattern: async.html
   Authorization: authorization.html
   FHIR Artifacts: artifacts.html
   Downloads: downloads.html
