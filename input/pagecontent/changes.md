@@ -8,6 +8,7 @@
 * Added Bulk Submit and Bulk Submit Status operations.
 * Added Bulk Publish operation.
 * Migrated the FHIR Asynchronous Bulk Interaction Pattern documentation from the core FHIR spec into this IG.
+* Added optional `outputFormat` and `manifestType` elements to the Bulk Export Manifest.
 * Changes to Bulk Submit and Bulk Publish manifests from earlier draft versions:
   - Parameters not used in Bulk Export are now root elements rather than extensions.
   - `error.countSeverity` is now an array of `code` and `count` elements rather than a JSON object with codes as keys and counts as values.
