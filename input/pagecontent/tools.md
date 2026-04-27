@@ -3,47 +3,25 @@
 This page describes optional reviewer tooling for annotating generated IG pages.
 These tools are not part of the published specification.
 
-## LLM DOM Annotator
+## LLM DOM Annotator Bookmarklet
 
 The LLM DOM Annotator is maintained in this repository at
 `input/images/llm-dom-annotator.js`. The IG Publisher copies this file to the
 published output so it can be loaded as a bookmarklet when reviewing a local or
-hosted build. The script runs only in the current page, stores
-annotations in memory, and makes no network requests after it has loaded.
-
-### Serve a local build
-
-If you are reviewing a local publisher build, serve the generated output over
-HTTP rather than opening the files directly from disk:
-
-```bash
-cd output/en
-python3 -m http.server 8000
-```
-
-Then open `http://127.0.0.1:8000/`.
-
-### Create the bookmarklet
-
-Use this bookmarklet. It loads the annotator from the HL7 CI build of this IG
-after this file has been published there:
-
-```javascript
-javascript:(()=>{const u='https://build.fhir.org/ig/HL7/bulk-data/branches/argo25/en/llm-dom-annotator.js';if(window.LlmDomAnnotator){window.LlmDomAnnotator.activate();return;}const s=document.createElement('script');s.src=u+'?'+Date.now();s.onload=()=>window.LlmDomAnnotator?.activate();document.documentElement.appendChild(s);})()
-```
-
-To test unpublished local changes to the annotator, use the script from a local
-Publisher build instead:
-
-```javascript
-javascript:(()=>{const u='http://127.0.0.1:8000/llm-dom-annotator.js';if(window.LlmDomAnnotator){window.LlmDomAnnotator.activate();return;}const s=document.createElement('script');s.src=u+'?'+Date.now();s.onload=()=>window.LlmDomAnnotator?.activate();document.documentElement.appendChild(s);})()
-```
-
-This works for both local pages served from `http://127.0.0.1:8000/` and hosted
+hosted build. This works for both local pages served from `http://127.0.0.1:8000/` and hosted
 HTTPS IG pages, provided the page does not block injected scripts with a Content
 Security Policy.
 
-### Install the bookmarklet
+The script runs only in the current page, stores
+annotations in memory, and makes no network requests after it has loaded.
+
+### Install the annotator
+
+#### Bookmarklet Code
+
+```text
+javascript:(function(){var w=window,d=document,l=w.location,p=l.pathname;if(!/\/$/.test(p)){p=/\.[^\/.]+$/.test(p)?p.replace(/[^\/]*$/,''):p+'/';}var u=l.protocol+'//'+l.host+p+'llm-dom-annotator.js';if(w.LlmDomAnnotator){w.LlmDomAnnotator.activate();return;}var s=d.createElement('script');s.src=u+'?'+Date.now();s.onload=function(){if(w.LlmDomAnnotator)w.LlmDomAnnotator.activate();};s.onerror=function(){alert('Could not load LLM DOM Annotator: '+u);};d.documentElement.appendChild(s);}())
+```
 
 #### Chrome, Edge, and Brave
 
