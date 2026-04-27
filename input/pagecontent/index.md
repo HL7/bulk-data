@@ -25,11 +25,11 @@ The scope of this document does NOT include:
 
 Bulk Data defines three operations. Each fits a different relationship between the system that holds the data (Data Provider) and the system that needs it (Data Consumer).
 
-**[Bulk Export](export.html)** — The consumer pulls data from a provider on demand. The consumer controls what comes back by optionally choosing the cohort, resource types, filters, data elements, and time window. Use this operation when a system needs to retrieve data from a trusted source and shape the request to its own needs — for example, a research data warehouse exporting clinical data from an EHR or a payer exporting claims-relevant records.
+**[Bulk Export](export.html)** — The consumer pulls data from a provider on demand. The consumer controls what comes back by optionally choosing the cohort, resource types, filters, data elements, and time window. Use this operation when a system needs to retrieve data from a trusted source and shape the request to its own needs — for example, a research data warehouse exporting clinical data from an EHR or a payer exporting claims-relevant records from a clinical system.
 
-**[Bulk Submit](submit.html)** — The provider pushes a pre-coordinated dataset to a specific recipient. Both sides agree in advance on what the submission contains, and the recipient can acknowledge processing, report issues, or return derived artifacts through the in-band Bulk Submit Status channel. Use this when the sender already knows what must be delivered and the receiver needs to close the loop — for example, submitting required clinical data to a payer, regulator, or processing service.
+**[Bulk Submit](submit.html)** — The provider pushes a pre-coordinated dataset to a specific recipient. Both sides agree in advance on what the submission contains, and the recipient can acknowledge processing, report issues, or return derived artifacts through the in-band Bulk Submit Status operation. Use this operation when the sender already knows what must be delivered and the receiver needs to close the loop — for example, submitting required clinical data to a payer, regulator, or processing service.
 
-**[Bulk Publish](publish.html)** — The provider posts a dataset for any number of consumers to retrieve via ordinary HTTP. The provider decides what is published; consumers discover and cache it using standard HTTP semantics. Use this when the same relatively static dataset serves many downstream systems — for example, publishing a provider directory, formulary, or scheduling data.
+**[Bulk Publish](publish.html)** — The provider posts a dataset for any number of consumers to retrieve via ordinary HTTP. The provider decides what is published; consumers discover and cache it using standard HTTP semantics. Use this operation when the same relatively static dataset serves many downstream systems — for example, publishing a provider directory, formulary, or scheduling data.
 
 Multiple operations can be used to address a single use case. For example, an intermediary might use Bulk Export to retrieve data from one system, transform it, and then use Bulk Submit to deliver the transformed version to another system.
 
@@ -85,7 +85,6 @@ The [Bulk Data Access Implementation Guide Resource](ImplementationGuide-hl7.fhi
 
 ### Terminology
 
-This profile inherits terminology from the standards referenced above.
 The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
 
 ### Datasets
@@ -95,6 +94,7 @@ Common datasets to be exchanged through bulk operations include:
 * Clinical data such as the [US Core Data for Interoperability](https://www.healthit.gov/isa/united-states-core-data-interoperability-uscdi), as profiled in [US Core](http://www.hl7.org/fhir/us/core/)
 * Financial data such as the Patient, ExplanationOfBenefit, Coverage, and Claim resources profiled in [Centers for Medicare & Medicaid Services Blue Button IG](https://bluebutton.cms.gov)
 * Terminology data, such as the CodeSystem and ValueSet resources stored in a [FHIR terminology service](https://hl7.org/fhir/terminology-service.html)
+* Provider directory information, such as Organization, Location, Practitioner, PractitionerRole, HealthcareService, and Endpoint resources
 
 ### FHIR Asynchronous Bulk Interaction Pattern
 

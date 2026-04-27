@@ -151,7 +151,7 @@ Usage: #definition
   * name = #metadata
   * use = #in
   * min = 0
-  * max = "1"
+  * max = "*"
   * documentation = """
     Child parameters can be added under this parameter to pass pre-coordinated data relevant to the submission from the Data Provider to the Data Consumer. Each child parameter name SHALL be an absolute URL. Specific child parameters are defined in implementation guides for particular use cases.
     """
@@ -178,7 +178,7 @@ Usage: #definition
   * name = #import
   * use = #in
   * min = 0
-  * max = "1"
+  * max = "*"
   * documentation = """
     Child parameters can be added under this parameter to pass pre-coordinated options relevant to how the data will be processed from the Data Provider to the Data Consumer. For example, a Data Consumer may allow the Data Provider to specify whether or not existing data should be replaced with the data in the submission. Each child parameter name SHALL be an absolute URL. Specific child parameters are defined in implementation guides for particular use cases.
     """

@@ -18,6 +18,6 @@ This page contains a list of abbreviations used in this implementation guide.
 * R5 - FHIR Release 5
 * REST - Representational State Transfer
 * S3 - Simple Storage Service
-* STU - Standard for Trial Use (used in version labels such as STU1-STU4)
+* STU - Standard for Trial Use (used in version labels such as STU1)
 * TLS - Transport Layer Security
 * URL - Uniform Resource Locator

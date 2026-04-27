@@ -4,7 +4,7 @@ title Bulk Publish Data Consumer Workflow
 partition "Initial request" {
   start
   :GET /$bulk-publish;
-  :Download all files included in manifest;
+  :Download all files from the urls in the manifest;
   :Process output array files in order;\nkeep the last instance from the last file when\nthe same resource id appears more than once;
   :Process deleted array files,\nremoving resources;
   :Review error array files;
@@ -30,7 +30,7 @@ partition "Subsequent requests" {
       stop
     else (No)
       :Remove prior data;
-      :Download all files included in manifest;
+      :Download all files from the urls in the manifest;
       :Process output array files in order;\nkeep the last instance from the last file when\nthe same resource id appears more than once;
       :Process deleted array files,\nremoving resources;
       :Review error array files;

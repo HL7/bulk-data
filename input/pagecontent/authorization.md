@@ -1,3 +1,3 @@
-Implementations of [Bulk Export](export.html), [Bulk Submit](submit.html), and [Bulk Submit Status](submit.html#bulk-submit-status-request) SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](https://hl7.org/fhir/smart-app-launch/backend-services.html). 
+Implementations of [Bulk Export](export.html), [Bulk Submit](submit.html), and [Bulk Submit Status](submit.html#bulk-submit-status-request-flow) SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](https://hl7.org/fhir/smart-app-launch/backend-services.html). 
 
 Implementations of [Bulk Publish](publish.html) MAY use the profile when access to the manifest or published files is restricted, though Bulk Publish may also use open endpoints or capability URLs as described on the Publish page.

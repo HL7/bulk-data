@@ -6,18 +6,18 @@ Usage: #example
 * submissionId = "a15eea1f-1605-4303-989f-542d3a7962d8"
 * transactionTime = "2025-01-01T00:00:00Z"
 * requiresAccessToken = true
-* error[0].url = "https://example.com/output/validation_errors_2.ndjson"
-* error[0].manifestUrl = "https://example.com/manifests/3556d214-c6e2-42e6-a7f7-89690f7a40bb_2"
+* error[0].url = "https://example.com/output/import_errors_1.ndjson"
+* error[0].manifestUrl = "https://example.com/manifests/3556d214-c6e2-42e6-a7f7-89690f7a40bb_1"
 * error[0].countSeverity[0].code = #information
-* error[0].countSeverity[0].count = 98
+* error[0].countSeverity[0].count = 0
 * error[0].countSeverity[1].code = #error
-* error[0].countSeverity[1].count = 2
-* error[1].url = "https://example.com/output/import_errors_1.ndjson"
-* error[1].manifestUrl = "https://example.com/manifests/3556d214-c6e2-42e6-a7f7-89690f7a40bb_1"
+* error[0].countSeverity[1].count = 100
+* error[1].url = "https://example.com/output/validation_errors_2.ndjson"
+* error[1].manifestUrl = "https://example.com/manifests/3556d214-c6e2-42e6-a7f7-89690f7a40bb_2"
 * error[1].countSeverity[0].code = #information
-* error[1].countSeverity[0].count = 0
+* error[1].countSeverity[0].count = 98
 * error[1].countSeverity[1].code = #error
-* error[1].countSeverity[1].count = 100
+* error[1].countSeverity[1].count = 2
 
 Instance: SubmitStatusResourceOperationOutcomeExample
 InstanceOf: OperationOutcome

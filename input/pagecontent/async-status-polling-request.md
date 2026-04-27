@@ -6,6 +6,8 @@ When polling for status, {{ bulk_client_role }}s SHOULD follow an [exponential b
 
 When requesting status, the {{ bulk_client_role }} SHOULD use an `Accept` header indicating a content type of `application/json`. In the case that errors prevent the asynchronous operation from completing, the {{ bulk_server_role }} SHOULD respond with a FHIR `OperationOutcome` resource in JSON format.
 
+When a Prefer header value of `separate-export-status` was provided in the kick-off request and is supported by the {{ bulk_server_role }}, the HTTP status code in the response to this request SHALL reflect the status request itself, and not the asynchronous job. In this case, when the HTTP status code of this request is `200 OK`, the response SHALL also include an `X-Export-Status` header with an HTTP status code that reflects the status of the asynchronous job.
+
 ##### Endpoint
 
 `GET [polling content location]`
@@ -13,11 +15,13 @@ When requesting status, the {{ bulk_client_role }} SHOULD use an `Accept` header
 ##### Response - In-Progress Status
 
 - HTTP Status Code of `202 Accepted`
+- When a Prefer header value of `separate-export-status` was provided in the kick-off request and is supported by the {{ bulk_server_role }}, HTTP status code of `200 OK` and an `X-Export-Status` header of `202 Accepted`
 - Optionally, the {{ bulk_server_role }} MAY return an `X-Progress` header with a text description of the status of the request that is less than 100 characters. The format of this description is at the {{ bulk_server_role }}'s discretion and MAY be a percentage complete value, or MAY be a more general status such as "in progress". The {{ bulk_client_role }} MAY parse the description, display it to the user, or log it.
 
 ##### Response - Error Status
 
 - HTTP status code of `4XX` or `5XX`
+- When a Prefer header value of `separate-export-status` was provided in the kick-off request and is supported by the {{ bulk_server_role }}, HTTP status code of `200 OK` and an `X-Export-Status` header of `4XX` or `5XX`
 - `Content-Type` header of `application/fhir+json` when the body is a FHIR `OperationOutcome` resource
 - The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON format. If this is not possible, such as when the infrastructure layer returning the error is not FHIR aware, the {{ bulk_server_role }} MAY return an error message in another format and include a corresponding value for the `Content-Type` header.
 
@@ -28,6 +32,7 @@ In the case of a polling failure that does not indicate failure of the asynchron
 ##### Response - Complete Status
 
 - HTTP status of `200 OK`
+- When a Prefer header value of `separate-export-status` was provided in the kick-off request and is supported by the {{ bulk_server_role }}, an `X-Export-Status` header of `200 OK`
 - `Content-Type` header of `application/json`
 - The {{ bulk_server_role }} SHOULD return an `Expires` header indicating when the files listed will no longer be available for access
 - A body containing the operation-specific manifest described below

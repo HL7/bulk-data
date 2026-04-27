@@ -1,6 +1,6 @@
 ### Audience and Scope
 
-The Bulk Publish operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which a Data Consumer may retrieve FHIR bulk-data files from a Data Provider. These files may be provided at an open endpoint, or may require the Data Consumer to authenticate and authorize access to retrieve the data.
+The Bulk Publish operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which a Data Consumer may retrieve FHIR bulk data files from a Data Provider. These files may be provided at an open endpoint, or may require the Data Consumer to authenticate and authorize access to retrieve the data.
 
 The Bulk Publish API does not require a FHIR server implementation, and Data Providers may implement it using a simple HTTP server that returns a Bulk Publish manifest in response to GET requests at a path that ends in `/$bulk-publish`, and a set of HTTP endpoints that serve the bulk data files referenced from that manifest.
 
