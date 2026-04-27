@@ -54,6 +54,8 @@ pages:
     title: Change Log
   downloads.html:
     title: Downloads
+  tools.md:
+    title: Tools
   ImplementationGuide-hl7.fhir.uv.bulkdata.md:
     title: Bulk Data Implementation Guide Resource
 
