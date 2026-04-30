@@ -27,7 +27,7 @@ Usage: #definition
   * documentation = """
     Support is optional for a Data Provider, optional for a Data Consumer.
 
-    The response SHALL be filtered to only include resources of the specified resource types(s).
+    The response SHALL be filtered to only include resources of the specified resource type(s).
 
     If this parameter is omitted, the Data Provider SHALL return all supported resources within the scope of the Data Consumer's authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/).
 

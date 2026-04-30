@@ -1,7 +1,7 @@
 ValueSet: GroupTypeSubset
 Id: group-type-subset
 Title: "Subset of GroupType Value Set"
-Description: "Valuset to constrain the type element in a Group to person, practitioner and device"
+Description: "Value Set to constrain the type element in a Group to person, practitioner and device"
 * ^experimental = false
 * ^jurisdiction = http://unstats.un.org/unsd/methods/m49/m49.htm#001 "World"
 * ^immutable = true
@@ -67,7 +67,7 @@ Description: "This Group resource profile enables the creation of patient cohort
   * ^definition = """
     A server SHALL support the inclusion of one or more `member-filter` modifier extensions containing a `valueExpression` with a language of `application/x-fhir-query` and an `expression` populated with a FHIR REST API query, and SHALL support REST queries for one or more of the Patient, Practitioner, or Device resource types. For supported resource types, the server SHALL also support querying the resources in that resource type's compartment. If multiple `member-filter` extensions are provided, servers SHALL filter the group to only include resources that meet the conditions in all of the expressions or resources that have resources in their compartments that meet the conditions in all of the expressions. A server MAY also support other expression languages such as `text/cql`. When more than one language is supported by a server a client SHALL use a single language type for all of the member-filter expressions included in a single Group.
 
-    FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `member-filter` criteria. Additionally, a query in the `member-filter` parameter SHALL have the search context of a single FHIR Resource Type. The contexts "all resource types" and "a specified compartment" are not allowed. Clients should consult the server's capability statement to identify supported search parameters. Servers SHALL reject Group creation requests that include unsupported search parameters in a `member-filter` expression. Implementation guides that reference the Bulk Cohort API, should specify required search parameters must be supported for their use case. Other implementations guides that incorporate the Bulk Export operation MAY provide a set of core search parameters that servers implementing the guide need to support.
+    FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `member-filter` criteria. Additionally, a query in the `member-filter` parameter SHALL have the search context of a single FHIR Resource Type. The contexts "all resource types" and "a specified compartment" are not allowed. Clients should consult the server's capability statement to identify supported search parameters. Servers SHALL reject Group creation requests that include unsupported search parameters in a `member-filter` expression. Implementation guides that reference the Bulk Cohort API should specify required search parameters that must be supported for their use case. Other implementation guides that incorporate the Bulk Export operation MAY provide a set of core search parameters that servers implementing the guide need to support.
     """
 * extension contains MembersRefreshed named members-refreshed 0..1
   * ^short = "when membership in this group was updated"

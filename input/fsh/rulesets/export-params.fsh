@@ -46,7 +46,7 @@ RuleSet: ExportParam_type
   * documentation = """
     Support is optional for a Data Provider, optional for a Data Consumer.
 
-    The response SHALL be filtered to only include resources of the specified resource types(s).
+    The response SHALL be filtered to only include resources of the specified resource type(s).
 
     If this parameter is omitted, the Data Provider SHALL return all supported resources within the scope of the Data Consumer's authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the Patient Compartment that are referenced by the resources being returned and would be helpful in interpreting the patient data MAY also be returned (such as Organization and Practitioner). When this behavior is supported, a Data Provider SHOULD document this support (for example, as narrative text, or by including a [GraphDefinition Resource](https://www.hl7.org/fhir/graphdefinition.html)).
 
@@ -141,7 +141,7 @@ RuleSet: ExportParam_organizeOutputBy
 
     String of a FHIR resource type.
 
-    When provided, a Data Provider with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, Data Providers SHALL organize each output file with resources of only single type. See [details](export.html#bulk-data-output-file-organization), [example manifest](export.html#organize-output-by-manifest-example), and [example output file](export.html#organize-output-by-file-example).
+    When provided, a Data Provider with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, Data Providers SHALL organize each output file with resources of only a single type. See [details](export.html#bulk-data-output-file-organization), [example manifest](export.html#organize-output-by-manifest-example), and [example output file](export.html#organize-output-by-file-example).
 
     A Data Provider unable to structure output by the requested `organizeOutputBy` resource SHOULD return an error and FHIR `OperationOutcome` resource. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
   """
