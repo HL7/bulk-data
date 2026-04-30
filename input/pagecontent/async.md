@@ -73,7 +73,7 @@ When the `outputOrganizedBy` element in the manifest is not populated, each outp
 
 When the `outputOrganizedBy` element is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type specified by `outputOrganizedBy`, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resource's block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` element in the relevant `output` array items.
 
-Resources that would otherwise be included in the returned data set, but do not have references to the resource type specified in the `outputOrganizedBy` element MAY be included in resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the data set.
+Resources that would otherwise be included in the returned data set, but do not have references to the resource type specified in the `outputOrganizedBy` element, MAY be included in resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the data set.
 
 <div class="stu-note">
 When the <code>outputOrganizedBy</code> element is set to <code>Patient</code>, {{ bulk_server_role }}s SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.
@@ -107,7 +107,7 @@ Example NDJSON file when `outputOrganizedBy` is set to `Patient`:
 {...}
 ```
 
-{% include async-attachments.md %}x
+{% include async-attachments.md %}
 
 ---
 {% include async-delete-request.md %}

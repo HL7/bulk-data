@@ -8,7 +8,7 @@ For a high-level comparison of Bulk Export, Bulk Submit, and Bulk Publish, see [
 
 #### Relationship to Bulk Export
 
-In contrast to the [Bulk Export operation](export.html), the Bulk Publish operation returns static manifests and bulk data files, and does not provide a mechanism for a Data Consumer to retrieve a filtered subset of the available data. Systems that return infrequently updated reference information may wish to use the Bulk Publish operation instead of the Bulk Export operation to reduce the complexity and cost involved in hosting and providing this information. 
+In contrast to the [Bulk Export operation](export.html), the Bulk Publish operation returns static manifests and bulk data files, and does not provide a mechanism for a Data Consumer to retrieve a filtered subset of the available data. Systems that return infrequently updated reference information may wish to use the Bulk Publish operation instead of the Bulk Export operation to reduce the complexity and cost involved in hosting and providing this information.
 
 Expected use cases include the publication of provider directory information, formulary information and open scheduling slots.
 
@@ -20,14 +20,14 @@ All exchanges described herein between a Data Consumer and a Data Provider SHOUL
 
 There are two primary roles involved in a Bulk Publish transaction:
 
-1. **Data Provider**: Server that hosts the Bulk Publish manifest and file listed in the manifest.
+1. **Data Provider**: Server that hosts the Bulk Publish manifest and files listed in the manifest.
 
 2. **Data Consumer**: Client that retrieves the Bulk Publish manifest and bulk data files and attachments.
 
 
 ### Manifest Request
 
-Request for fully static or periodically updated dataset in FHIR format. For a visual overview of how a Data Consumer processes a Bulk Publish manifest, see the [Data Consumer Workflow](#data-consumer-workflow) diagram below.
+Request for a fully static or periodically updated dataset in FHIR format. For a visual overview of how a Data Consumer processes a Bulk Publish manifest, see the [Data Consumer Workflow](#data-consumer-workflow) diagram below.
 
 #### Endpoint
 
@@ -54,7 +54,7 @@ GET `[base]/$bulk-publish`
 
 The output manifest is a JSON object providing metadata and links to the generated FHIR Bulk Data files. These files SHALL be accessible to the Data Consumer at the URLs advertised. The manifest and these URLs MAY be served by file servers other than the Data Provider's FHIR-specific server.
 
-The Data Provider MAY update the manifest at any time and SHALL use the `transactionTime` element to indicate when the files were generated. The response SHOULD NOT include any FHIR resources modified after this instant, and SHALL include any matching resources modified up to and including this instant. File URLs SHALL not be reused between updates unless their contents have remained the same, and files SHOULD remain available for a grace period following an update to avoid interrupting downloads that are in progress.
+The Data Provider MAY update the manifest at any time and SHALL use the `transactionTime` element to indicate when the files were generated. The response SHOULD NOT include any FHIR resources modified after this instant, and SHALL include any matching resources modified up to and including this instant. File URLs SHALL NOT be reused between updates unless their contents have remained the same, and files SHOULD remain available for a grace period following an update to avoid interrupting downloads that are in progress.
 
 The Data Provider SHOULD populate the `updateCadence` element to indicate the frequency with which the Data Provider expects to update the manifest.
 
@@ -68,12 +68,12 @@ Data Providers SHOULD set a reasonable `Cache-Control` header on the manifest (e
 Implementation notes:
 
 - For `transactionTime`, to properly meet the inclusion constraints above, a Data Provider might need to wait for pending updates in its publishing pipeline or source systems to resolve before publishing a new manifest.
-- Error, warning, and information messages related to the published dataset or publication process SHOULD be included in `error` and not in `output`. If there are no relevant messages, the Data Provider SHOULD return an empty array. 
+- Error, warning, and information messages related to the published dataset or publication process SHOULD be included in `error` and not in `output`. If there are no relevant messages, the Data Provider SHOULD return an empty array.
 
 
 ##### Incremental Updates
 
-The Data Provider MAY incrementally update a manifest by adding data files to the `output` array element that contain new resources and/or resources that replace versions of the resources in earlier files in the `output` array that have the same resource id. Additionally, the Data Provider MAY add files with Bundle resources indicating resources that have been deleted to the `deleted` array element (see details below), and MAY add files to the `error` array element. When generating a manifest that will be subsequently updated with these incremental changes, the Data Provider SHALL populate an `epochStartTime` element. When initially published, this value SHALL have the same value as the `transactionTime` element. Subsequently, adding files to the `output` array, `deleted` array, and `error` array of a manifest will cause the `transactionTime` element for that manifest to advance, but the `epochStartTime` value will remain the same. If a Data Provider is refreshing the manifest and no resources have been added, deleted, or updated since the `transactionTime` in the current manifest, the Data Provider SHOULD advance the `transactionTime` to the current time to indicate that the Data Provider is regularly publishing updates. Periodically, the Data Provider MAY generate a manifest that is a complete snapshot of the data (a new epoch), updating the `output` array and `error` array, emptying the `deleted` array, and setting new `epochStartTime` and `transactionTime` values. When a manifest is incrementally updated, apart from when it is reset to a new epoch, the order of files in the `output`, `deleted`, and `error` arrays in the manifest SHALL not change, the file contents SHALL not change, and the files SHALL remain retrievable.
+The Data Provider MAY incrementally update a manifest by adding data files to the `output` array element that contain new resources and/or resources that replace versions of the resources in earlier files in the `output` array that have the same resource id. Additionally, the Data Provider MAY add files with Bundle resources indicating resources that have been deleted to the `deleted` array element (see details below), and MAY add files to the `error` array element. When generating a manifest that will be subsequently updated with these incremental changes, the Data Provider SHALL populate an `epochStartTime` element. When initially published, this value SHALL have the same value as the `transactionTime` element. Subsequently, adding files to the `output` array, `deleted` array, and `error` array of a manifest will cause the `transactionTime` element for that manifest to advance, but the `epochStartTime` value will remain the same. If a Data Provider is refreshing the manifest and no resources have been added, deleted, or updated since the `transactionTime` in the current manifest, the Data Provider SHOULD advance the `transactionTime` to the current time to indicate that the Data Provider is regularly publishing updates. Periodically, the Data Provider MAY generate a manifest that is a complete snapshot of the data (a new epoch), updating the `output` array and `error` array, emptying the `deleted` array, and setting new `epochStartTime` and `transactionTime` values. When a manifest is incrementally updated, apart from when it is reset to a new epoch, the order of files in the `output`, `deleted`, and `error` arrays in the manifest SHALL NOT change, the file contents SHALL not change, and the files SHALL remain retrievable.
 
 Data Providers SHALL structure the manifests such that a Data Consumer can obtain a complete data set when processing a manifest by (1) inserting or updating all FHIR resources in files in the `output` array that have not been previously processed, followed by (2) deleting all resources listed in files in the `deleted` array that have not been previously processed.
 
@@ -147,7 +147,7 @@ When the `outputOrganizedBy` element in the manifest is not populated, each outp
 
 When the `outputOrganizedBy` element is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type specified by `outputOrganizedBy`, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resource's block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` element in the relevant `output` array items.
 
-Resources that would otherwise be included in the data set, but do not have references to the resource type specified in the `outputOrganizedBy` element MAY be included in resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the data set.
+Resources that would otherwise be included in the data set, but do not have references to the resource type specified in the `outputOrganizedBy` element, MAY be included in resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the data set.
 
 <div class="stu-note">
 When the <code>outputOrganizedBy</code> element is set to <code>Patient</code>, Data Providers SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.

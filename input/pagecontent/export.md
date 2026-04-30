@@ -13,7 +13,7 @@ For a high-level comparison of Bulk Export, Bulk Submit, and Bulk Publish, see [
 
 All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL.
 
-The Data Provider SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). When SMART Backend Services Authorization is used, Bulk Data Status Requests and Bulk Data Output File Requests with `requiresAccessToken=true` SHALL be protected the same way the Bulk Data Kick-off Request, including an access token with scopes that cover all resources being exported. A Data Provider MAY additionally restrict Bulk Data Status Requests and Bulk Data Output File Requests by limiting them to the Data Consumer that originated the export. Implementations MAY include endpoints that use authorization schemes other than OAuth 2.0, such as mutual TLS or signed URLs.
+The Data Provider SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). When SMART Backend Services Authorization is used, Bulk Data Status Requests and Bulk Data Output File Requests with `requiresAccessToken=true` SHALL be protected the same way as the Bulk Data Kick-off Request, including an access token with scopes that cover all resources being exported. A Data Provider MAY additionally restrict Bulk Data Status Requests and Bulk Data Output File Requests by limiting them to the Data Consumer that originated the export. Implementations MAY include endpoints that use authorization schemes other than OAuth 2.0, such as mutual TLS or signed URLs.
 
 For Group level exports, in addition to requiring authorization to access the resources included in the export, a Data Provider SHOULD restrict Data Consumers from exporting data for Group resources they are not authorized to read (e.g., via `system/Group.rs` in SMART on FHIR v2). A Data Provider SHALL also restrict access to specific groups based on underlying business rules.
 
@@ -82,7 +82,7 @@ FHIR Operation to obtain a detailed set of FHIR resources of diverse resource ty
 
 FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all members of a specified [Group](https://www.hl7.org/fhir/group.html).
 
-If a Data Provider's FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables Data Consumers to discover available groups based on stable characteristics such as `Group.identifier`.
+If a Data Provider's FHIR server supports Group-level data export, it SHOULD support reading and searching for the `Group` resource. This enables Data Consumers to discover available groups based on stable characteristics such as `Group.identifier`.
 
 As described on [the Group page](group.html), implementations may expose read-only groups managed by the Data Provider, member-based groups managed by the Data Consumer, or criteria-based groups whose membership is computed from characteristics. Some Data Providers may also support the Bulk Cohort API described in this guide for asynchronous creation of characteristic-based cohorts by a Data Consumer.
 
@@ -178,7 +178,7 @@ FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingre
 
 **Example Request**
 
-The following is an export request for `MedicationRequest` resources, where the Data Consumer would further like to restrict the MedicationRequests to those that are `active`, or else `completed` after July 1, 2018. This can be accomplished with two `_typeFilter` query parameters and an `_type ` query parameter:
+The following is an export request for `MedicationRequest` resources, where the Data Consumer would further like to restrict the MedicationRequests to those that are `active`, or else `completed` after July 1, 2018. This can be accomplished with two `_typeFilter` query parameters and an `_type` query parameter:
 
 
 * `MedicationRequest?status=active`
@@ -249,12 +249,12 @@ When requesting status, the Data Consumer SHOULD use an `Accept` header indicati
       <td>
       Response headers - no <code>Prefer: separate-export-status</code> header on kickoff
       <pre><code>Status: 202 Accepted
-X-Progress: “50% complete”
+X-Progress: "50% complete"
 Retry-After: 120</code></pre>
       Response headers - <code>Prefer: separate-export-status</code> header on kickoff
       <pre><code>Status: 200 OK
 X-Export-Status: 202 Accepted
-X-Progress: “50% complete”
+X-Progress: "50% complete"
 Retry-After: 120</code></pre>
     </td>
     </tr>

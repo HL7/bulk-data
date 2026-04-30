@@ -9,7 +9,7 @@ When the `organizeOutputBy` kickoff parameter is populated with a resource type,
 Resources that would otherwise be included in the export, but do not have references to the resource type specified in the `organizeOutputBy` parameter, MAY be included in resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the export.
 
 <div class="stu-note">
-When the <code>organizeOutputBy</code> parameter is set <code>Patient</code>, {{ bulk_server_role }}s SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.
+When the <code>organizeOutputBy</code> parameter is set to <code>Patient</code>, {{ bulk_server_role }}s SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.
 
 For other resource types, we are soliciting feedback on the best approach for documenting the set of resources in a resource block. Implementation Guides MAY reference a <a href="https://www.hl7.org/fhir/compartmentdefinition.html">Compartment Definition</a>, populate a <a href="https://www.hl7.org/fhir/graphdefinition.html">GraphDefinition Resource</a>, include narrative text, or use another approach.
 </div>

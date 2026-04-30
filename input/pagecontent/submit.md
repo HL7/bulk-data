@@ -2,13 +2,13 @@
 {% assign bulk_client_role = "Data Provider" %}
 ### Audience and Scope
 
-The Bulk Submit operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which an authenticated and authorized system (Data Provider) may submit bulk FHIR data to a server (Data Consumer) and receive status information regarding the Data Consumer's receipt and processing of the data and, where applicable, processed data. The general purpose Bulk Submit operation can be implemented as defined here, or further profiled in implementation guides that constrain the options available in order to address a specific scenario.
+The Bulk Submit operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which an authenticated and authorized system (Data Provider) may submit bulk FHIR data to a server (Data Consumer) and receive status information regarding the Data Consumer's receipt and processing of the data and, where applicable, processed data. The general-purpose Bulk Submit operation can be implemented as defined here, or further profiled in implementation guides that constrain the options available in order to address a specific scenario.
 
 For a high-level comparison of Bulk Export, Bulk Submit, and Bulk Publish, see [Choosing a Bulk Operation](index.html#choosing-a-bulk-operation).
 
 #### Relationship to Bulk Export
 
-Bulk Submit is the push-based complement to the pull-based [Bulk Export operation](export.html). In Bulk Submit, the Data Provider sends one or more manifests describing a pre-coordinated dataset to the Data Consumer. This is a better fit than Bulk Export when the sender already knows what must be delivered and the receiver needs in-band status or processing feedback. 
+Bulk Submit is the push-based complement to the pull-based [Bulk Export operation](export.html). In Bulk Submit, the Data Provider sends one or more manifests describing a pre-coordinated dataset to the Data Consumer. This is a better fit than Bulk Export when the sender already knows what must be delivered and the receiver needs in-band status or processing feedback.
 
 Bulk Export is the better fit for ad hoc, data consumer-driven requests where the recipient needs to specify the cohort, filters, or time window.
 
@@ -222,7 +222,7 @@ When the `outputOrganizedBy` element in the status manifest is not populated, ea
 
 When the `outputOrganizedBy` element is populated with a resource type, the output files SHALL be populated with blocks consisting of a header `Parameters` resource containing a parameter named `header` with a reference to a resource of the type specified by `outputOrganizedBy`, followed by the resource referenced in this header and resources that reference the resource referenced in the header (together a "resource block"). Each output file MAY contain multiple resource blocks and, when possible, a single resource's block SHOULD NOT be split across files. If a resource block does span more than one file, the header SHALL be repeated at the start of each file where the block continues, and the association between these files SHALL be documented in the manifest using the `continuesInFile` element in the relevant `output` array items.
 
-Resources that would otherwise be included in the returned data set, but do not have references to the resource type specified in the `outputOrganizedBy` element MAY be included in resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the data set.
+Resources that would otherwise be included in the returned data set, but do not have references to the resource type specified in the `outputOrganizedBy` element, MAY be included in resource blocks that contain resources they reference, MAY be repeated in every resource block, or MAY be omitted from the data set.
 
 <div class="stu-note">
 When the <code>outputOrganizedBy</code> element is set to <code>Patient</code>, Data Consumers SHOULD use the <a href="https://www.hl7.org/fhir/compartmentdefinition-patient.html">Patient Compartment Definition</a> to determine a base set of related resources to include in a resource block, though other resources may also be included.
