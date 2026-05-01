@@ -12,7 +12,7 @@ Usage: #definition
 * date = "2025-01-27"
 * jurisdiction = $m49.htm#001 "World"
 * description = """
-    This operation to receive status updates about the submission, after a Data Provider has kicked off a Bulk Submit operation. For example, the Data Consumer may indicate files it was unable to retrieve, resources that failed validation, or resources that could not be merged into an existing data set. The Data Consumer may also return processed data such as computed quality measures or de-identified versions of the submitted data. The Data Provider receives a `202 Accepted` response with a `Content-Location` header and then polls that URL according to the [FHIR Asynchronous Bulk Interaction Pattern](async.html).
+    This operation receives status updates about the submission after a Data Provider has kicked off a Bulk Submit operation. For example, the Data Consumer may indicate files it was unable to retrieve, resources that failed validation, or resources that could not be merged into an existing data set. The Data Consumer may also return processed data such as computed quality measures or de-identified versions of the submitted data. The Data Provider receives a `202 Accepted` response with a `Content-Location` header and then polls that URL according to the [FHIR Asynchronous Bulk Interaction Pattern](async.html).
     """
 * code = #bulk-submit-status
 * system = true

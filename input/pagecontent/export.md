@@ -198,7 +198,7 @@ _Note that newlines and spaces have been added above for clarity, and would not 
 
 ##### Processing Model
 
-The following steps outline a model of how a Data Provider SHOULD process a bulk export request. The actual operations a Data Provider performs and the order in which they are performed might differ. Additionally, as documented elsewhere in this implementation guide, depending on the values and headers provided, some requests might cause a Data Provider to return an error rather than continuing to process the request.
+The following steps outline a model of how a Data Provider might process a bulk export request. The actual operations a Data Provider performs and the order in which they are performed might differ. Additionally, as documented elsewhere in this implementation guide, depending on the values and headers provided, some requests might cause a Data Provider to return an error rather than continuing to process the request.
 
  <figure>
   {% include processing-model.svg %}

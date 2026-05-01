@@ -2,7 +2,7 @@ Logical: BulkPublishManifest
 Parent: BulkDataManifest
 Id: BulkPublishManifest
 Title: "Bulk Publish Manifest"
-Description: "Logical model describing the manifest returned by a $bulk-publish endpoint. Extends BulkDataManifest with fields to support incremental updates through epochs and to advertise a Data Provider's expected update cadence."
+Description: "Logical model describing the manifest returned by a $bulk-publish endpoint. Extends BulkDataManifest with fields to support incremental updates through epochs and to advertise a Data Provider's update cadence."
 * ^status = #active
 * ^extension[+].url = $fmm
 * ^extension[=].valueInteger = 2

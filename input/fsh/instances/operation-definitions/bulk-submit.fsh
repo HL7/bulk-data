@@ -12,7 +12,7 @@ Usage: #definition
 * date = "2025-01-27"
 * jurisdiction = $m49.htm#001 "World"
 * description = """
-    FHIR Operation through which an authenticated and authorized Data Provider submits Bulk FHIR Data to a Data Consumer and receive status information regarding the Data Consumer's receipt and processing of the data. The Data Provider provides one or more manifest URLs pointing to pre-coordinated FHIR data sets, along with metadata needed for the Data Consumer to retrieve and process the files.
+    FHIR Operation through which an authenticated and authorized Data Provider submits Bulk FHIR Data to a Data Consumer and receives status information regarding the Data Consumer's receipt and processing of the data. The Data Provider provides one or more manifest URLs pointing to pre-coordinated FHIR data sets, along with metadata needed for the Data Consumer to retrieve and process the files.
     """
 * code = #bulk-submit
 * system = true
