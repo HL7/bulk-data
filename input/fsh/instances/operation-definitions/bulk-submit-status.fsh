@@ -12,7 +12,7 @@ Usage: #definition
 * date = "2025-01-27"
 * jurisdiction = $m49.htm#001 "World"
 * description = """
-    After a Data Provider has kicked off a Bulk Submit operation, it may use this operation to receive status updates about the submission. For example, the Data Consumer may indicate files it was unable to retrieve, resources that failed validation, or resources that could not be merged into an existing data set. The Data Consumer may also return processed data such as computed quality measures or de-identified versions of the submitted data. The Data Provider receives a `202 Accepted` response with a `Content-Location` header and then polls that URL according to the [FHIR Asynchronous Bulk Interaction Pattern](async.html).
+    This operation to receive status updates about the submission, after a Data Provider has kicked off a Bulk Submit operation. For example, the Data Consumer may indicate files it was unable to retrieve, resources that failed validation, or resources that could not be merged into an existing data set. The Data Consumer may also return processed data such as computed quality measures or de-identified versions of the submitted data. The Data Provider receives a `202 Accepted` response with a `Content-Location` header and then polls that URL according to the [FHIR Asynchronous Bulk Interaction Pattern](async.html).
     """
 * code = #bulk-submit-status
 * system = true
@@ -45,6 +45,6 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    The format for the generated bulk data files used to return OperationOutcome resources related to the submission status and, when applicable, other resources. Currently, ndjson must be supported, though servers may choose to also support other output formats. Servers SHALL support the full content type of `application/fhir+ndjson` as well as abbreviated representations including `application/ndjson` and `ndjson`. Defaults to `application/fhir+ndjson`.
+    The format for the generated bulk data files used to return OperationOutcome resources related to the submission status and, when applicable, other resources. Servers SHALL support ndjson, and MAY support other output formats. Servers SHALL support the full content type of `application/fhir+ndjson` as well as abbreviated representations including `application/ndjson` and `ndjson`. Defaults to `application/fhir+ndjson`.
     """
   * type = #string

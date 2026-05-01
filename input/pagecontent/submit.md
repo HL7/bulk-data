@@ -78,11 +78,11 @@ The Data Provider uses the `submissionStatus` parameter to indicate the state of
 
 - `in-progress` or omitted: Indicates that there will be additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
 - `complete`: Indicates there will be no additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
-- `aborted`: Indicates that the submission is invalid. The Data Consumer must stop retrieving files and delete any data already processed from this submission. There will not be additional requests to the `$bulk-submit` endpoint for this `submitter` and `submissionId` combination.
+- `aborted`: Indicates that the submission is invalid. The Data Consumer SHALL stop retrieving files and delete any data already processed from this submission. There will not be additional requests to the `$bulk-submit` endpoint for this `submitter` and `submissionId` combination.
 
 ###### Correcting Data Without Aborting
 
-If a specific portion of the data is incorrect, the Data Provider should not cancel the entire submission. Instead, it should send a request that populates the `replacesManifestUrl` parameter. This tells the Data Consumer to discard the data from that specific previous manifest, and optionally replace it with a new `manifestUrl` when that element is also populated, while keeping the other manifests in the submission valid.
+If a specific portion of the data is incorrect, the Data Provider SHOULD NOT cancel the entire submission. Instead, it SHOULD send a request that populates the `replacesManifestUrl` parameter. This tells the Data Consumer to discard the data from that specific previous manifest, and optionally replace it with a new `manifestUrl` when that element is also populated, while keeping the other manifests in the submission valid.
 
 ##### Manifest and File Security
 
@@ -113,7 +113,7 @@ Alternatively, the Data Provider MAY call the Bulk Submit operation multiple tim
 - HTTP status code `4XX` or `5XX`
 - The body SHALL be a FHIR `OperationOutcome` resource
 
-If a server wants to prevent a client from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests` and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header. The `Retry-After` header SHOULD indicate how long the client should wait before trying again, either as a delay time in seconds or as an HTTP-date. When provided, the client SHOULD use this information to inform the timing of a future request.
+If a server wants to prevent a client from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests` and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header. The `Retry-After` header SHOULD indicate how long the client needs to wait before trying again, either as a delay time in seconds or as an HTTP-date. When provided, the client SHOULD use this information to inform the timing of a future request.
 
 ### Bulk Submit Status Request Flow
 
@@ -157,7 +157,7 @@ The request body SHALL be a FHIR [Parameters resource](https://hl7.org/fhir/para
 - HTTP status code `4XX` or `5XX`
 - The body SHALL be a FHIR `OperationOutcome` resource in JSON format
 
-If a server wants to prevent a client from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests` and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header. The `Retry-After` header SHOULD indicate how long the client should wait before trying again, either as a delay time in seconds or as an HTTP-date. When provided, the client SHOULD use this information to inform the timing of a future request.
+If a server wants to prevent a client from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests` and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header. The `Retry-After` header SHOULD indicate how long the client needs to wait before trying again, either as a delay time in seconds or as an HTTP-date. When provided, the client SHOULD use this information to inform the timing of a future request.
 
 ---
 {% include async-status-polling-request.md %}
@@ -176,7 +176,7 @@ Each item in the `error` section of the manifest SHALL include `manifestUrl` to 
 
 If there are resources to return, the Data Consumer SHALL populate the `output` section of the manifest with one or more files that contain FHIR resources. Each item in the `output` section SHOULD include `manifestUrl` to link the returned file back to the submitted manifest. A single `manifestUrl` may be referenced from multiple items in the `output` section.
 
-If the Data Consumer wishes to indicate to the Data Provider that resources included as part of the submission should be removed by the Data Provider, the Data Consumer MAY populate the `deleted` section with one or more files containing FHIR transaction Bundles. Each line in such a file SHALL contain a FHIR `Bundle` with a type of `transaction` containing one or more `entry` items that reflect a deleted resource. In each entry, `request.url` and `request.method` SHALL be populated and `request.method` SHALL be set to `DELETE`. Resources that appear in `deleted` SHALL NOT also appear in `output`.
+If the Data Consumer wishes to indicate that resources included as part of the submission be removed by the Data Provider, the Data Consumer MAY populate the `deleted` section with one or more files containing FHIR transaction Bundles. Each line in such a file SHALL contain a FHIR `Bundle` with a type of `transaction` containing one or more `entry` items that reflect a deleted resource. In each entry, `request.url` and `request.method` SHALL be populated and `request.method` SHALL be set to `DELETE`. Resources that appear in `deleted` SHALL NOT also appear in `output`.
 
 When the status response is returned incrementally, including when a partial status manifest is returned with an HTTP status of `202 Accepted`, the Data Consumer MAY populate the `link` section with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another status manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, and `link` arrays.
 

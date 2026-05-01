@@ -12,7 +12,7 @@ Usage: #definition
 * date = "2025-01-27"
 * jurisdiction = $m49.htm#001 "World"
 * description = """
-    FHIR Operation through which an authenticated and authorized Data Provider may submit Bulk FHIR Data to a Data Consumer and receive status information regarding the Data Consumer's receipt and processing of the data. The Data Provider provides one or more manifest URLs pointing to pre-coordinated FHIR data sets, along with metadata needed for the Data Consumer to retrieve and process the files.
+    FHIR Operation through which an authenticated and authorized Data Provider submits Bulk FHIR Data to a Data Consumer and receive status information regarding the Data Consumer's receipt and processing of the data. The Data Provider provides one or more manifest URLs pointing to pre-coordinated FHIR data sets, along with metadata needed for the Data Consumer to retrieve and process the files.
     """
 * code = #bulk-submit
 * system = true
@@ -25,7 +25,7 @@ Usage: #definition
   * min = 1
   * max = "1"
   * documentation = """
-    The submitter must match a system and code specified by the Data Consumer (coordinated out-of-band or in an implementation guide specific to a use case).
+    The submitter SHALL match a system and code specified by the Data Consumer (coordinated out-of-band or in an implementation guide specific to a use case).
     """
   * type = #Identifier
 
@@ -35,7 +35,7 @@ Usage: #definition
   * min = 1
   * max = "1"
   * documentation = """
-    The value must be unique for the `submitter`.
+    The value SHALL be unique for the `submitter`.
     """
   * type = #string
 
@@ -45,7 +45,7 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    System of `http://hl7.org/fhir/uv/bulkdata/ValueSet/submission-status`, code of `in-progress` (default if parameter is omitted), `complete` or `aborted`. Once a request has been submitted with a `submissionStatus` of `aborted` or `complete`, no additional requests may be submitted for that `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated.
+    System of `http://hl7.org/fhir/uv/bulkdata/ValueSet/submission-status`, code of `in-progress` (default if parameter is omitted), `complete` or `aborted`. Once a request has been submitted with a `submissionStatus` of `aborted` or `complete`, additional requests SHALL NOT be submitted for that `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated.
     """
   * type = #Coding
 
@@ -55,7 +55,7 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    Url pointing to a [Bulk Export Manifest](https://build.fhir.org/ig/HL7/bulk-data/export.html#response---output-manifest) with a pre-coordinated FHIR data set. Files in multiple submitted manifests with the same `submitter` and `submissionId` SHALL be treated by the Data Consumer as if they were submitted in a single manifest. This parameter MAY be omitted when the operation is being called to set the submissionStatus to `complete` or `aborted`. The value must be unique for all manifests that share a `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated. When this parameter is populated, the `fhirBaseUrl` parameter SHALL also be populated.
+    Url pointing to a [Bulk Export Manifest](https://build.fhir.org/ig/HL7/bulk-data/export.html#response---output-manifest) with a pre-coordinated FHIR data set. Files in multiple submitted manifests with the same `submitter` and `submissionId` SHALL be treated by the Data Consumer as if they were submitted in a single manifest. This parameter MAY be omitted when the operation is being called to set the submissionStatus to `complete` or `aborted`. The value SHALL be unique for all manifests that share a `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated. When this parameter is populated, the `fhirBaseUrl` parameter SHALL also be populated.
     """
   * type = #url
 
@@ -65,7 +65,7 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    The url of a previously submitted manifest that has the same `submissionId` and `submitter` as this request. When provided, Data Consumer SHALL replace the data in the referenced manifest with the one in the current request. If the url is invalid or the Data Consumer is unable to replace the data, it should respond to the request with an OperationOutcome describing the error.
+    The url of a previously submitted manifest that has the same `submissionId` and `submitter` as this request. When provided, Data Consumer SHALL replace the data in the referenced manifest with the one in the current request. If the url is invalid or the Data Consumer is unable to replace the data, it SHOULD respond to the request with an OperationOutcome describing the error.
     """
   * type = #url
 
@@ -95,7 +95,7 @@ Usage: #definition
   * min = 0
   * max = "*"
   * documentation = """
-    HTTP headers that the Data Consumer should use when requesting a data file from the Data Provider.
+    HTTP headers that the Data Consumer SHOULD use when requesting a data file from the Data Provider.
     """
   * part[+]
     * name = #headerName
@@ -180,7 +180,7 @@ Usage: #definition
   * min = 0
   * max = "*"
   * documentation = """
-    Child parameters can be added under this parameter to pass pre-coordinated options relevant to how the data will be processed from the Data Provider to the Data Consumer. For example, a Data Consumer may allow the Data Provider to specify whether or not existing data should be replaced with the data in the submission. Each child parameter name SHALL be an absolute URL. Specific child parameters are defined in implementation guides for particular use cases.
+    Child parameters MAY be added under this parameter to pass pre-coordinated options relevant to how the data will be processed from the Data Provider to the Data Consumer. For example, a Data Consumer might allow the Data Provider to specify whether or not existing data should be replaced with the data in the submission. Each child parameter name SHALL be an absolute URL. Specific child parameters are defined in implementation guides for particular use cases.
     """
   * part[+]
     * name = #parameterUrl
