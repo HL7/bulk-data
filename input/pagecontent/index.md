@@ -1,6 +1,6 @@
 Organizations that manage populations often need to exchange large FHIR datasets. Examples include pulling a cohort from an EHR for analytics, sending a pre-arranged package of data to a payer or regulator, or publishing reference data such as provider directories and schedules. Standard FHIR REST APIs work well for interactive and transaction-scale use, but resource-by-resource exchange becomes expensive and operationally brittle when the job involves thousands or millions of resources.
 
-This implementation guide defines a family of FHIR-based bulk operations that standardize how large datasets are requested, delivered, monitored, and reused. Instead of relying on custom CSV extracts and one-off file transfer workflows, these operations use consistent manifest structures, asynchronous processing, and security patterns that can be applied across many implementations. 
+This implementation guide defines a family of FHIR-based bulk operations that standardize how large datasets are requested, delivered, monitored, and reused. Instead of relying on custom CSV extracts and one-off file transfer workflows, these operations use consistent manifest structures, asynchronous processing, and security patterns that can be applied across many implementations.
 
 The operations are applicable to any data that can be represented in FHIR, and may be implemented in "native" FHIR servers that store FHIR resources directly as well as systems that implement FHIR as an interoperability layer (as is often the case with EHR systems and data warehouse platforms).
 
@@ -27,7 +27,7 @@ Bulk Data defines three operations. Each fits a different relationship between t
 
 **[Bulk Export](export.html)** — The consumer pulls data from a provider on demand. The consumer controls what comes back by optionally choosing the cohort, resource types, filters, data elements, and time window. Use this operation when a system needs to retrieve data from a trusted source and shape the request to its own needs — for example, a research data warehouse exporting clinical data from an EHR or a payer exporting claims-relevant records from a clinical system.
 
-**[Bulk Submit](submit.html)** — The provider pushes a pre-coordinated dataset to a specific recipient. Both sides agree in advance on what the submission contains, and the recipient can acknowledge processing, report issues, or return derived artifacts through the in-band Bulk Submit Status operation. Use this operation when the sender already knows what must be delivered and the receiver needs to close the loop — for example, submitting required clinical data to a payer, regulator, or processing service.
+**[Bulk Submit](submit.html)** — The provider pushes a pre-coordinated dataset to a specific recipient. Both sides agree in advance on what the submission contains, and the recipient can acknowledge processing, report issues, or return derived artifacts through the in-band Bulk Submit Status operation. Use this operation when the sender already knows what needs to be delivered and the receiver needs to close the loop — for example, submitting required clinical data to a payer, regulator, or processing service.
 
 **[Bulk Publish](publish.html)** — The provider posts a dataset for any number of consumers to retrieve via ordinary HTTP. The provider decides what is published; consumers discover and cache it using standard HTTP semantics. Use this operation when the same relatively static dataset serves many downstream systems — for example, publishing a provider directory, formulary, or scheduling data.
 
@@ -69,7 +69,7 @@ Many Bulk Export workflows are applicable to a specific cohort of patients rathe
 
 ### Conformance and Publication
 
-To declare conformance with this IG, a server should include the following URL in its `CapabilityStatement.instantiates`: `http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data`.
+To declare conformance with this IG, a server SHOULD include the following URL in its `CapabilityStatement.instantiates`: `http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data`.
 
 The [Bulk Data Access Implementation Guide Resource](ImplementationGuide-hl7.fhir.uv.bulkdata.html) defines the technical details of this publication, including dependencies and publishing parameters.
 

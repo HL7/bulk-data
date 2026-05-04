@@ -10,7 +10,7 @@ Usage: #definition
 * extension[=].valueInteger = 5
 * experimental = false
 * date = "2021-07-29"
-* description = "The expected capabilities of a Data Provider actor (e.g., EHR systems, data warehouses, and other clinical and administrative systems that aim to interoperate by sharing large FHIR datasets) which is responsible for providing responses to requests submitted by a Data Consumer actor. Systems implementing this capability statement should meet the requirements set by the Bulk Data Access Implementation Guide. A Data Consumer has the option of choosing from this list to access necessary data based on use cases and other contextual requirements."
+* description = "The expected capabilities of a Data Provider actor (e.g., EHR systems, data warehouses, and other clinical and administrative systems that aim to interoperate by sharing large FHIR datasets) which is responsible for providing responses to requests submitted by a Data Consumer actor. Systems implementing this capability statement SHOULD meet the requirements set by the Bulk Data Access Implementation Guide. A Data Consumer MAY choose from this list to access necessary data based on use cases and other contextual requirements."
 * jurisdiction = $m49.htm#001 "World"
 * kind = #requirements
 * instantiates = "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data"
@@ -28,7 +28,7 @@ Usage: #definition
         * valueCode = #SHOULD
       * name = "export"
       * definition = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export"
-      * documentation = "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in the specified [Group](https://www.hl7.org/fhir/group.html).\n\nIf a Data Provider's FHIR server supports Group-level data export, it SHOULD support reading and searching for `Group` resource. This enables Data Consumers to discover available groups based on stable characteristics such as `Group.identifier`.\n\nThe [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned."
+      * documentation = "FHIR Operation to obtain a detailed set of FHIR resources of diverse resource types pertaining to all patients in the specified [Group](https://www.hl7.org/fhir/group.html).\n\nIf a Data Provider's FHIR server supports Group-level data export, it SHOULD support reading and searching for the `Group` resource. This enables Data Consumers to discover available groups based on stable characteristics such as `Group.identifier`.\n\nThe [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned."
   * resource[+]
     * type = #Patient
     * operation
