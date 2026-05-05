@@ -35,7 +35,7 @@ GET `[base]/$bulk-publish`
 
 - A Data Provider SHALL support retrieval of a Bulk Publish manifest through an HTTP GET request to an endpoint that terminates with a `$bulk-publish` segment.
 - A Data Consumer SHOULD include the conditional request HTTP header `If-None-Match` with each request to avoid retrieving data when nothing has changed since the last request. Data Providers SHOULD support the use of this header.
-- When the `If-None-Match` value matches the current `ETag`, a Data Provider MAY return `304 Not Modified`; otherwise it SHALL return `200 OK` with the manifest.
+- When the `If-None-Match` value matches the current `ETag`, a Data Provider MAY return `304 Not Modified`.
 
 
 #### Response - Error
@@ -54,7 +54,7 @@ GET `[base]/$bulk-publish`
 
 The output manifest is a JSON object providing metadata and links to the generated FHIR Bulk Data files. These files SHALL be accessible to the Data Consumer at the URLs advertised. The manifest and these URLs MAY be served by file servers other than the Data Provider's FHIR-specific server.
 
-The Data Provider MAY update the manifest at any time and SHALL use the `transactionTime` element to indicate when the files were generated. The response SHOULD NOT include any FHIR resources modified after this instant, and SHALL include any matching resources modified up to and including this instant. File URLs SHALL NOT be reused between updates unless their contents have remained the same, and files SHOULD remain available for a grace period following an update to avoid interrupting downloads that are in progress.
+The Data Provider MAY update the manifest at any time and SHALL use the `transactionTime` element to indicate when the files were generated. The response SHOULD NOT include any FHIR resources modified after this instant, and SHALL include any matching resources modified up to and including this instant. File URLs SHALL NOT be reused between updates unless their contents have remained the same, and files that no longer appear in a manifest SHOULD remain available for a grace period following an update to avoid interrupting downloads that are in progress.
 
 The Data Provider SHOULD populate the `updateCadence` element to indicate the frequency with which the Data Provider expects to update the manifest.
 

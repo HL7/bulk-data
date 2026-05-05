@@ -340,7 +340,7 @@ Implementation notes:
 
 <a name="manifest-link"></a>
 
-- When the `allowPartialManifests` kickoff parameter is `true`, the manifest MAY include a `link` array with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, and `link` arrays.
+- When the `allowPartialManifests` kickoff parameter is `true`, the manifest MAY include a `link` array with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `error`, and `link` arrays.
 - If the export has failed or a transient error has occurred, a Data Provider MAY return an error in response to a request for the `next` link, as described in the [Error Status](#response---error-status) section above. For non-transient errors, a Data Consumer MAY process resources that have already been retrieved before re-running the export job or MAY discard them.
 
 Example manifest, `organizeOutputBy` kickoff parameter is not populated:
@@ -362,7 +362,7 @@ Example manifest, `organizeOutputBy` kickoff parameter is `Patient`, and `allowP
 Example deleted resource bundle (represents one line in an output file):
 
 <div class="language-json">
-{% fragment Bundle/deleted-resource-transaction-bundle-example JSON ELIDE:language %}
+{% fragment Bundle/deleted-resource-transaction-bundle-example JSON %}
 </div>
 
 [View Example](Bundle-deleted-resource-transaction-bundle-example.html)

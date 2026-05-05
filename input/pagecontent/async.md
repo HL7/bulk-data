@@ -23,9 +23,9 @@ The request will support the HTTP methods, URLs, headers, and other parameters t
 
   Specifies the format of the optional FHIR `OperationOutcome` resource response to the kick-off request. A client SHOULD provide this header. A server may support any subset of the [Serialization Format Representations](https://hl7.org/fhir/resource-formats.html#wire). If omitted, the server MAY return an error or MAY process the request and return a format selected by the server.
 
-- `Prefer` (string, required)
+- `Prefer` (string)
 
-  Specifies whether the response is immediate or asynchronous. Setting this to <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> triggers this asynchronous bulk pattern.
+  Specifies whether the response is immediate or asynchronous. Setting this to <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> triggers this asynchronous bulk pattern, though operations that can only be invoked asynchronously MAY default to this behavior or MAY return an error when this header is not provided.
 
   A client MAY also provide a second Prefer header value of `separate-export-status`, so the combined Prefer header for the kick-off request is `Prefer: respond-async,separate-export-status`. If this header value is included by a client and is supported by a server, the server SHALL return the header `Preference-Applied` with values of `respond-async` and `separate-export-status` in its response. These may be provided as comma-delimited values or the header may be repeated for each value.
 

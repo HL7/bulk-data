@@ -76,7 +76,7 @@ Constraints:
 
 The Data Provider uses the `submissionStatus` parameter to indicate the state of a submission to the Data Consumer:
 
-- `in-progress` or omitted: Indicates that there will be additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
+- `in-progress` (default if parameter is omitted): Indicates that there will be additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
 - `complete`: Indicates there will be no additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
 - `aborted`: Indicates that the submission is invalid. The Data Consumer SHALL stop retrieving files and delete any data already processed from this submission. There will not be additional requests to the `$bulk-submit` endpoint for this `submitter` and `submissionId` combination.
 
@@ -178,7 +178,7 @@ If there are resources to return, the Data Consumer SHALL populate the `output` 
 
 If the Data Consumer wishes to indicate that resources included as part of the submission be removed by the Data Provider, the Data Consumer MAY populate the `deleted` section with one or more files containing FHIR transaction Bundles. Each line in such a file SHALL contain a FHIR `Bundle` with a type of `transaction` containing one or more `entry` items that reflect a deleted resource. In each entry, `request.url` and `request.method` SHALL be populated and `request.method` SHALL be set to `DELETE`. Resources that appear in `deleted` SHALL NOT also appear in `output`.
 
-When the status response is returned incrementally, including when a partial status manifest is returned with an HTTP status of `202 Accepted`, the Data Consumer MAY populate the `link` section with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another status manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, and `link` arrays.
+When the status response is returned incrementally, including when a partial status manifest is returned with an HTTP status of `202 Accepted`, the Data Consumer MAY populate the `link` section with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another status manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `error`, and `link` arrays.
 
 Generated field table from the logical model:
 
