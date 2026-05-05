@@ -98,7 +98,7 @@ Common datasets to be exchanged through bulk operations include:
 
 ### FHIR Asynchronous Bulk Interaction Pattern
 
-The [Bulk Export Operation](export.html) and the [Bulk Submit Status Operation](submit.html#bulk-submit-status-request) build on the [FHIR Asynchronous Bulk Interaction Pattern](async.html), a FHIR request and response flow that servers can implement for any [Operation](https://hl7.org/fhir/operations.html) or [Defined Interaction](https://hl7.org/fhir/http.html) that needs to return a large dataset. This pattern is described in the FHIR R4 and FHIR R5 versions of the [FHIR specification](https://hl7.org/fhir), and has been moved into this Implementation Guide going forward.
+The [Bulk Export Operation](export.html) and the [Bulk Submit Status Operation](submit.html#bulk-submit-status-request-flow) build on the [FHIR Asynchronous Bulk Interaction Pattern](async.html), a FHIR request and response flow that servers can implement for any [Operation](https://hl7.org/fhir/operations.html) or [Defined Interaction](https://hl7.org/fhir/http.html) that needs to return a large dataset. This pattern is described in the FHIR R4 and FHIR R5 versions of the [FHIR specification](https://hl7.org/fhir), and has been moved into this Implementation Guide going forward.
 
 Use cases that return small amounts of data but may take a lot of time to process may prefer to use the related [Asynchronous Interaction Request Pattern](https://hl7.org/fhir/async-bundle.html).
 

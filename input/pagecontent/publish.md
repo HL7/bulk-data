@@ -100,7 +100,7 @@ Manifest after first incremental update:
 Deleted resource bundle (represents one line in an output file):
 
 <div class="language-json">
-{% fragment Bundle/deleted-resource-transaction-bundle-example JSON ELIDE:language %}
+{% fragment Bundle/deleted-resource-transaction-bundle-example JSON %}
 </div>
 
 [View Example](Bundle-deleted-resource-transaction-bundle-example.html)
