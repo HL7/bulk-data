@@ -12,6 +12,7 @@
 * Changes to Bulk Submit and Bulk Publish manifests from earlier draft versions:
   - Parameters not used in Bulk Export are now root elements rather than extensions.
   - `error.countSeverity` is now an array of `code` and `count` elements rather than a JSON object with codes as keys and counts as values.
+  - Move to a valueset of `http://hl7.org/fhir/event-status` for the submissionStatus parameter, changing our draft `complete` status to `completed` and `aborted` status to `stopped` to align.
 
 ### STU3 - v3.0.0
 * Added support for partial export manifests to enable servers to make some files available prior to all of the files being ready and to split large lists of files across multiple manifests. Clients can select this behavior using the new `allowPartialManifests` kick-off request parameter. 

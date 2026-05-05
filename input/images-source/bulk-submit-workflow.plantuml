@@ -29,7 +29,7 @@ StatusEndpoint --> SubmitClient: Partial status manifest
 SubmitClient -> StatusFiles: Retrieve status files
 StatusFiles --> SubmitClient
 
-SubmitClient -> SubmitEndpoint: Submit second manifest URL (submissionStatus: complete)
+SubmitClient -> SubmitEndpoint: Submit second manifest URL (submissionStatus: completed)
 SubmitEndpoint --> SubmitClient: Success OperationOutcome
 
 SubmitEndpoint -> SubmitFiles: Retrieve submission files

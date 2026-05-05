@@ -74,11 +74,11 @@ Constraints:
 
 ##### `submissionStatus` Parameter
 
-The Data Provider uses the `submissionStatus` parameter to indicate the state of a submission to the Data Consumer:
+The Data Provider uses the `submissionStatus` parameter to indicate the state of a submission to the Data Consumer. Values SHALL be drawn from the [Submission Status Value Set](ValueSet-submission-status.html), which constrains the [`http://hl7.org/fhir/event-status`](https://hl7.org/fhir/valueset-event-status.html) code system to:
 
 - `in-progress` (default if parameter is omitted): Indicates that there will be additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
-- `complete`: Indicates there will be no additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
-- `aborted`: Indicates that the submission is invalid. The Data Consumer SHALL stop retrieving files and delete any data already processed from this submission. There will not be additional requests to the `$bulk-submit` endpoint for this `submitter` and `submissionId` combination.
+- `completed`: Indicates there will be no additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
+- `stopped`: Indicates that the submission is invalid. The Data Consumer SHALL stop retrieving files and delete any data already processed from this submission. There will not be additional requests to the `$bulk-submit` endpoint for this `submitter` and `submissionId` combination.
 
 ###### Correcting Data Without Aborting
 
@@ -166,7 +166,7 @@ If a server wants to prevent a client from beginning a new submission before an 
 
 The Data Consumer MAY return a partial status manifest and an HTTP status of `202 Accepted` while the submission is incomplete or is still being processed.
 
-Once the submission is complete, meaning the Data Provider has sent a request with `submissionStatus = complete` and the Data Consumer has retrieved and processed the submitted files, the Data Consumer SHALL return a status manifest and an HTTP status of `200 OK`.
+Once the submission is complete, meaning the Data Provider has sent a request with `submissionStatus = completed` and the Data Consumer has retrieved and processed the submitted files, the Data Consumer SHALL return a status manifest and an HTTP status of `200 OK`.
 
 These manifests provide a mechanism for the Data Consumer to return resources related to the data submission. If there is no relevant information to communicate and the submission is complete, the Data Consumer MAY return a manifest with empty or omitted `output` and `error` arrays. Each manifest SHALL include `submissionId` at the root.
 

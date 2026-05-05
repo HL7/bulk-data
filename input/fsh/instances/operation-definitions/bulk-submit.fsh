@@ -45,9 +45,11 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    System of `http://hl7.org/fhir/uv/bulkdata/ValueSet/submission-status`, code of `in-progress` (default if parameter is omitted), `complete` or `aborted`. Once a request has been submitted with a `submissionStatus` of `aborted` or `complete`, additional requests SHALL NOT be submitted for that `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated.
+    System of `http://hl7.org/fhir/event-status`, code of `in-progress` (default if parameter is omitted), `completed` or `stopped`. Once a request has been submitted with a `submissionStatus` of `stopped` or `completed`, additional requests SHALL NOT be submitted for that `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated.
     """
   * type = #Coding
+  * binding.strength = #required
+  * binding.valueSet = Canonical(SubmissionStatusValueSet)
 
 * parameter[+]
   * name = #manifestUrl
@@ -55,7 +57,7 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    Url pointing to a [Bulk Export Manifest](https://build.fhir.org/ig/HL7/bulk-data/export.html#response---output-manifest) with a pre-coordinated FHIR data set. Files in multiple submitted manifests with the same `submitter` and `submissionId` SHALL be treated by the Data Consumer as if they were submitted in a single manifest. This parameter MAY be omitted when the operation is being called to set the submissionStatus to `complete` or `aborted`. The value SHALL be unique for all manifests that share a `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated. When this parameter is populated, the `fhirBaseUrl` parameter SHALL also be populated.
+    Url pointing to a [Bulk Export Manifest](https://build.fhir.org/ig/HL7/bulk-data/export.html#response---output-manifest) with a pre-coordinated FHIR data set. Files in multiple submitted manifests with the same `submitter` and `submissionId` SHALL be treated by the Data Consumer as if they were submitted in a single manifest. This parameter MAY be omitted when the operation is being called to set the submissionStatus to `completed` or `stopped`. The value SHALL be unique for all manifests that share a `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated. When this parameter is populated, the `fhirBaseUrl` parameter SHALL also be populated.
     """
   * type = #url
 

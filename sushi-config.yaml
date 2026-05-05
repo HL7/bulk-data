@@ -96,6 +96,8 @@ resources:
     name: Bulk Publish Operation Definition
   ValueSet/include-associated-data:
     name: Include Associated Data Value Set
+  ValueSet/submission-status:
+    name: Submission Status Value Set
   CodeSystem/include-associated-data:
     name: Include Associated Data Code System
 
