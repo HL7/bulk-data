@@ -24,10 +24,14 @@ Specifies the format of the file being requested.
 
 ##### Response - Success
 
-- HTTP status of `200 OK`
-- `Content-Type` header that matches the file format being delivered. For files in NDJSON format, SHALL be `application/fhir+ndjson`
+The {{ bulk_server_role }} SHALL return a successful file response with:
+
+- HTTP status `200 OK`
+- `Content-Type` header that matches the file format being delivered
 - Body of FHIR resources in newline delimited JSON, [NDJSON](https://github.com/ndjson/ndjson-spec), or another requested format
+
+For files in NDJSON format, the `Content-Type` header SHALL be `application/fhir+ndjson`.
 
 ##### Response - Error
 
-- HTTP Status Code of `4XX` or `5XX`
+The {{ bulk_server_role }} SHALL return an error response with HTTP status `4XX` or `5XX`.

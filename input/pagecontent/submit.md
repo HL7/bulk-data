@@ -74,11 +74,11 @@ Constraints:
 
 ##### `submissionStatus` Parameter
 
-The Data Provider uses the `submissionStatus` parameter to indicate the state of a submission to the Data Consumer. Values SHALL be drawn from the [Submission Status Value Set](ValueSet-submission-status.html), which constrains the [`http://hl7.org/fhir/event-status`](https://hl7.org/fhir/valueset-event-status.html) code system to:
+The Data Provider uses the `submissionStatus` parameter to indicate the state of a submission to the Data Consumer. Values SHALL be drawn from the [Submission Status Value Set](ValueSet-submission-status.html), which constrains the [`http://hl7.org/fhir/event-status`](https://hl7.org/fhir/valueset-event-status.html) code system. These values have the following meanings:
 
-- `in-progress` (default if parameter is omitted): Indicates that there will be additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
-- `completed`: Indicates there will be no additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
-- `stopped`: Indicates that the submission is invalid. The Data Consumer SHALL stop retrieving files and delete any data already processed from this submission. There will not be additional requests to the `$bulk-submit` endpoint for this `submitter` and `submissionId` combination.
+- `in-progress` (default if parameter is omitted): Additional requests to the `$bulk-submit` endpoint are expected for the `submitter` and `submissionId` combination in that request.
+- `completed`: No additional requests to the `$bulk-submit` endpoint are expected for the `submitter` and `submissionId` combination in that request.
+- `stopped`: The submission is invalid. The Data Consumer SHALL stop retrieving files and delete any data already processed from this submission. No additional requests to the `$bulk-submit` endpoint are expected for this `submitter` and `submissionId` combination.
 
 ###### Correcting Data Without Aborting
 
@@ -101,19 +101,22 @@ Alternatively, the Data Provider MAY call the Bulk Submit operation multiple tim
 ##### Headers
 
 - `Accept` (string)
-  Specifies the format of the optional FHIR `OperationOutcome` resource response to the request. Support for `application/fhir+json` is required. A client SHOULD provide this header. If omitted, the server MAY return an error or MAY process the request as if `application/fhir+json` was supplied.
+  Specifies the format of the optional FHIR `OperationOutcome` resource response to the request. The Data Consumer SHALL support `application/fhir+json`. A Data Provider SHOULD provide this header. If omitted, the Data Consumer MAY return an error or MAY process the request as if `application/fhir+json` was supplied.
 
 ##### Response - Success
 
-- HTTP status code `200 OK`
-- Optionally, a FHIR `OperationOutcome` resource in the body
+The Data Consumer SHALL return a successful response with HTTP status `200 OK`.
+
+The Data Consumer MAY include a FHIR `OperationOutcome` resource in the body.
 
 ##### Response - Error
 
-- HTTP status code `4XX` or `5XX`
-- The body SHALL be a FHIR `OperationOutcome` resource
+The Data Consumer SHALL return an error response with:
 
-If a server wants to prevent a client from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests` and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header. The `Retry-After` header SHOULD indicate how long the client needs to wait before trying again, either as a delay time in seconds or as an HTTP-date. When provided, the client SHOULD use this information to inform the timing of a future request.
+- HTTP status `4XX` or `5XX`
+- FHIR `OperationOutcome` resource in the body
+
+If a Data Consumer wants to prevent a Data Provider from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests`.
 
 ### Bulk Submit Status Request Flow
 
@@ -136,28 +139,32 @@ The request body SHALL be a FHIR [Parameters resource](https://hl7.org/fhir/para
 ##### Headers
 
 - `Accept` (string)
-  Specifies the format of the optional FHIR `OperationOutcome` resource response to the kick-off request. Currently, only `application/fhir+json` is supported. A client SHOULD provide this header. If omitted, the server MAY return an error or MAY process the request as if `application/fhir+json` was supplied.
+  Specifies the format of the optional FHIR `OperationOutcome` resource response to the kick-off request. Currently, only `application/fhir+json` is supported. A Data Provider SHOULD provide this header. If omitted, the Data Consumer MAY return an error or MAY process the request as if `application/fhir+json` was supplied.
 
 - `Prefer` (string)
-  Specifies whether the response is immediate or asynchronous. A value of <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> indicates that the response is asynchronous. A client SHOULD provide this header. If omitted, the server MAY return an error or MAY process the request as if `respond-async` was supplied.
+  Specifies whether the response is immediate or asynchronous. A value of <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> indicates that the response is asynchronous. A Data Provider SHOULD provide this header. If omitted, the Data Consumer MAY return an error or MAY process the request as if `respond-async` was supplied.
 
-  A client MAY also provide a second Prefer header value of `separate-export-status`, so the combined Prefer header for the kick-off request is `Prefer: respond-async,separate-export-status`. If this header value is included by a client and is supported by a server, the server SHALL return the header `Preference-Applied` with values of `respond-async` and `separate-export-status` in its response. These may be provided as comma-delimited values or the header may be repeated for each value.
+  A Data Provider MAY also provide a second Prefer header value of `separate-export-status`, so the combined Prefer header for the kick-off request is `Prefer: respond-async,separate-export-status`. If this header value is included by a Data Provider and is supported by a Data Consumer, the Data Consumer SHALL return the header `Preference-Applied` with values of `respond-async` and `separate-export-status` in its response. These may be provided as comma-delimited values or the header may be repeated for each value.
 
-  When a Prefer header value of `separate-export-status` is provided in the kick-off request and supported by the server, the HTTP status code in the response to a Bulk Data Status Request SHALL reflect the status request itself, and not the asynchronous job. In this case, when the HTTP status code of the Bulk Data Status Request is `200 OK`, the response SHALL also include an `X-Export-Status` header with an HTTP status code that reflects the status of the asynchronous job.
+  When a Prefer header value of `separate-export-status` is provided in the kick-off request and supported by the Data Consumer, the HTTP status code in the response to a Bulk Data Status Request SHALL reflect the status request itself, and not the asynchronous job. In this case, when the HTTP status code of the Bulk Data Status Request is `200 OK`, the response SHALL also include an `X-Export-Status` header with an HTTP status code that reflects the status of the asynchronous job.
 
 ##### Response - Success
 
-- HTTP status code `202 Accepted`
+The Data Consumer SHALL return a successful kick-off response with:
+
+- HTTP status `202 Accepted`
 - `Content-Location` header with the absolute URL of an endpoint for subsequent status requests
-- When a Prefer header value of `separate-export-status` is provided in the kick-off request and supported by the server, the response SHALL include the header `Preference-Applied` with values of `respond-async` and `separate-export-status`. These may be provided as comma-delimited values or the header may be repeated for each value.
-- Optionally, a FHIR `OperationOutcome` resource in the body in JSON format
+
+When a Prefer header value of `separate-export-status` is provided in the kick-off request and supported by the Data Consumer, the response SHALL include the header `Preference-Applied` with values of `respond-async` and `separate-export-status`. These may be provided as comma-delimited values or the header may be repeated for each value.
+
+The Data Consumer MAY include a FHIR `OperationOutcome` resource in the body in JSON format.
 
 ##### Response - Error
 
-- HTTP status code `4XX` or `5XX`
-- The body SHALL be a FHIR `OperationOutcome` resource in JSON format
+The Data Consumer SHALL return an error response with:
 
-If a server wants to prevent a client from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests` and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header. The `Retry-After` header SHOULD indicate how long the client needs to wait before trying again, either as a delay time in seconds or as an HTTP-date. When provided, the client SHOULD use this information to inform the timing of a future request.
+- HTTP status `4XX` or `5XX`
+- FHIR `OperationOutcome` resource in the body in JSON format
 
 ---
 {% include async-status-polling-request.md %}

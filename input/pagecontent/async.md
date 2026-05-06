@@ -15,7 +15,7 @@ Use cases that return small amounts of data but may take a lot of time to proces
 
 #### Kick-off Request
 
-The request will support the HTTP methods, URLs, headers, and other parameters that normally apply to the interaction being invoked. Servers SHALL also support the `Prefer` header described below, and SHOULD support the `Accept` header and `_outputFormat` parameter described below.
+Servers SHALL support the HTTP methods, URLs, headers, and other parameters that normally apply to the interaction being invoked. Servers SHALL also support the `Prefer` header described below, and SHOULD support the `Accept` header and `_outputFormat` parameter described below.
 
 ##### Headers
 
@@ -45,15 +45,21 @@ Implementation notes:
 
 ##### Response - Success
 
-- HTTP Status Code of `202 Accepted`
+The server SHALL return a successful kick-off response with:
+
+- HTTP status `202 Accepted`
 - `Content-Location` header with the absolute URL of an endpoint for subsequent status requests
-- When a Prefer header value of `separate-export-status` is provided in the kick-off request and supported by the server, the response SHALL include the header `Preference-Applied` with values of `respond-async` and `separate-export-status`. These may be provided as comma-delimited values or the header may be repeated for each value.
-- Optionally, a FHIR `OperationOutcome` resource in the body
+
+When a Prefer header value of `separate-export-status` is provided in the kick-off request and supported by the server, the response SHALL include the header `Preference-Applied` with values of `respond-async` and `separate-export-status`. These may be provided as comma-delimited values or the header may be repeated for each value.
+
+The server MAY include a FHIR `OperationOutcome` resource in the body.
 
 ##### Response - Error
 
-- HTTP Status Code of `4XX` or `5XX`
-- The body SHALL be a FHIR `OperationOutcome` resource
+The server SHALL return an error response with:
+
+- HTTP status `4XX` or `5XX`
+- FHIR `OperationOutcome` resource in the body
 
 ---
 {% include async-status-polling-request.md %}

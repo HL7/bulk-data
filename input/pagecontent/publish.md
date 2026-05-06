@@ -40,17 +40,22 @@ GET `[base]/$bulk-publish`
 
 #### Response - Error
 
-- HTTP status code of `4XX` or `5XX`
-- `Content-Type` header of `application/fhir+json`
-- The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON format. If this is not possible (for example, the infrastructure layer returning the error is not FHIR aware), the Data Provider MAY return an error message in another format and include a corresponding value for the `Content-Type` header.
+The Data Provider SHALL return an error response with HTTP status `4XX` or `5XX`.
+
+The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON format. If this is not possible (for example, the infrastructure layer returning the error is not FHIR aware), the Data Provider MAY return an error message in another format and include a corresponding value for the `Content-Type` header.
+
+When the body is a FHIR `OperationOutcome` resource, the response SHALL include a `Content-Type` header of `application/fhir+json`.
 
 
 #### Response - Output Manifest
 
-- HTTP status of `200 OK`
+The Data Provider SHALL return a manifest response with:
+
+- HTTP status `200 OK`
 - `Content-Type` header of `application/json`
-- `ETag` header that changes when the manifest body changes
 - Body of output manifest (see below)
+
+The response SHALL include an `ETag` header. The `ETag` value SHALL change when the manifest body changes.
 
 The output manifest is a JSON object providing metadata and links to the generated FHIR Bulk Data files. These files SHALL be accessible to the Data Consumer at the URLs advertised. The manifest and these URLs MAY be served by file servers other than the Data Provider's FHIR-specific server.
 
@@ -73,7 +78,7 @@ Implementation notes:
 
 ##### Incremental Updates
 
-The Data Provider MAY incrementally update a manifest by adding data files to the `output` array element that contain new resources and/or resources that replace versions of the resources in earlier files in the `output` array that have the same resource id. Additionally, the Data Provider MAY add files with Bundle resources indicating resources that have been deleted to the `deleted` array element (see details below), and MAY add files to the `error` array element. When generating a manifest that will be subsequently updated with these incremental changes, the Data Provider SHALL populate an `epochStartTime` element. When initially published, this value SHALL have the same value as the `transactionTime` element. Subsequently, adding files to the `output` array, `deleted` array, and `error` array of a manifest will cause the `transactionTime` element for that manifest to advance, but the `epochStartTime` value will remain the same. If a Data Provider is refreshing the manifest and no resources have been added, deleted, or updated since the `transactionTime` in the current manifest, the Data Provider SHOULD advance the `transactionTime` to the current time to indicate that the Data Provider is regularly publishing updates. Periodically, the Data Provider MAY generate a manifest that is a complete snapshot of the data (a new epoch), updating the `output` array and `error` array, emptying the `deleted` array, and setting new `epochStartTime` and `transactionTime` values. When a manifest is incrementally updated, apart from when it is reset to a new epoch, the order of files in the `output`, `deleted`, and `error` arrays in the manifest SHALL NOT change, the file contents SHALL not change, and the files SHALL remain retrievable.
+The Data Provider MAY incrementally update a manifest by adding data files to the `output` array element that contain new resources and/or resources that replace versions of the resources in earlier files in the `output` array that have the same resource id. Additionally, the Data Provider MAY add files with Bundle resources indicating resources that have been deleted to the `deleted` array element (see details below), and MAY add files to the `error` array element. When generating a manifest that will be subsequently updated with these incremental changes, the Data Provider SHALL populate an `epochStartTime` element. When initially published, this value SHALL have the same value as the `transactionTime` element. Subsequently, adding files to the `output`, `deleted`, and `error` arrays of a manifest SHALL cause the `transactionTime` element for that manifest to advance, and the `epochStartTime` value SHALL remain the same. If a Data Provider is refreshing the manifest and no resources have been added, deleted, or updated since the `transactionTime` in the current manifest, the Data Provider SHOULD advance the `transactionTime` to the current time to indicate that the Data Provider is regularly publishing updates. Periodically, the Data Provider MAY generate a manifest that is a complete snapshot of the data (a new epoch), updating the `output` array and `error` array, emptying the `deleted` array, and setting new `epochStartTime` and `transactionTime` values. When a manifest is incrementally updated, apart from when it is reset to a new epoch, the order of files in the `output`, `deleted`, and `error` arrays in the manifest SHALL NOT change, the file contents SHALL not change, and the files SHALL remain retrievable.
 
 Data Providers SHALL structure the manifests such that a Data Consumer can obtain a complete data set when processing a manifest by (1) inserting or updating all FHIR resources in files in the `output` array that have not been previously processed, followed by (2) deleting all resources listed in files in the `deleted` array that have not been previously processed.
 
@@ -131,13 +136,17 @@ Specifies the format of the file being requested.
 
 #### Response - Success
 
-- HTTP status of `200 OK`
-- `Content-Type` header that matches the file format being delivered.  For files in NDJSON format, SHALL be `application/fhir+ndjson`
+The Data Provider SHALL return a successful file response with:
+
+- HTTP status `200 OK`
+- `Content-Type` header that matches the file format being delivered
 - Body of FHIR resources in newline delimited json - [NDJSON](https://github.com/ndjson/ndjson-spec) or other requested format
+
+For files in NDJSON format, the `Content-Type` header SHALL be `application/fhir+ndjson`.
 
 #### Response - Error
 
-- HTTP Status Code of `4XX` or `5XX`
+The Data Provider SHALL return an error response with HTTP status `4XX` or `5XX`.
 
 ### Bulk Data Output File Organization
 
@@ -197,5 +206,5 @@ Note that if a Data Provider copies files to the Bulk Data output endpoint or pr
 </figure>
 
 #### Error handling
-- If any referenced file returns `404` or `410` while `epochStartTime` has not changed, the Data Provider is violating the invariant; Data Consumers MAY retry and/or alert.
-- If the manifest becomes temporarily unreachable (e.g., 5xx), back off and retry (exponential backoff bounded by the `updateCadence`).
+- While `epochStartTime` has not changed, referenced files SHALL remain retrievable and SHALL NOT return `404` or `410`. If this invariant is violated, Data Consumers MAY retry and/or alert.
+- If the manifest becomes temporarily unreachable (e.g., 5xx), Data Consumers SHOULD back off and retry using exponential backoff bounded by the `updateCadence`.

@@ -8,10 +8,13 @@ After an asynchronous bulk request has been started, a {{ bulk_client_role }} MA
 
 ##### Response - Success
 
-- HTTP Status Code of `202 Accepted`
-- Optionally a FHIR `OperationOutcome` resource in the body in JSON format
+The {{ bulk_server_role }} SHALL return a successful delete response with HTTP status `202 Accepted`.
+
+The {{ bulk_server_role }} MAY include a FHIR `OperationOutcome` resource in the body in JSON format.
 
 ##### Response - Error
 
-- HTTP status code of `4XX` or `5XX`
-- The body SHALL be a FHIR `OperationOutcome` resource in JSON format
+The {{ bulk_server_role }} SHALL return an error response with:
+
+- HTTP status `4XX` or `5XX`
+- FHIR `OperationOutcome` resource in the body in JSON format

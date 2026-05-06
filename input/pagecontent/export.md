@@ -106,6 +106,7 @@ Export data from a Data Provider's FHIR server, whether or not it is associated 
 
   A Data Consumer MAY also provide a second Prefer header value of `separate-export-status`, so the combined Prefer header for the kickoff request is `Prefer: respond-async,separate-export-status`. If this header value is included by a Data Consumer and is supported by a Data Provider, the Data Provider SHALL return the header `Preference-Applied` with values of `respond-async` and `separate-export-status` in its response. These may be provided as comma-delimited values or the header may be repeated for each value.
 
+  <a name="separate-export-status"></a>
   When a Prefer header value of `separate-export-status` is provided in the kickoff request and supported by the Data Provider, the HTTP status code in the response to a Bulk Data Status request SHALL reflect the status request itself, and not the export job. In this case, when the HTTP status code of the Bulk Data Status request is `200 OK`, the response SHALL also include an `X-Export-Status` header with an HTTP status code that reflects the status of the export job.
 
 ##### Query Parameters
@@ -209,15 +210,21 @@ _* In the case of a Group level export, the Data Provider may retain resources m
 
 ##### Response - Success
 
-- HTTP Status Code of `202 Accepted`
+The Data Provider SHALL return a successful kick-off response with:
+
+- HTTP status `202 Accepted`
 - `Content-Location` header with the absolute URL of an endpoint for subsequent status requests (polling location)
-- When a Prefer header value of `separate-export-status` is provided in the kickoff request and supported by the Data Provider, the response SHALL include the header `Preference-Applied` with values of `respond-async` and `separate-export-status`. These may be provided as comma-delimited values or the header may be repeated for each value.
-- Optionally, a FHIR `OperationOutcome` resource in the body in JSON format
+
+When a Prefer header value of `separate-export-status` is provided in the kickoff request and supported by the Data Provider, the response SHALL include the header `Preference-Applied` with values of `respond-async` and `separate-export-status`. These may be provided as comma-delimited values or the header may be repeated for each value.
+
+The Data Provider MAY include a FHIR `OperationOutcome` resource in the body in JSON format.
 
 ##### Response - Error (e.g., unsupported search parameter)
 
-- HTTP Status Code of `4XX` or `5XX`
-- The body SHALL be a FHIR `OperationOutcome` resource in JSON format
+The Data Provider SHALL return an error response with:
+
+- HTTP status `4XX` or `5XX`
+- FHIR `OperationOutcome` resource in the body in JSON format
 
 If a Data Provider wants to prevent a Data Consumer from beginning a new export before an in-progress export is completed, it SHOULD respond with a `429 Too Many Requests` status and a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header, following the rate-limiting advice for "Bulk Data Status Request" below.
 
@@ -302,17 +309,31 @@ Body
 
 ##### Response - In-Progress Status
 
-- HTTP Status Code of `202 Accepted` (when a prefer header value of `separate-export-status` was not provided in the kickoff)
-- When a Prefer header value of `separate-export-status` was provided in the kickoff and is supported by the Data Provider, HTTP status code of `200 OK` and an `X-Export-Status` header of `202 Accepted`
-- Optionally, the Data Provider MAY return an `X-Progress` header with a text description of the status of the request that is less than 100 characters. The format of this description is at the Data Provider's discretion and MAY be a percentage complete value, or MAY be a more general status such as "in progress". The Data Consumer MAY parse the description, display it to the user, or log it.
-- When the `allowPartialManifests` kickoff parameter is `true`, the Data Provider MAY return a `Content-Type` header of `application/json` and a body containing an output manifest in the format [described below](#response---output-manifest), populated with a partial set of output files for the export. When provided, a manifest SHALL only contain files that are available for retrieval by the Data Consumer. Once returned, the Data Provider SHALL NOT alter a manifest when it is returned in subsequent requests, with the exception of optionally adding a `link` field pointing to a manifest with additional output files or updating output file URLs that have expired. The output files referenced in the manifest SHALL NOT be altered once they have been included in a manifest that has been returned to a Data Consumer.
+The Data Provider SHALL indicate an in-progress export job as follows:
+
+| Kick-off request | HTTP status | `X-Export-Status` |
+| --- | --- | --- |
+| No [`separate-export-status`](#separate-export-status) | `202 Accepted` | Not present |
+| [`separate-export-status`](#separate-export-status) | `200 OK` | `202 Accepted` |
+{:.grid}
+
+The Data Provider MAY also return an `X-Progress` header with a text description of the status of the request that is less than 100 characters. The format of this description is at the Data Provider's discretion and MAY be a percentage complete value, or MAY be a more general status such as "in progress". The Data Consumer MAY parse the description, display it to the user, or log it.
+
+When the `allowPartialManifests` kickoff parameter is `true`, the Data Provider MAY return a `Content-Type` header of `application/json` and a body containing an output manifest in the format [described below](#response---output-manifest), populated with a partial set of output files for the export. When provided, a manifest SHALL only contain files that are available for retrieval by the Data Consumer. Once returned, the Data Provider SHALL NOT alter a manifest when it is returned in subsequent requests, with the exception of optionally adding a `link` field pointing to a manifest with additional output files or updating output file URLs that have expired. The output files referenced in the manifest SHALL NOT be altered once they have been included in a manifest that has been returned to a Data Consumer.
 
 ##### Response - Error Status
 
-- HTTP status code of `4XX` or `5XX` (when a prefer header value of `separate-export-status` was not provided in the kickoff)
-- When a Prefer header value of `separate-export-status` was provided in the kickoff and is supported by the Data Provider, HTTP status code of `200 OK` and an `X-Export-Status` header of `4XX` or `5XX`
-- `Content-Type` header of `application/fhir+json` when body is a FHIR `OperationOutcome` resource
-- The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON format. If this is not possible (for example, the infrastructure layer returning the error is not FHIR aware), the Data Provider MAY return an error message in another format and include a corresponding value for the `Content-Type` header.
+The Data Provider SHALL indicate an export job failure as follows:
+
+| Kick-off request | HTTP status | `X-Export-Status` |
+| --- | --- | --- |
+| No [`separate-export-status`](#separate-export-status) | `4XX` or `5XX` | Not present |
+| [`separate-export-status`](#separate-export-status) | `200 OK` | `4XX` or `5XX` |
+{:.grid}
+
+The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON format. If this is not possible (for example, the infrastructure layer returning the error is not FHIR aware), the Data Provider MAY return an error message in another format and include a corresponding value for the `Content-Type` header.
+
+When the body is a FHIR `OperationOutcome` resource, the response SHALL include a `Content-Type` header of `application/fhir+json`.
 
 In the case of a polling failure that does not indicate failure of the export job, a Data Provider SHOULD use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the FHIR `OperationOutcome` resource's `issue.code` element to indicate to the Data Consumer that it will need retry the request at a later time.
 
@@ -320,11 +341,17 @@ In the case of a polling failure that does not indicate failure of the export jo
 
 ##### Response - Complete Status
 
-- HTTP status of `200 OK`
-- When a Prefer header value of `separate-export-status` was provided in the kickoff and is supported by the Data Provider, an `X-Export-Status` header of `200 OK`
-- `Content-Type` header of `application/json`
-- The Data Provider SHOULD return an `Expires` header indicating when the files listed will no longer be available for access.
-- A body containing the output manifest described below.
+The Data Provider SHALL indicate a completed export job as follows:
+
+| Kick-off request | HTTP status | `X-Export-Status` |
+| --- | --- | --- |
+| No [`separate-export-status`](#separate-export-status) | `200 OK` | Not present |
+| [`separate-export-status`](#separate-export-status) | `200 OK` | `200 OK` |
+{:.grid}
+
+The response SHALL include a `Content-Type` header of `application/json` and a body containing the output manifest described below.
+
+The Data Provider SHOULD return an `Expires` header indicating when the files listed will no longer be available for access.
 
 ##### Response - Output Manifest
 
