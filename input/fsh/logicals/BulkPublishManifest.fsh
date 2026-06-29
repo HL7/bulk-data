@@ -2,15 +2,13 @@ Logical: BulkPublishManifest
 Parent: BulkDataManifest
 Id: BulkPublishManifest
 Title: "Bulk Publish Manifest"
-Description: "Logical model describing the manifest returned by a $bulk-publish endpoint. Extends BulkDataManifest with fields to support incremental updates through epochs and to advertise a Data Provider's update cadence."
+Description: "Logical model describing the manifest returned by a $bulk-publish endpoint. Extends BulkDataManifest with fields to advertise a Data Provider's update cadence and support pending-based incremental update chains."
 * ^status = #active
 * ^extension[+].url = $fmm
 * ^extension[=].valueInteger = 2
 * ^jurisdiction = $m49.htm#001 "World"
 
-// Bulk Publish does not support partial-manifest pagination.
-* link 0..0
-* request 0..0
+* updateCadence 0..1 string "Update Cadence" "ISO 8601 duration indicating the typical rate at which the Data Provider expects the manifest or pending update-chain pages to change. When provided, Data Consumers SHOULD use this value to choose a polling interval for subsequent requests."
 
 * transactionTime ^short = "Timestamp for the data included in this manifest"
 * transactionTime ^definition = "Indicates the Data Provider's time when the files in this published manifest were generated. The published files referenced in this manifest SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant."
@@ -21,5 +19,9 @@ Description: "Logical model describing the manifest returned by a $bulk-publish 
 * output.url ^short = "File URL"
 * output.url ^definition = "The absolute path to the file. The format of the file SHOULD match the outputFormat element in this manifest when that element is populated."
 
-* epochStartTime 0..1 instant "Epoch Start Time" "The timestamp when the current epoch began, used to support incremental manifest updates. When the epoch changes, epochStartTime and transactionTime SHALL be identical. Within an epoch, file lists in output, deleted, and error are append-only and file contents are immutable; an epoch reset establishes a new baseline by regenerating a complete snapshot. Data Providers that incrementally update a manifest and periodically reset to a snapshot SHALL populate this element. Data Providers that always return a complete snapshot MAY populate or omit this element."
-* updateCadence 0..1 string "Update Cadence" "ISO 8601 duration indicating the typical rate at which new files will be added to the manifest (e.g., \"PT1H\"). When provided, Data Consumers SHOULD use this value to choose a polling interval for subsequent requests."
+* link 0..1
+* link ^short = "Next manifest page or update-chain marker"
+* link ^definition = "When present, a single link with relation `next` points to another manifest page, an incremental update manifest page, or a pending or closed update-chain marker."
+* link.url ^short = "Next manifest page or marker URL"
+* link.url ^definition = "URL pointing to another manifest page, or to an operation-defined marker such as `#pending` or `#closed`."
+* request 0..0

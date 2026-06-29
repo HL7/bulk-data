@@ -28,11 +28,4 @@ Description: "Logical model describing the status manifest returned by a Data Co
 
 * error.manifestUrl 1..1 url "Source Manifest URL" "URL of the manifest submitted by the Data Provider where the issues described in this error file occurred. Each item in the error section SHALL include this element. A single manifestUrl MAY be referenced from multiple items in the error section."
 
-* link ^short = "Paging links"
-* link ^definition = "Link to a related status manifest used to incrementally return additional output or deleted files."
-* link.relation ^short = "Relation"
-* link.relation ^definition = "The relationship type. A value of 'next' indicates the URL points to another status manifest containing additional files."
-* link.url ^short = "Link URL"
-* link.url ^definition = "URL pointing to the location of another status manifest. All fields in the linked manifest SHALL be populated with the same values as this manifest, apart from the contents of output, deleted, and link."
-
 * request 0..0

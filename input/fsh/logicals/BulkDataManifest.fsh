@@ -39,5 +39,11 @@ Description: "Logical model describing a standard format to provide links to FHI
     * count 1..1 integer "Count" "The number of OperationOutcome resources in the file with this severity level."
 
 * link 0..* BackboneElement "Paging links" "Link to related manifest."
-  * relation 1..1 string "Relation" "The relationship type. A value of 'next' indicates the URL points to the location of another manifest containing additional output files."
-  * url 1..1 url "Link URL" "URL pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as this manifest, apart from the contents of output, deleted, and link."
+  * obeys bdm-link-relation-next
+  * relation 1..1 string "Relation" "The relationship type. Value SHALL be 'next', indicating the URL points to the location of another manifest."
+  * url 1..1 url "Link URL" "URL pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as this manifest, apart from the contents of output, deleted, error, and link."
+
+Invariant: bdm-link-relation-next
+Description: "Manifest links SHALL use a relation value of 'next'."
+Severity: #error
+Expression: "relation = 'next'"

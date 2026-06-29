@@ -24,3 +24,11 @@ Reference to draft CodeSystem http://hl7.org/fhir/group-type|4.0.1
 # 05. Created UTG tracker to create code system in UTG: UP-759 - "Create an Include Associated Data Code System" based on discussion with TMSG (11/13/2025 minutes: https://confluence.hl7.org/spaces/TSMG/pages/403868663/2025-11-13+TSMG+Agenda+and+Minutes). To preserve the expansion and links in the ValueSet definition, this version will use the current code system defined in this IG and will update to the THO code system URL when it is published. Since the current operation parameter that uses these codes is of type `code` and documented as experimental, this is not considered a breaking change and does not need community input. An STU note was added to alert implementers that that the code system will be migrating to THO.
 
 Most code systems defined in HL7 IGs will need to move to THO later during the process. Consider giving this code system a THO URL now (See https://confluence.hl7.org/display/TSMG/Terminology+Play+Book, and/or talk to TSMG)
+
+
+# Errors
+
+# 06. Bulk Publish uses operation-defined fragment sentinel values in link.url.
+# These are valid fragment-only URL references, but the publisher validates bare fragments as same-document anchors.
+The URL value '#pending' is invalid because there is no matching target
+The URL value '#closed' is invalid because there is no matching target

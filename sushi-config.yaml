@@ -28,6 +28,11 @@ pages:
     extension:
       - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
         valueCode: trial-use
+  publish-worked-example.md:
+    title: Bulk Publish Worked Example
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: informative
   submit.md:
     title: Submit
     extension:
