@@ -3,7 +3,6 @@ InstanceOf: BulkPublishManifest
 Title: "Minimal Bulk Publish Manifest"
 Description: "Example minimal, non-incremental Bulk Publish manifest."
 Usage: #example
-* manifestType = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-publish"
 * transactionTime = "2021-01-01T00:00:00Z"
 * requiresAccessToken = false
 * output[0].type = "Organization"
@@ -16,7 +15,6 @@ InstanceOf: BulkPublishManifest
 Title: "Paged Bulk Publish Manifest"
 Description: "Example first page of a Bulk Publish manifest divided into ordinary manifest pages."
 Usage: #example
-* manifestType = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-publish"
 * transactionTime = "2021-01-01T00:00:00Z"
 * requiresAccessToken = false
 * output[0].type = "Organization"
@@ -29,7 +27,6 @@ InstanceOf: BulkPublishManifest
 Title: "Paged Bulk Publish Manifest Next Page"
 Description: "Example second page of a Bulk Publish manifest divided into ordinary manifest pages."
 Usage: #example
-* manifestType = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-publish"
 * transactionTime = "2021-01-01T00:00:00Z"
 * requiresAccessToken = false
 * output[0].type = "Practitioner"
@@ -42,7 +39,6 @@ InstanceOf: BulkPublishManifest
 Title: "Bulk Publish Manifest With Pending Update Chain"
 Description: "Example root Bulk Publish manifest that links to a pending update-chain page."
 Usage: #example
-* manifestType = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-publish"
 * transactionTime = "2021-01-01T00:00:00Z"
 * updateCadence = "P1D"
 * requiresAccessToken = false
@@ -56,7 +52,6 @@ InstanceOf: BulkPublishManifest
 Title: "Pending Bulk Publish Manifest Page"
 Description: "Example Bulk Publish manifest page that advertises a pending incremental update."
 Usage: #example
-* manifestType = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-publish"
 * transactionTime = "2021-01-01T00:00:00Z"
 * updateCadence = "P1D"
 * requiresAccessToken = false
@@ -68,7 +63,6 @@ InstanceOf: BulkPublishManifest
 Title: "Bulk Publish Incremental Update Manifest"
 Description: "Example Bulk Publish manifest page containing an incremental update and a pending next link."
 Usage: #example
-* manifestType = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-publish"
 * updateCadence = "P1D"
 * transactionTime = "2021-01-02T00:00:00Z"
 * requiresAccessToken = false

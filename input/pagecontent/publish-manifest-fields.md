@@ -74,19 +74,17 @@
 			ELSE 0
 		END AS omit_from_table,
 		CASE f.seg1
-			WHEN 'manifestType' THEN 1
-			WHEN 'transactionTime' THEN 2
-			WHEN 'epochStartTime' THEN 3
-			WHEN 'updateCadence' THEN 4
-			WHEN 'request' THEN 5
-			WHEN 'requiresAccessToken' THEN 6
-			WHEN 'outputFormat' THEN 7
-			WHEN 'outputOrganizedBy' THEN 8
-			WHEN 'outputOrganizedByDetail' THEN 9
-			WHEN 'output' THEN 10
-			WHEN 'deleted' THEN 11
-			WHEN 'error' THEN 12
-			WHEN 'link' THEN 13
+			WHEN 'transactionTime' THEN 1
+			WHEN 'epochStartTime' THEN 2
+			WHEN 'updateCadence' THEN 3
+			WHEN 'requiresAccessToken' THEN 4
+			WHEN 'outputFormat' THEN 5
+			WHEN 'outputOrganizedBy' THEN 6
+			WHEN 'outputOrganizedByDetail' THEN 7
+			WHEN 'output' THEN 8
+			WHEN 'deleted' THEN 9
+			WHEN 'outcome' THEN 10
+			WHEN 'link' THEN 11
 			ELSE 999
 		END AS top_sort,
 		top.required_sort AS top_required_sort,

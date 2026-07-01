@@ -12,7 +12,7 @@ Usage: #example
 * output[2].type = "Observation"
 * output[2].url = "https://example.org/output/observation_file_2.ndjson"
 * deleted[0].url = "https://example.org/output/del_file_1.ndjson"
-* error[0].url = "https://example.org/output/err_file_1.ndjson"
+* outcome[0].url = "https://example.org/output/err_file_1.ndjson"
 * extension[0].url = "http://example.org/fhir/StructureDefinition/includes-telehealth-patients"
 * extension[0].valueBoolean = true
 
@@ -29,7 +29,7 @@ Usage: #example
 * output[1].continuesInFile = "https://example.org/output/file_3.ndjson"
 * output[2].url = "https://example.org/output/file_3.ndjson"
 * deleted[0].url = "https://example.org/output/del_file_1.ndjson"
-* error[0].url = "https://example.org/output/err_file_1.ndjson"
+* outcome[0].url = "https://example.org/output/err_file_1.ndjson"
 * extension[0].url = "http://example.org/fhir/StructureDefinition/includes-telehealth-patients"
 * extension[0].valueBoolean = true
 * link[0].relation = "next"

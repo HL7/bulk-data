@@ -2,14 +2,12 @@ Logical: BulkSubmitStatusManifest
 Parent: BulkDataManifest
 Id: BulkSubmitStatusManifest
 Title: "Bulk Submit Status Manifest"
-Description: "Logical model describing the status manifest returned by a Data Consumer in response to a $bulk-submit-status polling request. Extends BulkDataManifest with a submissionId linking the manifest to the originating submission, and a manifestUrl on output and error items linking them back to the Data Provider's submitted manifests."
+Description: "Logical model describing the status manifest returned by a Data Consumer in response to a $bulk-submit-status polling request. Extends BulkDataManifest with a submissionId linking the manifest to the originating submission, and a manifestUrl on output and outcome items linking them back to the Data Provider's submitted manifests."
 * ^status = #active
 * ^extension[+].url = $fmm
 * ^extension[=].valueInteger = 2
 * ^jurisdiction = $m49.htm#001 "World"
 
-* manifestType ^short = "OperationDefinition that resulted in this status manifest"
-* manifestType ^definition = "Canonical URL of the OperationDefinition for the status operation associated with the provision of this manifest. E.g., `http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-submit-status|1.0.0`. This element will be mandatory in a future release of this IG."
 * transactionTime ^short = "Timestamp for the data included in this manifest"
 * transactionTime ^definition = "Indicates the Data Consumer's time when this status manifest and its referenced files were generated. The returned files SHOULD NOT include resources modified after this instant, and SHALL include any matching resources prepared up to and including this instant."
 * requiresAccessToken ^short = "Token required to retrieve status files"
@@ -26,6 +24,4 @@ Description: "Logical model describing the status manifest returned by a Data Co
 * deleted ^short = "Deleted Resource Files"
 * deleted ^definition = "References to files containing pointers to previously submitted resources marked for removal by the Data Provider. Each line in the deleted files SHALL contain a FHIR Bundle with a type of transaction which SHALL contain one or more entry items that reflect a deleted resource. In each entry, the request.url and request.method elements SHALL be populated and request.method SHALL be set to DELETE."
 
-* error.manifestUrl 1..1 url "Source Manifest URL" "URL of the manifest submitted by the Data Provider where the issues described in this error file occurred. Each item in the error section SHALL include this element. A single manifestUrl MAY be referenced from multiple items in the error section."
-
-* request 0..0
+* outcome.manifestUrl 1..1 url "Source Manifest URL" "URL of the manifest submitted by the Data Provider where the issues described in this outcome file occurred. Each item in the outcome section SHALL include this element. A single manifestUrl MAY be referenced from multiple items in the outcome section."

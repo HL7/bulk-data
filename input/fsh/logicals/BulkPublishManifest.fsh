@@ -24,4 +24,3 @@ Description: "Logical model describing the manifest returned by a $bulk-publish 
 * link ^definition = "When present, a single link with relation `next` points to another manifest page, an incremental update manifest page, or a pending or closed update-chain marker."
 * link.url ^short = "Next manifest page or marker URL"
 * link.url ^definition = "URL pointing to another manifest page, or to an operation-defined marker such as `#pending` or `#closed`."
-* request 0..0

@@ -10,6 +10,8 @@
 * Defined a logical model for the Bulk Data Manifest JSON format.
   - In STU3, the `extension` property on any manifest object had a value of a JSON object where the properties are the extension name and the values are the extension value. In STU4, the `extension` property contains an array of FHIR Extension elements.
   - Added optional `outputFormat` element.
+  - Removed the deprecated `request` element.
+  - Renamed the `error` element to `outcome`.
 * Aligned Bulk Export kick-off requests with the FHIR Operations Framework.
   - Removed support for HTTP `GET` kick-off requests, requiring use of HTTP `POST` with a FHIR Parameters Resource.
   - Removed support for representing repeated Bulk Export parameters as multiple comma-delimited values in a single parameter value.
