@@ -13,7 +13,7 @@ Usage: #example
 * error[0].countSeverity[1].code = #error
 * error[0].countSeverity[1].count = 100
 * error[1].url = "http://example.org/output/validation_errors_2.ndjson"
-* error[1].manifestUrl = "https//example.org/manifests/3556d214-c6e2-42e6-a7f7-89690f7a40bb_2"
+* error[1].manifestUrl = "https://example.org/manifests/3556d214-c6e2-42e6-a7f7-89690f7a40bb_2"
 * error[1].countSeverity[0].code = #information
 * error[1].countSeverity[0].count = 98
 * error[1].countSeverity[1].code = #error

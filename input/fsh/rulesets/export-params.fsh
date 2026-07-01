@@ -63,7 +63,7 @@ RuleSet: ExportParam_elements
   * min = 0
   * max = "*"
   * documentation = """
-    Experimental support is optional for a Data Provider, optional for a Data Consumer.
+    Support is optional for a Data Provider, optional for a Data Consumer.
 
     When provided, the Data Provider SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements SHOULD be of the form `[resource type].[element name]` (e.g., `Patient.id`) or `[element name]` (e.g., `id`) and only root elements in a resource are permitted. If the resource type is omitted, the element SHOULD be returned for all resources in the response where it is applicable.
 
@@ -82,7 +82,7 @@ RuleSet: ExportParam_patient
   * documentation = """
     Support is optional for a Data Provider, optional for a Data Consumer.
 
-    Not applicable to system level export requests. This parameter is only valid in kickoff requests initiated through an HTTP POST request. When provided, the Data Provider SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a Data Consumer requests patients who are not present on the Data Provider (or in the case of a group level export, who are not members of the group), the Data Provider SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
+    Not applicable to system level export requests. When provided, the Data Provider SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a Data Consumer requests patients who are not present on the Data Provider (or in the case of a group level export, who are not members of the group), the Data Provider SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
 
     A Data Provider that is unable to support the `patient` parameter SHOULD return an error and FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request omitting the `patient` parameter. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
     """
@@ -96,7 +96,7 @@ RuleSet: ExportParam_includeAssociatedData
   * min = 0
   * max = "*"
   * documentation = """
-    Experimental support is optional for a Data Provider, optional for a Data Consumer.
+    Support is optional for a Data Provider, optional for a Data Consumer.
 
     When provided, a Data Provider with support for the parameter and requested values SHALL return or omit a pre-defined set of FHIR resources associated with the request.
 
@@ -108,7 +108,7 @@ RuleSet: ExportParam_includeAssociatedData
     * `RelevantProvenanceResources`: Export will include all Provenance resources associated with each of the non-provenance resources being returned.
     * `_[custom value]`: A Data Provider MAY define and support custom values that are prefixed with an underscore (e.g., `_myCustomPreset`).
   """
-  * type = #code
+  * type = #Coding
   * binding
     * strength = #extensible
     * valueSet = Canonical(IncludeAssociatedDataValueSet)
@@ -125,7 +125,7 @@ RuleSet: ExportParam_typeFilter
 
     String of a FHIR REST search query.
 
-    When provided, a Data Provider with support for the parameter and requested search queries SHALL filter the data in the response for resource types referenced in the typeFilter expression to only include resources that meet the specified criteria. FHIR search result parameters such as `_include` and `_sort` SHALL NOT be used and a query in the `_typeFilter` parameter SHALL have the search context of a single FHIR Resource Type. [See details](export.html#_typefilter-query-parameter).
+    When provided, a Data Provider with support for the parameter and requested search queries SHALL filter the data in the response for resource types referenced in the typeFilter expression to only include resources that meet the specified criteria. FHIR search result parameters such as `_include` and `_sort` SHALL NOT be used and a query in the `_typeFilter` parameter SHALL have the search context of a single FHIR Resource Type. [See details](export.html#_typefilter-parameter).
 
     A Data Provider unable to support the requested `_typeFilter` queries SHOULD return an error and FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request that omits those queries. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
   """

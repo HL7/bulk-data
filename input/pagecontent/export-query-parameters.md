@@ -35,7 +35,7 @@
 
 <table class="table">
   <thead>
-    <th>Query Parameter</th>
+    <th>Parameter</th>
     <th>Optionality for Data Provider</th>
     <th>Optionality for Data Consumer</th>
     <th>Cardinality</th>
@@ -44,7 +44,7 @@
   </thead>
   <tbody>
 {% for p in params %}{% if p.param_name %}    <tr>
-      <td><code>{{ p.param_name }}</code>{% if p.param_name == 'patient' %}<br/>(POST requests only){% endif %}</td>
+      <td><code>{{ p.param_name }}</code></td>
       <td><span class="label label-{% if p.data_provider_optionality == 'required' %}success{% else %}info{% endif %}">{{ p.data_provider_optionality }}</span></td>
       <td><span class="label label-{% if p.data_consumer_optionality == 'required' %}success{% else %}info{% endif %}">{{ p.data_consumer_optionality }}</span></td>
       <td>{{ p.cardinality }}</td>

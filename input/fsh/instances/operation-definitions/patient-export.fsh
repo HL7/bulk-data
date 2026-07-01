@@ -9,9 +9,10 @@ Usage: #definition
 * extension[+].url = $fmm
 * extension[=].valueInteger = 5
 * kind = #operation
+* affectsState = true
 * date = "2021-07-29"
 * jurisdiction = $m49.htm#001 "World"
-* description = "FHIR Operation through which an authenticated and authorized Data Consumer requests a detailed set of FHIR resources of diverse resource types pertaining to all patients from a Data Provider. The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Bulk Interaction Pattern](async.html)"
+* description = "FHIR Operation through which an authenticated and authorized Data Consumer requests a detailed set of FHIR resources of diverse resource types pertaining to all patients from a Data Provider. The Data Provider's FHIR Resource Server SHALL support invocation of this operation using HTTP POST and the [FHIR Asynchronous Bulk Interaction Pattern](async.html)."
 * code = #export
 * resource = #Patient
 * system = false
