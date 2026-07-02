@@ -1,0 +1,14 @@
+{
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "transactionTime": "2021-01-01T00:00:00Z",
+  "updateCadence": "P1D",
+  "requiresAccessToken": false,
+  "output": [{
+      "type": "Organization",
+      "url": "https://example.com/output/organization_1.ndjson"
+    }],
+  "link": [{
+      "relation": "next",
+      "url": "https://example.com/manifests/provider-directory-update-1.json"
+    }]
+}

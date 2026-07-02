@@ -4,10 +4,10 @@ name: BulkDataAccessIG
 title: Bulk Data Access IG
 description: FHIR based approach for exporting large data sets from a FHIR server to a client application
 status: active
-version: 3.0.0
+version: 4.0.0
 fhirVersion: 4.0.1
 copyrightYear: 2025+
-releaseLabel: "STU 3" # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
+releaseLabel: "STU 4" # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
 license: CC0-1.0 # https://www.hl7.org/fhir/valueset-spdx-license.html
 jurisdiction: http://unstats.un.org/unsd/methods/m49/m49.htm#001
 publisher:
@@ -20,16 +20,47 @@ pages:
     title: Home
   export.md:
     title: Export
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
+  publish.md:
+    title: Publish
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
+  publish-worked-example.md:
+    title: Bulk Publish Worked Example
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: informative
+  submit.md:
+    title: Submit
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
   group.md:
     title: Groups
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
   authorization.md:
     title: SMART Backend Services Authorization
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
+  async.md:
+    title: Asynchronous Bulk Interaction Pattern
+    extension:
+      - url: http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status
+        valueCode: trial-use
   abbreviations.md:
     title: Abbreviations
   changes.md:
     title: Change Log
   downloads.html:
     title: Downloads
+  tools.md:
+    title: Tools
   ImplementationGuide-hl7.fhir.uv.bulkdata.md:
     title: Bulk Data Implementation Guide Resource
 
@@ -40,8 +71,11 @@ parameters:
 
 menu:
   Home: index.html
-  Export: export.html
+  Export Operation: export.html
   Groups: group.html
+  Submit Operation: submit.html
+  Publish Operation: publish.html
+  Async Pattern: async.html
   Authorization: authorization.html
   FHIR Artifacts: artifacts.html
   Downloads: downloads.html
@@ -53,12 +87,92 @@ resources:
     name: Capability Statement
   OperationDefinition/export:
     name: System Level Export Operation Definition
+  OperationDefinition/async:
+    name: FHIR Asynchronous Bulk Interaction Pattern Operation Definition
   OperationDefinition/group-export:
     name: Group Level Export Operation Definition
   OperationDefinition/patient-export:
     name: Patient Level Export Operation Definition
+  OperationDefinition/bulk-submit:
+    name: Bulk Submit Operation Definition
+  OperationDefinition/bulk-submit-status:
+    name: Bulk Submit Status Operation Definition
+  OperationDefinition/bulk-publish:
+    name: Bulk Publish Operation Definition
+  Binary/BulkDataManifestByTypeExample:
+    name: Bulk Data Manifest Example By Resource Type
+    description: Example Bulk Data output manifest when organizeOutputBy is not populated.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkDataManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkDataManifestOrganizedByPatientExample:
+    name: Bulk Data Manifest Example Organized By Patient
+    description: Example Bulk Data output manifest when organizeOutputBy is Patient and allowPartialManifests is true.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkDataManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkDataManifestMinimalExample:
+    name: Minimal Bulk Data Manifest
+    description: Example Bulk Data output manifest when organizeOutputBy is Patient and allowPartialManifests is true.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkDataManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestMinimalExample:
+    name: Minimal Bulk Publish Manifest
+    description: Example minimal, non-incremental Bulk Publish manifest.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestPagedExample:
+    name: Paged Bulk Publish Manifest
+    description: Example first page of a Bulk Publish manifest divided into ordinary manifest pages.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestPagedNextPageExample:
+    name: Paged Bulk Publish Manifest Next Page
+    description: Example second page of a Bulk Publish manifest divided into ordinary manifest pages.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestPendingRootExample:
+    name: Bulk Publish Manifest With Pending Update Chain
+    description: Example root Bulk Publish manifest that links to a pending update-chain page.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestPendingStubExample:
+    name: Pending Bulk Publish Manifest Page
+    description: Example Bulk Publish manifest page that advertises a pending incremental update.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestIncrementalUpdateExample:
+    name: Bulk Publish Incremental Update Manifest
+    description: Example Bulk Publish manifest page containing an incremental update and a pending next link.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkSubmitStatusManifestExample:
+    name: Bulk Submit Status Manifest Example
+    description: Example bulk submit status manifest returned by a Data Consumer.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkSubmitStatusManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
   ValueSet/include-associated-data:
     name: Include Associated Data Value Set
+  ValueSet/submission-status:
+    name: Submission Status Value Set
   CodeSystem/include-associated-data:
     name: Include Associated Data Code System
 

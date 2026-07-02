@@ -1,7 +1,8 @@
 @startuml
 start
-:All resources available for Bulk Export;
-:Exclude unauthorized resources
+:All resources available for the Data Provider to export;
+:Exclude resources the Data Consumer
+is not authorized to receive
 (based on OAuth scopes and business logic);
 if (group export) then (yes)
   :Exclude resources for patients outside group;
@@ -31,6 +32,6 @@ if (`includeAssociatedData` parameter) then (yes)
 else (no)
 endif
 :Add other related resources to provide context to those in export;
-:Output resources;
+:Output resources for the Data Consumer;
 stop
 @enduml

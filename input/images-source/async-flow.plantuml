@@ -1,0 +1,18 @@
+@startuml
+participant APP as "Client"
+participant "Server" as FHIR
+APP -> FHIR: Kick-off request
+activate FHIR #eee
+FHIR --> APP: Status polling location
+loop Check status (repeat 1..n)
+  APP -> FHIR: Status request
+  FHIR --> APP: In-progress status
+end
+deactivate FHIR
+APP -> FHIR: Status request
+FHIR --> APP: Complete status (JSON manifest)
+loop Retrieve files and errors (repeat 0..n)
+  APP -> FHIR: Output file request
+  FHIR --> APP: Output file
+end
+@enduml

@@ -1,7 +1,7 @@
 @startuml
-participant APP as "Bulk Data Client"
-box Bulk Data Provider
-participant "FHIR Authorization Server" as AUTH
+participant APP as "Data Consumer"
+box "Data Provider"
+participant "Authorization Server" as AUTH
 participant "FHIR Resource Server" as FHIR
 participant "Output File Server" as FILE
 end box
@@ -11,7 +11,7 @@ opt  Precondition: SMART Backend Services Registration
 end
 opt  Precondition: SMART Backend Services Authorization
     APP -> AUTH: Signed token request
-   return Short lived token
+   return Short-lived token
 end
 APP -> FHIR: Kick-off request
 activate FHIR #eee

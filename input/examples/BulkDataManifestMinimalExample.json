@@ -1,0 +1,9 @@
+{
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkDataManifest",
+  "transactionTime": "2021-01-01T00:00:00Z",
+  "requiresAccessToken": true,
+  "output": [{
+      "type": "Patient",
+      "url": "https://example.org/output/patient_file_1.ndjson"
+    }]
+}

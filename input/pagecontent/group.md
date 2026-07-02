@@ -1,6 +1,6 @@
 ### Bulk Exporting Data for a Group
 
-The [Group Level Bulk Export Operation](export.html#endpoint---group-of-patients) scopes the data returned in an export to the population defined by a FHIR Group resource on the server. Depending on the capabilities exposed by the server, a client may be able to retrieve a list of the Group resources it has access to, search for Group resource based on their attributes, read the contents of individual Group resources, and perform other FHIR operations such as creating new Groups, adding and removing members from a Group, or deleting previously created Group resources.
+The [Group Level Bulk Export Operation](export.html#endpoint---group-of-patients) scopes the data returned in an export to the population defined by a FHIR Group resource on the server. Depending on the capabilities exposed by the server, a client may be able to retrieve a list of the Group resources it has access to, search for Group resources based on their attributes, read the contents of individual Group resources, and perform other FHIR operations such as creating new Groups, adding and removing members from a Group, or deleting previously created Group resources.
 
 ### Group Types
 
@@ -8,13 +8,13 @@ When considering Bulk Export use cases, the community has identified three commo
 
 1. Read-only groups:  Cohorts of patients are managed entirely by the server and are exposed to the client as a set of Group FHIR ids for use in a Bulk Export operation. The server may also provide an API to view, list, and/or search for Group resources on the server, but does not offer clients the ability to create, update or delete Group resources. Examples include a roster provided by a payer organization to a provider organization using negotiated data from another system and a list of patients configured using a registry tool in an EHR system.
 
-2. Member-based groups: Cohorts are managed by the client by specifying individual members using a FHIR API with the ability to add and remove members in Group resources, and/or create and delete Group resources themselves. Depending on the server capabilities exposed, a client may add members based on their FHIR ids or using characteristics such as a subscriber number. Adding Group resources or adding patients to a group may trigger automated or manual approval workflows on the server. Examples include a patient roster managed using the [DaVinci ATR API](https://hl7.org/fhir/us/davinci-atr/) or a Group created with using member FHIR ids located using the FHIR [patient match operation](https://hl7.org/fhir/patient-operation-match.html).
+2. Member-based groups: Cohorts are managed by the client by specifying individual members using a FHIR API with the ability to add and remove members in Group resources, and/or create and delete Group resources themselves. Depending on the server capabilities exposed, a client may add members based on their FHIR ids or using characteristics such as a subscriber number. Adding Group resources or adding patients to a group may trigger automated or manual approval workflows on the server. Examples include a patient roster managed using the [DaVinci ATR API](https://hl7.org/fhir/us/davinci-atr/) or a Group created using member FHIR ids located using the FHIR [patient match operation](https://hl7.org/fhir/patient-operation-match.html).
 
-3. Criteria-based groups: Cohorts of patients on the server are managed by the client with a FHIR API that includes the ability to define Group resources based on a set of patient characteristics. These characteristics are then used by the server to associate members with the group. The server may also populate other elements of the group, such as the date membership was last computed. Examples include a client using a FHIR API to create a cohort of patients who are assigned to a specific practitioner, or a cohort of patients with a problem list condition of diabetes and a visit in the past month. A group may represent a subset of another "read-only group" or "member-based group", and could be point-in-time snapshot based on membership at the time of creation or dynamically update as new patients meet the specified criteria. The Bulk Cohort API described below represents one approach to defining criteria based groups.
+3. Criteria-based groups: Cohorts of patients on the server are managed by the client with a FHIR API that includes the ability to define Group resources based on a set of patient characteristics. These characteristics are then used by the server to associate members with the group. The server may also populate other elements of the group, such as the date membership was last computed. Examples include a client using a FHIR API to create a cohort of patients who are assigned to a specific practitioner, or a cohort of patients with a problem list condition of diabetes and a visit in the past month. A group may represent a subset of another "read-only group" or "member-based group", and could be a point-in-time snapshot based on membership at the time of creation or dynamically update as new patients meet the specified criteria. The Bulk Cohort API described below represents one approach to defining criteria-based groups.
 
 ### Bulk Cohort API
 
-Servers supporting the Bulk Data Access IG MAY support the Bulk Cohort API, which consists of an asynchronous Group creation REST interaction and a profile on the Group resource. The intent is to support the creation of characteristic-based cohorts using coarse-grained filters to efficiently export data on sets of patients from a source system. Post export, the client can use more complex filter criteria to support use cases such as measure calculation or other analytics. Groups complying with the Bulk Cohort profile must contain a `member-filter` modifier extension to define the members included in the group. Servers may concurrently support other group profiles that contain lists of members or use other methods to define group inclusion.
+Servers supporting the Bulk Data Access IG MAY support the Bulk Cohort API, which consists of an asynchronous Group creation REST interaction and a profile on the Group resource. The intent is to support the creation of characteristic-based cohorts using coarse-grained filters to efficiently export data on sets of patients from a source system. Post export, the client can use more complex filter criteria to support use cases such as measure calculation or other analytics. Groups complying with the Bulk Cohort profile SHALL contain a `member-filter` modifier extension to define the members included in the group. Servers MAY concurrently support other group profiles that contain lists of members or use other methods to define group inclusion.
 
 <div class="dragon">
 While this overall implementation guide has a <a href="https://hl7.org/fhir/R4/versions.html#maturity">maturity level</a> of FMM 5, the Bulk Cohort API is still experimental and has a maturity level of FMM 1.
@@ -22,7 +22,7 @@ While this overall implementation guide has a <a href="https://hl7.org/fhir/R4/v
 
 #### REST Interactions
 
-When the Bulk Cohort API is supported, the server SHALL accept FHIR Group create requests that use the [FHIR Asynchronous Interaction Request](https://hl7.org/fhir/async-bundle.html) pattern and provide a valid FHIR Group resource that complies with the [Bulk Cohort Profile](#group-profile). Servers MAY also accept synchronous FHIR Group create requests, but since not all servers can create groups in this way (for example, some systems require a manual group approval step), clients should not expect this to be universally available. After group creation, a server MAY subsequently make the new Group resource available to authorized clients or MAY reject resource creation request and returning a relevant error. Servers SHOULD support read, search, delete, and Bulk Export operations on created Group resources, and SHOULD support the `name` search parameter in search requests for these resources. Servers MAY support other FHIR REST API operations and other search parameters.
+When the Bulk Cohort API is supported, the server SHALL accept FHIR Group create requests that use the [FHIR Asynchronous Interaction Request](https://hl7.org/fhir/async-bundle.html) pattern and provide a valid FHIR Group resource that complies with the [Bulk Cohort Profile](#group-profile). Servers MAY also accept synchronous FHIR Group create requests, but since not all servers can create groups in this way (for example, some systems require a manual group approval step), clients cannot expect this to be universally available. After group creation, a server MAY subsequently make the new Group resource available to authorized clients or MAY reject the resource creation request and return a relevant error. Servers SHOULD support read, search, delete, and Bulk Export operations on created Group resources, and SHOULD support the `name` search parameter in search requests for these resources. Servers MAY support other FHIR REST API operations and other search parameters.
 
 Servers MAY support Group update requests. When update requests are supported, servers SHALL accept update requests that use the [FHIR Asynchronous Interaction Request](https://hl7.org/fhir/async-bundle.html) pattern and MAY accept synchronous update requests.
 
@@ -36,7 +36,18 @@ When a client and server are using SMART on FHIR authorization, scopes relevant 
 ##### Key Elements
 
 {% sqlToData elements
-	WITH elements AS (
+	WITH diff AS (
+		SELECT
+		element.parent,
+		MAX(CASE WHEN element.key = 'id' THEN atom END) AS el_id,
+		MAX(CASE WHEN element.key = 'path' THEN atom END) AS el_path,
+		MAX(CASE WHEN element.key = 'definition' THEN atom END) AS el_def
+		FROM Resources,
+			json_tree(Resources.Json, '$.differential.element') AS element
+		WHERE Resources.Id = 'bulk-cohort-group'
+		GROUP BY element.parent
+	),
+	snapshot AS (
 		SELECT
 		element.parent,
 		MAX(CASE WHEN element.key = 'id' THEN atom END) AS el_id,
@@ -47,33 +58,31 @@ When a client and server are using SMART on FHIR authorization, scopes relevant 
 		FROM Resources,
 			json_tree(Resources.Json, '$.snapshot.element') AS element
 		WHERE Resources.Id = 'bulk-cohort-group'
-		GROUP BY 1
+		GROUP BY element.parent
 	)
-	SELECT *,
-	el_min || '..' || el_max AS cardinality
-	FROM elements
+	SELECT
+	CASE
+		WHEN s.el_id LIKE '%:%' THEN
+			substr(s.el_id, instr(s.el_id, ':') + 1) ||
+			CASE WHEN s.el_path = 'Group.modifierExtension' THEN ' ModifierExtension'
+			     WHEN s.el_path = 'Group.extension' THEN ' Extension'
+			     ELSE ''
+			END
+		ELSE replace(s.el_path, 'Group.', '')
+	END AS display_name,
+	s.el_min || '..' || s.el_max AS cardinality,
+	COALESCE(d.el_def, base_diff.el_def, s.el_def) AS el_def
+	FROM snapshot s
+	INNER JOIN diff d ON s.el_id = d.el_id
+	LEFT JOIN diff base_diff ON s.el_path = base_diff.el_path AND base_diff.el_id NOT LIKE '%:%'
+	WHERE s.el_path != 'Group'
+	AND s.el_path NOT LIKE '%.%.%'
+	AND NOT (s.el_path IN ('Group.extension', 'Group.modifierExtension') AND s.el_id NOT LIKE '%:%')
 %}
 
-{% assign element = elements | find: 'el_id', 'Group.member' %}
-{{ '<br/><code>member</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.modifierExtension' %}
-{{ '<br/><code>member-filter</code> ModifierExtension (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.extension' %}
-{{ '<br/><code>members-refreshed</code> Extension (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.type' %}
-{{ '<br/><code>type</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.name' %}
-{{ '<br/><code>name</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.characteristic' %}
-{{ '<br/><code>characteristic</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
-
-{% assign element = elements | find: 'el_id', 'Group.actual' %}
-{{ '<br/><code>actual</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
+{% for element in elements %}
+{{ '<br/><code>' | append: element.display_name | append: '</code> (' | append: element.cardinality | append: ')<br/>' | append: element.el_def | markdownify }}
+{% endfor %}
 
 #### Example
 
@@ -84,4 +93,4 @@ Group with plan members filtered to patients with diabetes on their problem list
 [View Example](Group-BulkCohortGroupExample.json.html)
 
 ### Server Capability Documentation
-To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the Bulk Cohort profile as a `rest.resource.supportedProfile` of Group.  Server providers SHOULD also ensure that their documentation addresses when and how often are Bulk Cohort group membership is updated and which search parameters are supported in `member-filter` expressions.
+To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the Bulk Cohort profile as a `rest.resource.supportedProfile` of Group. Server providers SHOULD also ensure that their documentation addresses when and how often Bulk Cohort group membership is updated and which search parameters are supported in `member-filter` expressions.

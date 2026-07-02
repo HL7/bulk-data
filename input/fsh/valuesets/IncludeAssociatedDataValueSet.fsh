@@ -4,6 +4,8 @@ Title: "Include Associated Data Value Set"
 Description: "Metadata inclusion options for Bulk Data Access Export Operation includeAssociatedData parameter"
 * ^version = "2.0.0"
 * ^status = #active
+* ^extension[+].url = $fmm
+* ^extension[=].valueInteger = 5
 * ^date = "2021-07-29"
 * ^experimental = false
 * ^jurisdiction = $m49.htm#001 "World"

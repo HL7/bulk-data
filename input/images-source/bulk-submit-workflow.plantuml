@@ -1,0 +1,43 @@
+@startuml
+skinparam sequenceMessageAlign center
+
+box "Data Provider"
+participant "Submission Client" as SubmitClient
+participant "Submission File Server" as SubmitFiles
+end box
+
+box "Data Consumer"
+participant "Submission Endpoint" as SubmitEndpoint
+participant "Status Endpoint" as StatusEndpoint
+participant "Status File Server" as StatusFiles
+end box
+
+SubmitClient -> SubmitEndpoint: Submit first manifest URL (submissionStatus: in-progress)
+SubmitEndpoint --> SubmitClient: Success OperationOutcome
+
+SubmitEndpoint -> SubmitFiles: Retrieve manifest file
+SubmitFiles --> SubmitEndpoint
+SubmitEndpoint -> SubmitFiles: Retrieve submission files
+SubmitFiles --> SubmitEndpoint
+
+SubmitClient -> StatusEndpoint: Status kick-off
+StatusEndpoint --> SubmitClient: Polling URL
+
+SubmitClient -> StatusEndpoint: Poll request
+StatusEndpoint --> SubmitClient: Partial status manifest
+
+SubmitClient -> StatusFiles: Retrieve status files
+StatusFiles --> SubmitClient
+
+SubmitClient -> SubmitEndpoint: Submit second manifest URL (submissionStatus: completed)
+SubmitEndpoint --> SubmitClient: Success OperationOutcome
+
+SubmitEndpoint -> SubmitFiles: Retrieve submission files
+SubmitFiles --> SubmitEndpoint
+
+SubmitClient -> StatusEndpoint: Poll request
+StatusEndpoint --> SubmitClient: Complete status manifest
+
+SubmitClient -> StatusFiles: Retrieve final status files
+StatusFiles --> SubmitClient
+@enduml

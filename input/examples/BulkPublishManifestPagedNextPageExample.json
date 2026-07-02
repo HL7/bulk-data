@@ -1,0 +1,12 @@
+{
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "transactionTime": "2021-01-01T00:00:00Z",
+  "requiresAccessToken": false,
+  "output": [{
+      "type": "Practitioner",
+      "url": "https://example.com/output/practitioner_1.ndjson"
+    },{
+      "type": "PractitionerRole",
+      "url": "https://example.com/output/practitioner_role_1.ndjson"
+    }]
+}
