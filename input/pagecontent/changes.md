@@ -16,6 +16,7 @@
   - Removed support for HTTP `GET` kick-off requests, requiring use of HTTP `POST` with a FHIR Parameters Resource.
   - Removed support for representing repeated Bulk Export parameters as multiple comma-delimited values in a single parameter value.
   - Changed the `includeAssociatedData` parameter type to a `Coding` from a `code`.
+  - Removed `experimental` label from the `_elements` and `includeAssociatedData` parameters
 
 ### STU3 - v3.0.0
 * Added support for partial export manifests to enable servers to make some files available prior to all of the files being ready and to split large lists of files across multiple manifests. Clients can select this behavior using the new `allowPartialManifests` kick-off request parameter. 
