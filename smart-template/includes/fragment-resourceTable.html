@@ -1,0 +1,119 @@
+  <table class="{{site.data.resources[resource_].status.class}}" data-fhir="generated">
+{% if site.data.resources[resource_].url != nil %}
+    <tr>
+      <td colspan="5"><i>{{site.data.stringsBase[include.lang]['OfficialURL']}}</i>: <span class="copy-text">{{site.data.resources[resource_].url}}<button title="{{site.data.stringsBase[include.lang]['CopyURL']}}" class="btn-copy" data-clipboard-text="{{site.data.resources[resource_].url}}"/></span>
+      </td>
+      <td><i>{{site.data.stringsBase[include.lang]['Version']}}</i>:
+      <span class="copy-text">{{site.data.resources[resource_].version}}<button title="{{site.data.stringsBase[include.lang]['CopyVersioned']}}" class="btn-copy" data-clipboard-text="{{site.data.resources[resource_].url}}|{{site.data.resources[resource_].version}}"/></span>
+      </td>
+    </tr>
+{% endif %}
+    <tr>
+{% capture newJurisdictions %}
+{% for jurisdiction in site.data.resources[resource_].jurisdictions %}
+{% assign foundRes = false %}
+{% for igjur in site.data.resources[igId].jurisdictions %}
+{% if igjur.name == jurisdiction.name %}
+{% assign foundRes = true %}
+{% break %}
+{% endif %}
+{% endfor %}
+{% if foundRes == false %}
+{% if jurisdiction.flag %}
+  <img alt="{{jurisdiction.name}} flag" src="assets/images/{{jurisdiction.flag}}.svg" height="16" title="{{jurisdiction.name}}"/>
+{% elsif jurisdiction.code %}
+  <span title="{{jurisdiction.name}}">{{jurisdiction.code}}</span>
+{% else %}
+  {{jurisdiction.name}}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endcapture %}
+{% assign trimmedJurisdictions = newJurisdictions | strip %}
+
+{% assign colspan = 2 %}
+{% if site.data.resources[resource_].status.fmm == nil %}
+  {% assign colspan = colspan | plus: 1 %}
+{% endif %}
+{% if site.data.resources[igId].status.owner == site.data.resources[resource_].status.owner %}
+  {% assign colspan = colspan | plus: 1 %}
+{% endif %}
+{% if trimmedJurisdictions == "" %}
+  {% assign colspan = colspan | plus: 1 %}
+{% endif %}
+      <td colspan="{{colspan}}">
+        {% if site.data.resources[resource_].status.standards-status %}
+          <i>
+            {% if table_prefix != nil %}
+              {{table_prefix}}
+            {% endif %}
+            Standards status:
+          </i> <a href="{{site.data.fhir.path}}versions.html#std-process" title="{{site.data.stringsBase[include.lang]['StandardsStatus']}}">{{site.data.resources[resource_].status.standards-status|capitalize}}</a>
+          {% if site.data.resources[resource_].status.normativeVersion %}
+            ({{site.data.stringsBase[include.lang]['FromNormative'] | replace: "%NORMVER%", site.data.pages[localPage].normativeVersion}})
+          {% endif %}
+          {% if site.data.resources[resource_].status.standards-status-support %}
+            <span title="{{site.data.resources[resource_].status.standards-status-support | markdownify}}">*</span>
+          {% endif %}
+        {% else %}
+          {{site.data.resources[resource_].status.status}}
+          {% if site.data.resources[resource_].date %}
+{% capture resourcedate %}
+{{site.data.resources[resource_].date | date: "%Y-%m-%d"}}
+{% endcapture %}
+            {{site.data.stringsBase[include.lang]['ResourceDate'] | replace: "%RESDATE%", resourcedate}}
+          {% endif %}
+        {% endif %}
+      </td>
+{% if site.data.resources[resource_].status.fmm %}
+      <td>
+        <a href="{{site.data.info.fmm-definition}}">{{site.data.stringsBase[include.lang]['MaturityLevel']}}</a>: {{site.data.resources[resource_].status.fmm}}
+        {% if site.data.resources[resource_].status.fmmSource or site.data.resources[resource_].status.fmm-support %}
+          <span title="{{site.data.resources[resource_].status.fmmSource}}{{site.data.resources[resource_].status.fmm-support | markdownify }}">*</span>
+        {% endif %}
+      </td>
+{% endif %}
+{% if site.data.resources[igId].status.owner != site.data.resources[resource_].status.owner and site.data.resources[resource_].status.owner != nil %}
+      <td>
+        <i>{{site.data.stringsBase[include.lang]['Responsible']}}:</i> 
+{% if site.data.resources[resource_].status.link %}
+        <a href="{{site.data.resources[resource_].status.link}}">{{site.data.resources[resource_].status.owner}}</a>
+{% else %}
+        {{site.data.resources[resource_].status.owner}}
+{% endif %}
+      </td>
+{% endif %}
+{% if trimmedJurisdictions != "" %}
+      <td>
+        <i>{{site.data.stringsBase[include.lang]['Realm']}}:</i> {{trimmedJurisdictions}}
+      </td>
+{% endif %}
+      <td><i>{{site.data.stringsBase[include.lang]['ComputableName']}}</i>: <span style="font-family: monospace;">{{site.data.resources[resource_].name}}</span></td>
+    </tr>
+{% if site.data.resources[resource_].identifiers %}
+    <tr>
+      <td colspan="6">
+        <i>{{site.data.stringsBase[include.lang]['OtherIdentifiers']}}:</i> {{site.data.resources[resource_].identifiers}}
+      </td>
+    </tr>
+{% endif %}
+{% if site.data.resources[resource_].keywords %}
+    <tr>
+      <td colspan="6">
+        <i>{{site.data.stringsBase[include.lang]['Keywords']}}:</i> {{site.data.resources[resource_].keywords}}
+      </td>
+    </tr>
+{% endif %}
+{% if site.data.resources[resource_].contexts %}
+    <tr>
+{% assign usageLabel = "*" | append: site.data.stringsBase[include.lang]['Usage'] | append: "*: " %}
+      <td colspan="6">{{site.data.resources[resource_].contexts | prepend: usageLabel | markdownify}}</td>
+    </tr>
+{% endif %}
+{%if site.data.resources[resource_].copyright %}
+{% assign copyrightLabel = "*" | append: site.data.stringsBase[include.lang]['CopyrightLegal'] | append: "*: " %}
+    <tr>
+      <td colspan="6">{{site.data.resources[resource_].copyrightlang[include.lang] | prepend: copyrightLabel | markdownify}}</td>
+    </tr>
+{% endif %}
+  </table>
