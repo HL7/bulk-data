@@ -216,7 +216,7 @@ The Data Provider SHALL return a successful file response with:
 
 - HTTP status `200 OK`
 - `Content-Type` header that matches the file format being delivered
-- Body of FHIR resources in newline-delimited JSON - [NDJSON](https://github.com/ndjson/ndjson-spec) or other requested format
+- Body of FHIR resources in [NDJSON](https://github.com/ndjson/ndjson-spec) - Newline-Delimited JSON, or other requested format
 
 For files in NDJSON format, the `Content-Type` header SHALL be `application/fhir+ndjson`.
 

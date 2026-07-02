@@ -1,0 +1,19 @@
+{% if site.data.pages[localPage].status or site.data.pages[localPage].fmm %}
+  <table class="{{site.data.pages[localPage].statusclass}}" data-fhir="generated">
+    <tr>
+  {% if site.data.pages[localPage].status %}
+      <td>
+        <i>{{site.data.stringsBase[include.lang]['PageStandardsStatus']}}:</i> <a href="{{site.data.fhir.path}}versions.html#std-process" title="{{site.data.stringsBase[include.lang]['StandardsStatus']}}">{{site.data.pages[localPage].status|capitalize}}</a>
+        {% if site.data.pages[localPage].normativeVersion %}
+          ({{site.data.stringsBase[include.lang]['FromNormative'] | replace: "%NORMVER%", site.data.pages[localPage].normativeVersion}})
+        {% endif %}
+      </td>
+  {% endif %}
+  {% if site.data.pages[localPage].fmm %}
+      <td>
+        <a href="{{site.data.info.fmm-definition}}">{{site.data.stringsBase[include.lang]['MaturityLevel']}}</a>: {{site.data.pages[localPage].fmm}}
+      </td>
+  {% endif %}
+    </tr>
+  </table>
+{% endif %}

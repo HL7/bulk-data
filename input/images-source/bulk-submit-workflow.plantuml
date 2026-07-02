@@ -17,7 +17,7 @@ SubmitEndpoint --> SubmitClient: Success OperationOutcome
 
 SubmitEndpoint -> SubmitFiles: Retrieve manifest file
 SubmitFiles --> SubmitEndpoint
-SubmitEndpoint -> SubmitFiles: Retrieve submission files
+SubmitEndpoint -> SubmitFiles: Retrieve submission bulk data files
 SubmitFiles --> SubmitEndpoint
 
 SubmitClient -> StatusEndpoint: Status kick-off
@@ -32,7 +32,7 @@ StatusFiles --> SubmitClient
 SubmitClient -> SubmitEndpoint: Submit second manifest URL (submissionStatus: completed)
 SubmitEndpoint --> SubmitClient: Success OperationOutcome
 
-SubmitEndpoint -> SubmitFiles: Retrieve submission files
+SubmitEndpoint -> SubmitFiles: Retrieve submission bulk data files
 SubmitFiles --> SubmitEndpoint
 
 SubmitClient -> StatusEndpoint: Poll request
