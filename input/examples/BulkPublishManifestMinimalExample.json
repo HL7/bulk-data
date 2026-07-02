@@ -1,0 +1,12 @@
+{
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "transactionTime": "2021-01-01T00:00:00Z",
+  "requiresAccessToken": false,
+  "output": [{
+      "type": "Organization",
+      "url": "https://example.com/output/organization_1.ndjson"
+    },{
+      "type": "Organization",
+      "url": "https://example.com/output/organization_2.ndjson"
+    }]
+}

@@ -8,6 +8,7 @@ Description: "Logical model describing a standard format to provide links to FHI
 * ^extension[=].valueInteger = 5
 * ^jurisdiction = $m49.htm#001 "World"
 
+* manifestType 0..1 canonical "Logical model that defines this manifest" "Canonical URL of the logical model that defines the structure of this manifest. E.g., `http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkDataManifest`. This element will be mandatory in a future release of this IG."
 * transactionTime 1..1 instant "Timestamp for the data included in this manifest" "Indicates the Data Provider's time when the query is run or files were generated. The bulk data files referenced in this manifest SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant."
 * requiresAccessToken 1..1 boolean "Token required to retrieve bulk data files" "Indicates whether downloading the files referenced in this manifest requires the same authorization mechanism as the operation that resulted in the manifest. Value SHALL be true if both the Data Provider's file server and the Data Provider's FHIR API server control access using OAuth 2.0 bearer tokens. Value MAY be false for file servers that use access-control schemes other than OAuth 2.0, such as downloads from Amazon S3 bucket URLs or verifiable file servers within an organization's firewall."
 

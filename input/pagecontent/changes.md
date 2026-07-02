@@ -9,7 +9,7 @@
 * Migrated the FHIR Asynchronous Bulk Interaction Pattern documentation from the core FHIR spec into this IG and aligned with the current version of Bulk Export.
 * Defined a logical model for the Bulk Data Manifest JSON format.
   - In STU3, the `extension` property on any manifest object had a value of a JSON object where the properties are the extension name and the values are the extension value. In STU4, the `extension` property contains an array of FHIR Extension elements.
-  - Added optional `outputFormat` element.
+  - Added optional `manifestType` and `outputFormat` elements.
   - Removed the deprecated `request` element.
   - Renamed the `error` element to `outcome`.
 * Aligned Bulk Export kick-off requests with the FHIR Operations Framework.

@@ -42,6 +42,7 @@ GET https://exchange.example.org/fhir/$bulk-publish
 
 ```json
 {
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
   "transactionTime": "2026-01-01T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -80,6 +81,7 @@ GET https://exchange.example.org/fhir/bulk/manifest/update-chain-2026-01
 
 ```json
 {
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
   "transactionTime": "2026-01-01T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -98,6 +100,7 @@ On January 8, the Data Provider publishes `update-2026-01-08`. It then updates t
 
 ```json
 {
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
   "transactionTime": "2026-01-01T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -116,6 +119,7 @@ GET https://exchange.example.org/fhir/bulk/manifest/update-2026-01-08
 
 ```json
 {
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
   "transactionTime": "2026-01-08T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -156,6 +160,7 @@ GET https://exchange.example.org/fhir/bulk/manifest/update-2026-03-05
 
 ```json
 {
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
   "transactionTime": "2026-03-05T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -178,6 +183,7 @@ GET https://exchange.example.org/fhir/bulk/manifest/update-2026-03-05-page-2
 
 ```json
 {
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
   "transactionTime": "2026-03-05T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -200,6 +206,7 @@ On April 1, the Data Provider publishes a new complete snapshot at `[base]/$bulk
 
 ```json
 {
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
   "transactionTime": "2026-04-01T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -224,6 +231,7 @@ Existing Data Consumers on the old chain learn about the reset when the Data Pro
 
 ```json
 {
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
   "transactionTime": "2026-03-26T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",

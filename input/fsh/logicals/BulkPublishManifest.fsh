@@ -10,6 +10,8 @@ Description: "Logical model describing the manifest returned by a $bulk-publish 
 
 * updateCadence 0..1 string "Update Cadence" "ISO 8601 duration indicating the typical rate at which the Data Provider expects the manifest or pending update-chain pages to change. When provided, Data Consumers SHOULD use this value to choose a polling interval for subsequent requests."
 
+* manifestType ^short = "Logical model that defines this publish manifest"
+* manifestType ^definition = "Canonical URL of the logical model that defines the structure of this publish manifest. E.g., `http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest`. This element will be mandatory in a future release of this IG."
 * transactionTime ^short = "Timestamp for the data included in this manifest"
 * transactionTime ^definition = "Indicates the Data Provider's time when the files in this published manifest were generated. The published files referenced in this manifest SHOULD NOT include any resources modified after this instant, and SHALL include any matching resources modified up to and including this instant."
 * requiresAccessToken ^short = "Token required to retrieve published files"
