@@ -125,7 +125,7 @@ RuleSet: ExportParam_typeFilter
 
     String of a FHIR REST search query.
 
-    When provided, a Data Provider with support for the parameter and requested search queries SHALL filter the data in the response for resource types referenced in the typeFilter expression to only include resources that meet the specified criteria. FHIR search result parameters such as `_include` and `_sort` SHALL NOT be used and a query in the `_typeFilter` parameter SHALL have the search context of a single FHIR Resource Type. [See details](export.html#_typefilter-query-parameter).
+    When provided, a Data Provider with support for the parameter and requested search queries SHALL filter the data in the response for resource types referenced in the `_typeFilter` expression to only include resources that meet the specified criteria. FHIR search result parameters such as `_include` and `_sort` SHALL NOT be used and a query in the `_typeFilter` parameter SHALL have the search context of a single FHIR Resource Type. [See details](export.html#_typefilter-query-parameter).
 
     A Data Provider unable to support the requested `_typeFilter` queries SHOULD return an error and FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request that omits those queries. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
   """
