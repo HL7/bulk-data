@@ -9,6 +9,7 @@ Usage: #definition
 * extension[+].url = $fmm
 * extension[=].valueInteger = 2
 * kind = #operation
+* affectsState = true
 * date = "2025-01-27"
 * jurisdiction = $m49.htm#001 "World"
 * description = """

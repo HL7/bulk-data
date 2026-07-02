@@ -1,0 +1,10 @@
+{
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "transactionTime": "2021-01-01T00:00:00Z",
+  "updateCadence": "P1D",
+  "requiresAccessToken": false,
+  "link": [{
+      "relation": "next",
+      "url": "#pending"
+    }]
+}

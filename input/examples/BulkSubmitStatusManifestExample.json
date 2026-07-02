@@ -1,0 +1,27 @@
+{
+  "submissionId": "a15eea1f-1605-4303-989f-542d3a7962d8",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkSubmitStatusManifest",
+  "transactionTime": "2025-01-01T00:00:00Z",
+  "requiresAccessToken": true,
+  "outcome": [{
+      "url": "http://example.org/output/import_errors_1.ndjson",
+      "manifestUrl": "http://example.org/manifests/3556d214-c6e2-42e6-a7f7-89690f7a40bb_1",
+      "countSeverity": [{
+          "code": "information",
+          "count": 0
+        },{
+          "code": "error",
+          "count": 100
+        }]
+    },{
+      "url": "http://example.org/output/validation_errors_2.ndjson",
+      "manifestUrl": "https://example.org/manifests/3556d214-c6e2-42e6-a7f7-89690f7a40bb_2",
+      "countSeverity": [{
+          "code": "information",
+          "count": 98
+        },{
+          "code": "error",
+          "count": 2
+        }]
+    }]
+}

@@ -99,6 +99,76 @@ resources:
     name: Bulk Submit Status Operation Definition
   OperationDefinition/bulk-publish:
     name: Bulk Publish Operation Definition
+  Binary/BulkDataManifestByTypeExample:
+    name: Bulk Data Manifest Example By Resource Type
+    description: Example Bulk Data output manifest when organizeOutputBy is not populated.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkDataManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkDataManifestOrganizedByPatientExample:
+    name: Bulk Data Manifest Example Organized By Patient
+    description: Example Bulk Data output manifest when organizeOutputBy is Patient and allowPartialManifests is true.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkDataManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkDataManifestMinimalExample:
+    name: Minimal Bulk Data Manifest
+    description: Example Bulk Data output manifest when organizeOutputBy is Patient and allowPartialManifests is true.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkDataManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestMinimalExample:
+    name: Minimal Bulk Publish Manifest
+    description: Example minimal, non-incremental Bulk Publish manifest.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestPagedExample:
+    name: Paged Bulk Publish Manifest
+    description: Example first page of a Bulk Publish manifest divided into ordinary manifest pages.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestPagedNextPageExample:
+    name: Paged Bulk Publish Manifest Next Page
+    description: Example second page of a Bulk Publish manifest divided into ordinary manifest pages.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestPendingRootExample:
+    name: Bulk Publish Manifest With Pending Update Chain
+    description: Example root Bulk Publish manifest that links to a pending update-chain page.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestPendingStubExample:
+    name: Pending Bulk Publish Manifest Page
+    description: Example Bulk Publish manifest page that advertises a pending incremental update.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkPublishManifestIncrementalUpdateExample:
+    name: Bulk Publish Incremental Update Manifest
+    description: Example Bulk Publish manifest page containing an incremental update and a pending next link.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
+  Binary/BulkSubmitStatusManifestExample:
+    name: Bulk Submit Status Manifest Example
+    description: Example bulk submit status manifest returned by a Data Consumer.
+    exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkSubmitStatusManifest
+    extension:
+      - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format
+        valueCode: application/json
   ValueSet/include-associated-data:
     name: Include Associated Data Value Set
   ValueSet/submission-status:

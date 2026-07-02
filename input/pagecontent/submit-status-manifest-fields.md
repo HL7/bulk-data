@@ -79,15 +79,14 @@
 			WHEN 'transactionTime' THEN 3
 			WHEN 'epochStartTime' THEN 4
 			WHEN 'updateCadence' THEN 5
-			WHEN 'request' THEN 6
-			WHEN 'requiresAccessToken' THEN 7
-			WHEN 'outputFormat' THEN 8
-			WHEN 'outputOrganizedBy' THEN 9
-			WHEN 'outputOrganizedByDetail' THEN 10
-			WHEN 'output' THEN 11
-			WHEN 'deleted' THEN 12
-			WHEN 'error' THEN 13
-			WHEN 'link' THEN 14
+			WHEN 'requiresAccessToken' THEN 6
+			WHEN 'outputFormat' THEN 7
+			WHEN 'outputOrganizedBy' THEN 8
+			WHEN 'outputOrganizedByDetail' THEN 9
+			WHEN 'output' THEN 10
+			WHEN 'deleted' THEN 11
+			WHEN 'outcome' THEN 12
+			WHEN 'link' THEN 13
 			ELSE 999
 		END AS top_sort,
 		top.required_sort AS top_required_sort,

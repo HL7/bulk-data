@@ -56,9 +56,9 @@ The Bulk Data Export Operation initiates the asynchronous generation of a reques
 
 As discussed in [Privacy and Security Considerations](#privacy-and-security-considerations) above, a Data Provider SHALL limit the data returned to only those FHIR resources for which the Data Consumer is authorized.
 
-The Data Provider's FHIR Resource Server SHALL support invocation of this operation using the [FHIR Asynchronous Bulk Interaction Pattern](async.html). A Data Provider SHALL support GET requests and MAY support POST requests that supply parameters using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
+The Data Provider's FHIR Resource Server SHALL support invocation of this operation using HTTP POST and the [FHIR Asynchronous Bulk Interaction Pattern](async.html). Request parameters SHALL be supplied using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
-If a parameter has a cardinality of greater than one, a Data Consumer MAY repeat the kick-off parameter multiple times or MAY include a single instance of the parameter with multiple values delimited by commas. The Data Provider SHALL treat comma-delimited values within a single instance of the parameter as if the parameter was repeated. The use of comma-delimited values within a parameter is deprecated in favor of repeating parameters and will be removed in a future version of this IG.
+If a parameter has a cardinality greater than one, a Data Consumer MAY repeat the kick-off parameter by including multiple `Parameters.parameter` entries with the same `name`. A Data Consumer SHALL NOT represent multiple values by comma-delimiting them within a single parameter value.
 
 For Patient-level requests and Group-level requests associated with groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
 
@@ -68,7 +68,7 @@ References in the resources returned MAY be relative URLs with the format <code>
 
 ##### Endpoint - All Patients
 
-`[fhir base]/Patient/$export`
+`POST [fhir base]/Patient/$export`
 
 [View table of parameters for Patient Export](OperationDefinition-patient-export.html)
 
@@ -76,7 +76,7 @@ FHIR Operation to obtain a detailed set of FHIR resources of diverse resource ty
 
 ##### Endpoint - Group of Patients
 
-`[fhir base]/Group/[id]/$export`
+`POST [fhir base]/Group/[id]/$export`
 
 [View table of parameters for Group Export](OperationDefinition-group-export.html)
 
@@ -88,7 +88,7 @@ As described on [the Group page](group.html), implementations may expose read-on
 
 ##### Endpoint - System Level Export
 
-`[fhir base]/$export`
+`POST [fhir base]/$export`
 
 [View table of parameters for Export](OperationDefinition-export.html)
 
@@ -109,7 +109,7 @@ Export data from a Data Provider's FHIR server, whether or not it is associated 
   <a name="separate-export-status"></a>
   When a Prefer header value of `separate-export-status` is provided in the kickoff request and supported by the Data Provider, the HTTP status code in the response to a Bulk Data Status request SHALL reflect the status request itself, and not the export job. In this case, when the HTTP status code of the Bulk Data Status request is `200 OK`, the response SHALL also include an `X-Export-Status` header with an HTTP status code that reflects the status of the export job.
 
-##### Query Parameters
+##### Parameters
 
 {% include export-query-parameters.md %}
 
@@ -125,7 +125,7 @@ To obtain new and updated resources for patients in a group, as well as all data
 
   - Data Consumer submits a group export request:
 
-    `[baseurl]/Group/[id]/$export`
+    `POST [baseurl]/Group/[id]/$export`
 
   - Data Consumer retrieves response data
   - Data Consumer retains a list of the patient ids returned
@@ -134,36 +134,61 @@ To obtain new and updated resources for patients in a group, as well as all data
 - Subsequent Queries (e.g., on February 1, 2020):
   - Data Consumer submits a group export request to obtain a patient list:
 
-    `[baseurl]/Group/[id]/$export?_type=Patient&_elements=id`
+    ```
+    POST [baseurl]/Group/[id]/$export
+
+    {
+      "resourceType": "Parameters",
+      "parameter": [{
+        "name": "_type",
+        "valueString": "Patient"
+      },{
+        "name": "_elements",
+        "valueString": "id"
+      }]
+    }
+    ```
 
   - Data Consumer retains a list of patient ids returned
   - Data Consumer compares the response to the patient ids from the first query and identifies new patient ids
-  - Data Consumer submits a group export request via POST for patients who are new members of the group:
+  - Data Consumer submits a group export request for patients who are new members of the group:
 
     ```
     POST [baseurl]/Group/[id]/$export
 
-    {"resourceType" : "Parameters",
-      "parameter" : [{
-        "name" : "patient",
-        "valueReference" : {reference: "Patient/123"}
+    {
+      "resourceType": "Parameters",
+      "parameter": [{
+        "name": "patient",
+        "valueReference": {"reference": "Patient/123"}
       },{
-        "name" : "patient",
-        "valueReference" : {reference: "Patient/456"}
-      ...
+        "name": "patient",
+        "valueReference": {"reference": "Patient/456"}
       }]
     }
     ```
 
   - Data Consumer submits a group export request for updated group data:
 
-    `[baseurl]/Group/[id]/$export?_since=[initial transaction time]`
+    ```
+    POST [baseurl]/Group/[id]/$export
+
+    {
+      "resourceType": "Parameters",
+      "parameter": [{
+        "name": "_since",
+        "valueInstant": "2020-01-01T00:00:00Z"
+      }]
+    }
+    ```
 
     Note that data returned from this request may overlap with that returned from the prior step.
 
   - Data Consumer retains the transactionTime value from the response.
 
-##### `_typeFilter` Query Parameter
+<a name="_typefilter-parameter"></a>
+
+##### `_typeFilter` Parameter
 
 The `_typeFilter` parameter enables finer-grained filtering out of resources in the bulk data export response that would have otherwise been returned. For example, a Data Consumer may want to retrieve only active prescriptions rather than all prescriptions and only laboratory observations rather than all observations. When using `_typeFilter`, each resource type is filtered independently. For example, filtering `Patient` resources to people born after the year 2000 will not filter `Encounter` resources for patients born before the year 2000 from the export.
 
@@ -179,23 +204,25 @@ FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingre
 
 **Example Request**
 
-The following is an export request for `MedicationRequest` resources, where the Data Consumer would further like to restrict the MedicationRequests to those that are `active`, or else `completed` after July 1, 2018. This can be accomplished with two `_typeFilter` query parameters and an `_type` query parameter:
-
-
-* `MedicationRequest?status=active`
-* `MedicationRequest?status=completed&date=gt2018-07-01T00:00:00Z`
+The following is an export request for `MedicationRequest` resources, where the Data Consumer would further like to restrict the MedicationRequests to those that are `active`, or else `completed` after July 1, 2018. This can be accomplished with two `_typeFilter` parameters and an `_type` parameter:
 
 ```
-$export?
-  _type=
-    MedicationRequest
-  &_typeFilter=
-    MedicationRequest%3Fstatus%3Dactive
-  &_typeFilter=
-    MedicationRequest%3Fstatus%3Dcompleted%26date%3Dgt2018-07-01T00%3A00%3A00Z
-```
+POST [fhir base]/$export
 
-_Note that newlines and spaces have been added above for clarity, and would not be included in a real request._
+{
+  "resourceType": "Parameters",
+  "parameter": [{
+    "name": "_type",
+    "valueString": "MedicationRequest"
+  },{
+    "name": "_typeFilter",
+    "valueString": "MedicationRequest?status=active"
+  },{
+    "name": "_typeFilter",
+    "valueString": "MedicationRequest?status=completed&date=gt2018-07-01T00:00:00Z"
+  }]
+}
+```
 
 ##### Processing Model
 
@@ -337,7 +364,7 @@ When the body is a FHIR `OperationOutcome` resource, the response SHALL include 
 
 In the case of a polling failure that does not indicate failure of the export job, a Data Provider SHOULD use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the FHIR `OperationOutcome` resource's `issue.code` element to indicate to the Data Consumer that it will need retry the request at a later time.
 
-*Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.error` array of the completion response body SHALL be populated with one or more files in NDJSON format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). In the case of a partial success, the Data Provider SHALL use a `200` status code instead of `4XX` or `5XX`. The choice of when to determine that an export job has failed in its entirety (error status) vs. returning a partial success (complete status) is left to the Data Provider.
+*Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.outcome` array of the completion response body SHALL be populated with one or more files in NDJSON format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). In the case of a partial success, the Data Provider SHALL use a `200` status code instead of `4XX` or `5XX`. The choice of when to determine that an export job has failed in its entirety (error status) vs. returning a partial success (complete status) is left to the Data Provider.
 
 ##### Response - Complete Status
 
@@ -362,12 +389,12 @@ The output manifest is a JSON object providing metadata and links to the generat
 Implementation notes:
 
 - For `transactionTime`, to properly meet the inclusion constraints above, the Data Provider's FHIR server might need to wait for any pending transactions to resolve in its database before starting the export process.
-- Error, warning, and information messages related to the export SHOULD be included in `error` and not in `output`. If there are no relevant messages, the Data Provider SHOULD return an empty array. If the request contained invalid or unsupported parameters along with a `Prefer: handling=lenient` header and the Data Provider processed the request, the Data Provider SHOULD include a FHIR `OperationOutcome` resource for each of these parameters.
-- When the `_since` timestamp is supplied in the export request, the `deleted` array SHOULD be populated with files containing FHIR transaction Bundles for resources that match the kick-off request criteria but were deleted after the `_since` date. If no resources have been deleted, if `_since` was not supplied, or if the Data Provider has other reasons to avoid exposing these data, the Data Provider MAY omit this key or return an empty array. Resources that appear in `deleted` SHALL NOT also appear in `output`.
+- Error, warning, and information messages related to the export SHOULD be included in `outcome` and not in `output`. If the request contained invalid or unsupported parameters along with a `Prefer: handling=lenient` header and the Data Provider processed the request, the Data Provider SHOULD include a FHIR `OperationOutcome` resource for each of these parameters.
+- When the `_since` timestamp is supplied in the export request, the `deleted` array SHOULD be populated with files containing FHIR transaction Bundles for resources that match the kick-off request criteria but were deleted after the `_since` date. If no resources have been deleted, if `_since` was not supplied, or if the Data Provider has other reasons to avoid exposing these data, the Data Provider MAY omit this key. Resources that appear in `deleted` SHALL NOT also appear in `output`.
 
 <a name="manifest-link"></a>
 
-- When the `allowPartialManifests` kickoff parameter is `true`, the manifest MAY include a `link` array with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `error`, and `link` arrays.
+- When the `allowPartialManifests` kickoff parameter is `true`, the manifest MAY include a `link` array with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `outcome`, and `link` arrays.
 - If the export has failed or a transient error has occurred, a Data Provider MAY return an error in response to a request for the `next` link, as described in the [Error Status](#response---error-status) section above. For non-transient errors, a Data Consumer MAY process resources that have already been retrieved before re-running the export job or MAY discard them.
 
 Example manifest, `organizeOutputBy` kickoff parameter is not populated:
@@ -410,6 +437,18 @@ Example deleted resource bundle (represents one line in an output file):
 This implementation guide is structured to support a wide variety of Bulk Data Export use cases and Data Provider architectures. To provide clarity to developers on which capabilities are implemented by a particular Data Provider, Data Providers SHALL ensure that their CapabilityStatement accurately reflects the implemented Bulk Data Operations. Additionally, the Data Provider's CapabilityStatement SHOULD list the resource types available for export in the `rest.resource` element, and SHOULD list the search parameters that can be used in the `_typeFilter` parameter in `rest.resource.searchParam` elements.
 
 Data Providers SHOULD indicate resource types and search parameters that are accessible through the REST API, but not available using the Bulk Export operation, with one or more extensions that have a URL of `http://hl7.org/fhir/uv/bulkdata/Extension/operation-not-supported` and a `valueCanonical` with the canonical URL for the [OperationDefinition](artifacts.html#behavior-operation-definitions) of the bulk operation that is not supported. Alternatively, the extension may be populated with the canonical URL for the FHIR Bulk Data Access Implementation Guide [CapabilityStatement](CapabilityStatement-bulk-data.html) when none of the bulk operations are supported.
+
+When a Data Provider supports multiple versions of a Bulk Export operation at the same FHIR endpoint, the CapabilityStatement can advertise each version with a distinct `operation.name` and a version-specific OperationDefinition canonical URL in `operation.definition`. For example, a Data Provider supporting two versions of Group-level export could advertise:
+
+```json
+"operation": [{
+    "name": "export",
+    "definition": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export|3.0.0"
+  },{
+    "name": "export-v4",
+    "definition": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export|4.0.0"
+}]
+```
 
 Data Providers SHOULD also ensure that their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
 

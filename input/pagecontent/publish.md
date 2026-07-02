@@ -55,13 +55,13 @@ The Data Provider SHOULD populate the `updateCadence` element to indicate the fr
 
 Data Providers SHOULD set a reasonable `Cache-Control` header on the manifest (e.g., public, max-age=10) and SHOULD serve immutable files with long-lived caching headers (e.g., public, max-age=31536000, immutable).
 
-The `output`, `deleted`, and `error` arrays describe downloadable files. Files listed in `output` contain FHIR resources to insert or update. Files listed in `deleted` contain FHIR transaction Bundles whose entries identify resources to delete. Files listed in `error` contain OperationOutcome resources with errors, warnings, success, or informational messages about the dataset or publication process. For a given file URL, file contents are immutable: if the content changes, the Data Provider SHALL publish it at a new URL.
+The `output`, `deleted`, and `outcome` arrays describe downloadable files. Files listed in `output` contain FHIR resources to insert or update. Files listed in `deleted` contain FHIR transaction Bundles whose entries identify resources to delete. Files listed in `outcome` contain OperationOutcome resources with errors, warnings, success, or informational messages about the dataset or publication process. For a given file URL, file contents are immutable: if the content changes, the Data Provider SHALL publish it at a new URL.
 
-A Data Provider MAY divide a large manifest into multiple manifest pages, by including a single instance of a `link` element that has a `relation` element with a value of `next`, and a `url` element pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `error`, and `link` arrays.
+A Data Provider MAY divide a large manifest into multiple manifest pages, by including a single instance of a `link` element that has a `relation` element with a value of `next`, and a `url` element pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `outcome`, and `link` arrays.
 
 These `next` links represent ordinary manifest paging: the pages together describe one published dataset available when the Data Consumer starts retrieval. A Data Consumer follows ordinary `next` URLs until no `next` link is present.
 
-A Data Consumer SHALL process a manifest one page at a time by (1) inserting or updating all FHIR resources in files in the `output` array in array order, followed by (2) deleting all resources listed in files in the `deleted` array in array order. When the same resource type and logical id appear more than once, the Data Consumer SHALL keep the latest version by manifest order, unless it is later removed by a `deleted` entry. Files listed in the `error` array are informational. They convey errors, warnings, and information messages about the dataset or publication process and are not inserted into or deleted from the Data Consumer's dataset.
+A Data Consumer SHALL process a manifest one page at a time by (1) inserting or updating all FHIR resources in files in the `output` array in array order, followed by (2) deleting all resources listed in files in the `deleted` array in array order. When the same resource type and logical id appear more than once, the Data Consumer SHALL keep the latest version by manifest order, unless it is later removed by a `deleted` entry. Files listed in the `outcome` array are informational. They convey errors, warnings, and information messages about the dataset or publication process and are not inserted into or deleted from the Data Consumer's dataset.
 
 Example simple manifest:
 
@@ -176,7 +176,7 @@ For a step-by-step example, see [Bulk Publish Worked Example](publish-worked-exa
 Implementation notes:
 
 - For `transactionTime`, to properly meet the inclusion constraints above, a Data Provider might need to wait for pending updates in its publishing pipeline or source systems to resolve before publishing a new manifest.
-- Error, warning, and information messages related to the published dataset or publication process SHOULD be included in `error` and not in `output`.
+- Error, warning, and information messages related to the published dataset or publication process SHOULD be included in `outcome` and not in `output`.
 
 Deleted resource bundle example (represents one line in a `deleted` file):
 
@@ -190,7 +190,7 @@ Deleted resource bundle example (represents one line in a `deleted` file):
 ---
 ### Bulk Data Output File Request
 
-Using the URLs supplied by the Data Provider in the manifest, a Data Consumer MAY download the referenced output, deleted, and error files.
+Using the URLs supplied by the Data Provider in the manifest, a Data Consumer MAY download the referenced output, deleted, and outcome files.
 
 If the `requiresAccessToken` element in the manifest is set to `true`, the request SHALL include a valid access token. See [Security Considerations](#security-considerations) above.
 
@@ -202,7 +202,7 @@ A Data Consumer SHOULD provide an `Accept-Encoding` header when requesting outpu
 
 #### Endpoint
 
-`GET [URL from manifest output, deleted, or error element]`
+`GET [URL from manifest output, deleted, or outcome element]`
 
 #### Headers
 
@@ -286,21 +286,21 @@ A Data Provider may publish a new complete data snapshot at any time.
 
    - a new `transactionTime`
    - `output` entries for the new snapshot
-   - `deleted` and `error` entries when applicable
+   - `deleted` and `outcome` entries when applicable
    - if the snapshot will be incrementally updated, a `next` link pointing to a manifest that contains a `next` link with a URL of `#pending`
 
 ---
 
 #### Publish an incremental update
 
-1. Prepare any new `output`, `deleted`, and `error` files.
+1. Prepare any new `output`, `deleted`, and `outcome` files.
 
 2. Publish those files at URLs that will not be reused for different content.
 
 3. Create the next manifest page at a static URL:
 
    - a new `transactionTime`;
-   - `output`, `deleted`, and `error` entries for this step;
+   - `output`, `deleted`, and `outcome` entries for this step;
    - `link[relation="next"].url = "#pending"` unless the provider already knows the chain is capped.
 
 4. Update the prior pending page so that its `next` link points to this manifest.

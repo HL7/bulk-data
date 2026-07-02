@@ -2,7 +2,7 @@
 flowchart TD
     requestRoot["GET [base]/$bulk-publish"]
     startDataset["Begin a new local dataset"]
-    processPage["Download and process current manifest page<br/>output files, then deleted resource files,<br/>then error files (informational)"]
+    processPage["Download and process current manifest page<br/>output files, then deleted resource files,<br/>then outcome files (informational)"]
     hasAbsoluteLink{"Next link is a URL"}
     hasClosedLink{"Next link is `#closed`"}
     hasPendingLink{"Next link is `#pending`"}

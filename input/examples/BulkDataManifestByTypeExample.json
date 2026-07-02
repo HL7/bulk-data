@@ -1,0 +1,25 @@
+{
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkDataManifest",
+  "transactionTime": "2021-01-01T00:00:00Z",
+  "requiresAccessToken": true,
+  "output": [{
+      "type": "Patient",
+      "url": "https://example.org/output/patient_file_1.ndjson"
+    },{
+      "type": "Observation",
+      "url": "https://example.org/output/observation_file_1.ndjson"
+    },{
+      "type": "Observation",
+      "url": "https://example.org/output/observation_file_2.ndjson"
+    }],
+  "deleted": [{
+      "url": "https://example.org/output/del_file_1.ndjson"
+    }],
+  "outcome": [{
+      "url": "https://example.org/output/err_file_1.ndjson"
+    }],
+  "extension": [{
+      "url": "http://example.org/fhir/StructureDefinition/includes-telehealth-patients",
+      "valueBoolean": true
+    }]
+}

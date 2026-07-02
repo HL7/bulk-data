@@ -14,7 +14,7 @@ A {{ bulk_client_role }} SHOULD provide an `Accept-Encoding` header when request
 
 ##### Endpoint
 
-`GET [url from manifest output, deleted, or error field]`
+`GET [url from manifest output, deleted, or outcome field]`
 
 ##### Headers
 

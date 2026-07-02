@@ -4,15 +4,19 @@
 </style>
 
 ### STU4 - v4.0.0
-* Defined a logical model for the Bulk Data Manifest JSON format. The wire format is unchanged from STU3 except for extensions. In STU3, the `extension` property on any manifest object had a value of a JSON object where the properties are the extension name and the values are the extension value. In STU4, the `extension` property contains an array of FHIR Extension elements.
 * Added Bulk Submit and Bulk Submit Status operations.
 * Added Bulk Publish operation.
-* Migrated the FHIR Asynchronous Bulk Interaction Pattern documentation from the core FHIR spec into this IG.
-* Added optional `outputFormat` and `manifestType` elements to the Bulk Export Manifest.
-* Changes to Bulk Submit and Bulk Publish manifests from earlier draft versions:
-  - Parameters not used in Bulk Export are now root elements rather than extensions.
-  - `error.countSeverity` is now an array of `code` and `count` elements rather than a JSON object with codes as keys and counts as values.
-  - Move to a valueset of `http://hl7.org/fhir/event-status` for the submissionStatus parameter, changing our draft `complete` status to `completed` and `aborted` status to `stopped` to align.
+* Migrated the FHIR Asynchronous Bulk Interaction Pattern documentation from the core FHIR spec into this IG and aligned with the current version of Bulk Export.
+* Defined a logical model for the Bulk Data Manifest JSON format.
+  - In STU3, the `extension` property on any manifest object had a value of a JSON object where the properties are the extension name and the values are the extension value. In STU4, the `extension` property contains an array of FHIR Extension elements.
+  - Added optional `manifestType` and `outputFormat` elements.
+  - Removed the deprecated `request` element.
+  - Renamed the `error` element to `outcome`.
+* Aligned Bulk Export kick-off requests with the FHIR Operations Framework.
+  - Removed support for HTTP `GET` kick-off requests, requiring use of HTTP `POST` with a FHIR Parameters Resource.
+  - Removed support for representing repeated Bulk Export parameters as multiple comma-delimited values in a single parameter value.
+  - Changed the `includeAssociatedData` parameter type to a `Coding` from a `code`.
+  - Removed `experimental` label from the `_elements` and `includeAssociatedData` parameters
 
 ### STU3 - v3.0.0
 * Added support for partial export manifests to enable servers to make some files available prior to all of the files being ready and to split large lists of files across multiple manifests. Clients can select this behavior using the new `allowPartialManifests` kick-off request parameter. 
