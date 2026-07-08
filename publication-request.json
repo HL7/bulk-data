@@ -1,10 +1,10 @@
 {
     "package-id" : "hl7.fhir.uv.bulkdata",
-	"version" : "3.0.0",
-	"path" : "http://hl7.org/fhir/uv/bulkdata/STU3",
+	"version" : "4.0.0",
+	"path" : "http://hl7.org/fhir/uv/bulkdata/STU4",
 	"mode" : "milestone",
 	"status": "trial-use",
-	"sequence": "STU 3",
-	"desc": "STU 3 Publication",
+	"sequence": "STU 4",
+	"desc": "STU 4 Publication",
 	"changes": "changes.html"
 }
