@@ -68,6 +68,7 @@ parameters:
   excludettl: true
   excludexml: true
   excludemap: true
+  auto-oid-root: 2.16.840.1.113883.4.642.40.74
 
 menu:
   Home: index.html
