@@ -15,7 +15,7 @@ Usage: #definition
 * kind = #requirements
 * instantiates = "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data"
 * fhirVersion = #4.0.1
-* format = #json
+* format = #application/fhir+json
 * implementationGuide = "http://hl7.org/fhir/uv/bulkdata/ImplementationGuide/hl7.fhir.uv.bulkdata"
 * rest
   * mode = #server
