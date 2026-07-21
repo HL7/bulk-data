@@ -1,9 +1,9 @@
 {
     "package-id" : "hl7.fhir.uv.bulkdata",
 	"version" : "4.0.0-ballot",
-	"path" : "http://hl7.org/fhir/uv/bulkdata/STU4",
+	"path" : "http://hl7.org/fhir/uv/bulkdata/4.0.0-202609-ballot",
 	"mode" : "working",
-	"status": "trial-use",
+	"status": "ballot",
 	"sequence": "STU 4",
 	"desc": "STU 4 Publication",
 	"changes": "changes.html"

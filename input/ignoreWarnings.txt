@@ -6,7 +6,7 @@
 %The extension http://hl7.org/fhir/StructureDefinition/operationoutcome-sourceResource could not be found so is not allowed here%
 %No definition could be found for URL value 'http://hl7.org/fhir/StructureDefinition/operationoutcome-sourceResource'%
 
-# 02. These are examples of the Bulk Data Manifest Logical Models and not FHIR Resources
+# 02. These are examples of the Bulk Data Manifest Logical Models and not FHIR Resources ( see: https://chat.fhir.org/#narrow/channel/179252-IG-creation/topic/Logical.20Model.20Examples/with/392254859 )
 %Unable to find resourceType property%
 
 
@@ -21,14 +21,13 @@ WARNING: StructureDefinition.where(url = 'http://hl7.org/fhir/uv/bulkdata/Struct
 # 04. This extension is defined in the Expression type, not in this IG
 The extension http://hl7.org/fhir/StructureDefinition/elementdefinition-maxValueSet|5.3.0 is deprecated with the note: 'Use additionalBinding extension or element instead'
 
-# 05. Group profile - this code system is used by the Group resource
+# 05. Group profile - this code system is inherited from the base FHIR Group resource.
 Reference to draft CodeSystem http://hl7.org/fhir/group-type|4.0.1
 
 # 06. Submission Status Value Set intentionally constrains the FHIR R4 event-status code system for the Bulk Submit submissionStatus parameter. The draft status is inherited from the base FHIR terminology.
 Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1
 
 # 07. CapabilityStatement.format uses the FHIR R4 MIME type binding; application/fhir+json is the required JSON representation.
-Reference to experimental CodeSystem urn:ietf:bcp:13|0.0.2
 
 # 08. We have not implemented the Requirements resource nor marked these as conformance clauses in this version, but will consider this as a future enhancement.
 %The html source contains the word 'SHOULD' but it is not in a text phrase marked as a conformance clause%
