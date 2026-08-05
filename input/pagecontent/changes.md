@@ -3,7 +3,7 @@
 	h4:before {content: none}
 </style>
 
-### STU4 - v4.0.0
+### STU4 - v4.0.0 Ballot
 * Added Bulk Submit and Bulk Submit Status operations.
 * Added Bulk Publish operation.
 * Migrated the FHIR Asynchronous Bulk Interaction Pattern documentation from the core FHIR spec into this IG and aligned with the current version of Bulk Export.
@@ -19,7 +19,7 @@
   - Removed `experimental` label from the `_elements` and `includeAssociatedData` parameters
 
 ### STU3 - v3.0.0
-* Added support for partial export manifests to enable servers to make some files available prior to all of the files being ready and to split large lists of files across multiple manifests. Clients can select this behavior using the new `allowPartialManifests` kick-off request parameter. 
+* Added support for partial export manifests to enable servers to make some files available prior to all of the files being ready and to split large lists of files across multiple manifests. Clients can select this behavior using the new `allowPartialManifests` kick-off request parameter.
 * Added support for organizing the resources in output files by instances of the specified resource type, with a header for each instance of the resource type followed by the resource and resources in the output that reference it. Clients can select this behavior using the new `organizeOutputBy` kick-off request parameter.
 * Removed the "experimental" label from the `_typeFilter` kickoff parameter since it has been widely implemented, clarified its documentation and approach to boolean logic, and documented the interaction with other filters.
 * Added optional `_until` kickoff parameter on the Bulk Data kickoff request as an analog to the `_since` parameter to enable users to specify a cutoff modification timestamp for the resources in the response.
@@ -35,7 +35,7 @@
 * Documented required and optional status of kickoff parameters for server implementors
 * Documented guidance on use and interpretation of repeated parameters
 * Expanded definition of `_since` parameter in Group level kickoff requests to permit servers to return resources that have an earlier `lastUpdated` date for patients that were added to the group after the supplied date
-* Clarified which resources should be returned in scenarios where `_type` is populated 
+* Clarified which resources should be returned in scenarios where `_type` is populated
 * Added optional `_elements` kickoff parameter to filter resource data elements in the response
 * Added optional `patient` kickoff parameter to filter resources in the response by patient id
 * Added optional `includeAssociatedData` kickoff parameter and ValueSet for clients to indicate a set of pre-defined resources to omit or include with the response
