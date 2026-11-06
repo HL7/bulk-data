@@ -74,7 +74,7 @@ RuleSet: ExportParam_elements
 
     When provided, the Data Provider SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements SHOULD be of the form `[resource type].[element name]` (e.g., `Patient.id`) or `[element name]` (e.g., `id`) and only root elements in a resource are permitted. If the resource type is omitted, the element SHOULD be returned for all resources in the response where it is applicable.
 
-    A Data Provider is not obliged to return just the requested elements. A Data Provider SHOULD always return mandatory elements whether they are requested or not. A Data Provider SHOULD mark the resources with the tag `SUBSETTED` to ensure that the incomplete resource is not actually used to overwrite a complete resource.
+    A Data Provider is not obliged to return just the requested elements. A Data Provider SHOULD always return mandatory elements whether they are requested or not. For guidance on indicating that resources are being returned with omitted elements, see the FHIR specification's definition of [`_elements`](https://hl7.org/fhir/R4/search.html#elements).
 
     A Data Provider that is unable to support `_elements` SHOULD return an error and a FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request omitting the `_elements` parameter. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
     """
