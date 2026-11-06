@@ -78,7 +78,7 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    The format for the Bulk Data files in the manifest. The MIME-type MAY include a MIME-type parameter of `fhirVersion` as described in the [FHIR specification](https://hl7.org/fhir/http.html#version-parameter) to indicate which version of FHIR the resources in the Bulk Data files are based on. When omitted, defaults to `application/fhir+ndjson` (Newline Delimited JSON) with a version of FHIR determined by the Data Consumer. All of the resources in a submission SHALL use the same version of FHIR.
+    The format for the Bulk Data files in the manifest. The MIME-type MAY include a MIME-type parameter of `fhirVersion` as described in the [FHIR specification](https://hl7.org/fhir/http.html#version-parameter) to indicate which version of FHIR the resources in the Bulk Data files are based on. A Data Consumer that does not support the indicated `fhirVersion` SHOULD reject the request with an HTTP `4XX` status and an OperationOutcome. When `outputFormat` is omitted, it defaults to `application/fhir+ndjson` (Newline Delimited JSON). When the `fhirVersion` MIME-type parameter is omitted, the FHIR version SHALL be pre-coordinated between the Data Provider and Data Consumer. All of the resources in a submission SHALL use the same version of FHIR.
     """
   * type = #string
 
