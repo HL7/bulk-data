@@ -143,7 +143,7 @@ GET https://example.com/$bulk-publish
 Example pending manifest page:
 
 ```
-GET https://example.com/manifests/provider-directory-update-1.json
+GET https://example.com/manifests/provider-directory-update-stub.json
 ```
 
 <div class="language-json">
@@ -152,7 +152,7 @@ GET https://example.com/manifests/provider-directory-update-1.json
 
 [View Example](Binary-BulkPublishManifestPendingStubExample.html)
 
-Example incremental update manifest page:
+Example incremental update manifest page with a #pending link indicating a future incremental update. Unlike a root manifest page, an incremental update manifest may contain both files and a `#pending` next link, which indicates that a subsequent incremental update will be added.
 
 ```
 GET https://example.com/manifests/provider-directory-update-1.json

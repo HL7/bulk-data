@@ -5,7 +5,7 @@
   "requiresAccessToken": false,
   "output": [{
       "type": "Organization",
-      "url": "https://example.com/output/organization_2.ndjson"
+      "url": "https://example.com/output/organization_update_1.ndjson"
     }],
   "deleted": [{
       "url": "https://example.com/output/deleted_org_1.ndjson"

@@ -9,6 +9,6 @@
     }],
   "link": [{
       "relation": "next",
-      "url": "https://example.com/manifests/provider-directory-update-1.json"
+      "url": "https://example.com/manifests/provider-directory-update-stub.json"
     }]
 }
