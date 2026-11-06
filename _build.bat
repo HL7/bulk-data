@@ -4,6 +4,11 @@ setlocal enabledelayedexpansion
 SET "dlurl=https://github.com/HL7/fhir-ig-publisher/releases/latest/download/publisher.jar"
 SET "publisher_jar=publisher.jar"
 SET "input_cache_path=%CD%\input-cache\"
+IF DEFINED FHIR_PUBLISHER_HOME (
+    SET "publisher_home=%FHIR_PUBLISHER_HOME%"
+) ELSE (
+    SET "publisher_home=%USERPROFILE%\.fhir\tools\publisher"
+)
 SET "skipPrompts=false"
 SET "upper_path=..\"
 SET "scriptdlroot=https://raw.githubusercontent.com/HL7/ig-publisher-scripts/main"
@@ -23,40 +28,63 @@ IF EXIST "%input_cache_path%%publisher_jar%" (
         SET "jar_location=%upper_path%%publisher_jar%"
         ECHO Found publisher.jar in parent folder
     ) ELSE (
-        SET "jar_location=not_found"
-        SET "default_choice=1"
-        ECHO publisher.jar not found in input-cache or parent folder
+        ECHO Checking for publisher.jar in %publisher_home%
+        IF EXIST "%publisher_home%\%publisher_jar%" (
+            SET "jar_location=%publisher_home%\%publisher_jar%"
+            ECHO Found publisher.jar in FHIR publisher home
+        ) ELSE (
+            SET "jar_location=not_found"
+            SET "default_choice=1"
+            SET "default_reason=publisher not found"
+            ECHO publisher.jar not found in input-cache, parent folder, or FHIR publisher home
+        )
     )
 )
 
 
 :: Handle command-line argument to bypass the menu
-IF NOT "%~1"=="" (
-    IF /I "%~1"=="update" SET "userChoice=1"
-    IF /I "%~1"=="build" SET "userChoice=2"
-    IF /I "%~1"=="nosushi" SET "userChoice=3"
-    IF /I "%~1"=="notx" SET "userChoice=4"
-    IF /I "%~1"=="jekyll" SET "userChoice=5"
-    IF /I "%~1"=="clean" SET "userChoice=6"
-    IF /I "%~1"=="exit" SET "userChoice=0"
-    GOTO executeChoice
-)
+:: Known first arguments select a menu option; anything else is passed through to the publisher
+SET "extraArgs="
+IF "%~1"=="" GOTO showMenu
+IF /I "%~1"=="update" SET "userChoice=1" & GOTO parseExtra
+IF /I "%~1"=="build" SET "userChoice=2" & GOTO parseExtra
+IF /I "%~1"=="nosushi" SET "userChoice=3" & GOTO parseExtra
+IF /I "%~1"=="notx" SET "userChoice=4" & GOTO parseExtra
+IF /I "%~1"=="jekyll" SET "userChoice=5" & GOTO parseExtra
+IF /I "%~1"=="clean" SET "userChoice=6" & GOTO parseExtra
+IF /I "%~1"=="exit" SET "userChoice=0" & GOTO parseExtra
+:: Unknown first arg - default to build, pass all args through
+SET "userChoice=2"
+GOTO collectArgs
+:parseExtra
+SHIFT
+:collectArgs
+IF "%~1"=="" GOTO executeChoice
+SET "extraArgs=!extraArgs! %1"
+SHIFT
+GOTO collectArgs
+:showMenu
 
 echo ---------------------------------------------------------------
 ECHO Checking internet connection...
-PING tx.fhir.org -4 -n 1 -w 4000 >nul 2>&1 && SET "online_status=true" || SET "online_status=false"
+powershell -Command "try { $r=[System.Net.WebRequest]::Create('https://tx.fhir.org/r4/metadata'); $r.Timeout=4000; $r.GetResponse().Close(); exit 0 } catch { exit 1 }"
+IF %ERRORLEVEL% EQU 0 (SET "online_status=true") ELSE (SET "online_status=false")
 
 IF "%online_status%"=="true" (
-    ECHO We're online and tx.fhir.org is available.
+    ECHO We are online and tx.fhir.org is available.
     FOR /F "tokens=2 delims=:" %%a IN ('curl -s https://api.github.com/repos/HL7/fhir-ig-publisher/releases/latest ^| findstr "tag_name"') DO SET "latest_version=%%a"
     SET "latest_version=!latest_version:"=!"
     SET "latest_version=!latest_version: =!"
     SET "latest_version=!latest_version:~0,-1!"
 ) ELSE (
-    ECHO We're offline or tx.fhir.org is not available, can only run the publisher without TX...
+    ECHO.
+    ECHO *** WARNING: Working offline - this is not the normal mode.
+    ECHO     Some features including terminology rendering will not work.
+    ECHO.
     SET "txoption=-tx n/a"
     SET "latest_version=unknown"
     SET "default_choice=4"
+    SET "default_reason=working offline"
 )
 
 echo ---------------------------------------------------------------
@@ -74,14 +102,16 @@ IF NOT "%jar_location%"=="not_found" (
 ECHO Publisher version: !publisher_version!; Latest is !latest_version!
 
 IF NOT "%online_status%"=="true" (
-   ECHO We're offline.
+   ECHO We are offline.
 ) ELSE (
     IF NOT "!publisher_version!"=="!latest_version!" (
         ECHO An update is recommended.
         SET "default_choice=1"
+        SET "default_reason=newer version available"
     ) ELSE (
         ECHO Publisher is up to date.
         SET "default_choice=2"
+        SET "default_reason=publisher is up to date"
     )
 )
 
@@ -96,12 +126,9 @@ echo 4. Build IG - force no TX server
 echo 5. Jekyll build
 echo 6. Clean up temp directories
 echo 0. Exit
-:: echo [Press Enter for default (%default_choice%) or type an option number:]
 echo.
 
-:: Using CHOICE to handle input with timeout
-:: ECHO [Enter=Continue, 1-7=Option, 0=Exit]
-choice /C 12345670 /N /CS /D %default_choice% /T 5 /M "Choose an option number or wait 5 seconds for default (%default_choice%):"
+choice /C 12345670 /N /CS /D %default_choice% /T 5 /M "Choose an option number or wait 5 seconds for default (%default_choice% - %default_reason%):"
 SET "userChoice=%ERRORLEVEL%"
 
 
@@ -115,15 +142,12 @@ IF "%userChoice%"=="4" GOTO publish_notx
 IF "%userChoice%"=="5" GOTO debugjekyll
 IF "%userChoice%"=="6" GOTO clean
 IF "%userChoice%"=="0" EXIT /B
-
-:end
-
-
+GOTO endscript
 
 :debugjekyll
     echo Running Jekyll build...
     jekyll build -s temp/pages -d output
-GOTO end
+GOTO endscript
 
 
 :clean
@@ -152,10 +176,7 @@ GOTO end
         echo Removed: .\template
     )
 
-GOTO end
-
-
-
+GOTO endscript
 
 
 :downloadpublisher
@@ -169,49 +190,42 @@ IF DEFINED ARG (
 	GOTO processflags
 )
 
-FOR %%x IN ("%CD%") DO SET upper_path=%%~dpx
-
 ECHO.
-IF NOT EXIST "%input_cache_path%%publisher_jar%" (
-	IF NOT EXIST "%upper_path%%publisher_jar%" (
-		SET jarlocation="%input_cache_path%%publisher_jar%"
-		SET jarlocationname=Input Cache
-		ECHO IG Publisher is not yet in input-cache or parent folder.
-		REM we don't use jarlocation below because it will be empty because we're in a bracketed if statement
-		GOTO create
-	) ELSE (
-		ECHO IG Publisher FOUND in parent folder
-		SET jarlocation="%upper_path%%publisher_jar%"
-		SET jarlocationname=Parent folder
-		GOTO upgrade
-	)
-) ELSE (
+IF EXIST "%input_cache_path%%publisher_jar%" (
 	ECHO IG Publisher FOUND in input-cache
-	SET jarlocation="%input_cache_path%%publisher_jar%"
-	SET jarlocationname=Input Cache
+	SET "jarlocation=%input_cache_path%%publisher_jar%"
+	SET "jarlocationname=Input Cache"
 	GOTO upgrade
 )
+SET "jarlocation=%publisher_home%\%publisher_jar%"
+SET "jarlocationname=FHIR Publisher Home"
+IF EXIST "%publisher_home%\%publisher_jar%" (
+	ECHO IG Publisher FOUND in FHIR publisher home
+	GOTO upgrade
+)
+ECHO IG Publisher is not yet in input-cache or FHIR publisher home.
+GOTO create
 
 :create
 IF DEFINED FORCE (
-	MKDIR "%input_cache_path%" 2> NUL
+	MKDIR "%publisher_home%" 2> NUL
 	GOTO download
 )
 
-IF "%skipPrompts%"=="y" (
+IF "%skipPrompts%"=="true" (
 	SET create=Y
 ) ELSE (
 	SET /p create="Download? (Y/N) "
 )
 IF /I "%create%"=="Y" (
-	ECHO Will place publisher jar here: %input_cache_path%%publisher_jar%
-	MKDIR "%input_cache_path%" 2> NUL
+	ECHO Will place publisher jar here: %jarlocation%
+	MKDIR "%publisher_home%" 2> NUL
 	GOTO download
 )
 GOTO done
 
 :upgrade
-IF "%skipPrompts%"=="y" (
+IF "%skipPrompts%"=="true" (
 	SET overwrite=Y
 ) ELSE (
 	SET /p overwrite="Overwrite %jarlocation%? (Y/N) "
@@ -265,7 +279,7 @@ GOTO done
 
 ECHO.
 ECHO Updating scripts
-IF "%skipPrompts%"=="y" (
+IF "%skipPrompts%"=="true" (
 	SET updateScripts=Y
 ) ELSE (
 	SET /p updateScripts="Update scripts? (Y/N) "
@@ -273,7 +287,7 @@ IF "%skipPrompts%"=="y" (
 IF /I "%updateScripts%"=="Y" (
 	GOTO scripts
 )
-GOTO end
+GOTO endscript
 
 
 :scripts
@@ -299,12 +313,12 @@ ECHO Updating _build.bat
 call POWERSHELL -command if ('System.Net.WebClient' -as [type]) {(new-object System.Net.WebClient).DownloadFile(\"%build_bat_url%\",\"_build.new.bat\") } else { Invoke-WebRequest -Uri "%build_bat_url%" -Outfile "_build.new.bat" }
 if %ERRORLEVEL% == 0 goto upd_script_2
 echo "Errors encountered during download: %errorlevel%"
-goto end
+goto endscript
 :upd_script_2
 start copy /y "_build.new.bat" "_build.bat" ^&^& del "_build.new.bat" ^&^& exit
 
 
-GOTO end
+GOTO endscript
 
 
 :publish_once
@@ -312,14 +326,15 @@ GOTO end
 SET JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
 
 :: Debugging statements before running publisher
-ECHO 1jar_location is: %jar_location%
+ECHO jar_location is: %jar_location%
 IF NOT "%jar_location%"=="not_found" (
-	java %JAVA_OPTS% -jar "%jar_location%" -ig . %txoption% %*
+	ECHO IG Publisher FOUND, Publishing...
+	java %JAVA_OPTS% -jar "%jar_location%" -ig . %txoption% %extraArgs%
 ) ELSE (
-	ECHO IG Publisher NOT FOUND in input-cache or parent folder.  Please run _updatePublisher.  Aborting...
+	ECHO IG Publisher NOT FOUND in input-cache, parent folder, or FHIR publisher home.  Please run the script and update the publisher.  Aborting...
 )
 
-GOTO end
+GOTO endscript
 
 
 
@@ -328,14 +343,14 @@ GOTO end
 SET JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
 
 :: Debugging statements before running publisher
-ECHO 3jar_location is: %jar_location%
+ECHO jar_location is: %jar_location%
 IF NOT "%jar_location%"=="not_found" (
-	java %JAVA_OPTS% -jar "%jar_location%" -ig . %txoption% -no-sushi %*
+	java %JAVA_OPTS% -jar "%jar_location%" -ig . %txoption% -no-sushi %extraArgs%
 ) ELSE (
-	ECHO IG Publisher NOT FOUND in input-cache or parent folder. Please run _updatePublisher.  Aborting...
+	ECHO IG Publisher NOT FOUND in input-cache, parent folder, or FHIR publisher home. Please run the script and update the publisher.  Aborting...
 )
 
-GOTO end
+GOTO endscript
 
 
 :publish_notx
@@ -344,43 +359,33 @@ SET txoption=-tx n/a
 SET JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
 
 :: Debugging statements before running publisher
-ECHO 2jar_location is: %jar_location%
+ECHO jar_location is: %jar_location%
 IF NOT "%jar_location%"=="not_found" (
-	java %JAVA_OPTS% -jar "%jar_location%" -ig . %txoption% %*
+	java %JAVA_OPTS% -jar "%jar_location%" -ig . %txoption% %extraArgs%
 ) ELSE (
-	ECHO IG Publisher NOT FOUND in input-cache or parent folder.  Please run _updatePublisher.  Aborting...
+	ECHO IG Publisher NOT FOUND in input-cache, parent folder, or FHIR publisher home.  Please run the script and update the publisher.  Aborting...
 )
 
-GOTO end
-
-
+GOTO endscript
 
 
 :publish_continuous
 
 SET JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
 
-:: Debugging statements before running publisher
-ECHO Checking %input_cache_path% for publisher.jar
-IF EXIST "%input_cache_path%\%publisher_jar%" (
-	java %JAVA_OPTS% -jar "%input_cache_path%\%publisher_jar%" -ig . %txoption% -watch %*
+ECHO jar_location is: %jar_location%
+IF NOT "%jar_location%"=="not_found" (
+	java %JAVA_OPTS% -jar "%jar_location%" -ig . %txoption% -watch %extraArgs%
 ) ELSE (
-    ECHO Checking %upper_path% for publisher.jar
-    IF EXIST "..\%publisher_jar%" (
-	    java %JAVA_OPTS% -jar "..\%publisher_jar%" -ig . %txoption% -watch %*
-    ) ELSE (
-	    ECHO IG Publisher NOT FOUND in input-cache or parent folder.  Please run _updatePublisher.  Aborting...
-    )
+	ECHO IG Publisher NOT FOUND in input-cache, parent folder, or FHIR publisher home.  Please run the script and update the publisher.  Aborting...
 )
 
-GOTO end
+GOTO endscript
 
 
-:end
+:endscript
 
 :: Pausing at the end
-
-
 IF NOT "%skipPrompts%"=="true" (
   PAUSE
 )
