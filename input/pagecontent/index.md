@@ -58,10 +58,10 @@ Multiple operations can be used to address a single use case. For example, an in
 
 |                   | Bulk Export                                                        | Bulk Submit                                               | Bulk Publish                                                        |
 |----------------------------|--------------------------------------------------------------------|-----------------------------------------------------------|---------------------------------------------------------------------|
-| Cohort and data elements  | **Recipient specifies**                                           | Provider defines                                          | Provider defines                                                    |
-| Kick-off workflow         | Recipient pull                                                    | **Provider push**                                         | Recipient pull                                                      |
-| Cardinality               | One provider to one recipient                                     | One provider to one recipient                             | **One provider to many recipients**                                 |
-| Feedback channel          | Out of band                                                       | **In band**                                               | Out of band                                                         |
+| Cohort and data elements  | Recipient specifies                                               | Provider defines                                          | Provider defines                                                    |
+| Kick-off workflow         | Recipient pull                                                    | Provider push                                             | Recipient pull                                                      |
+| Cardinality               | One provider to one recipient                                     | One provider to one recipient                             | One provider to many recipients                                     |
+| Feedback channel          | Outside Bulk Data protocol                                        | Bulk Submit Status Operation                              | Outside Bulk Data protocol                                          |
 
 ### Representing Cohorts
 
