@@ -9,7 +9,7 @@ Description: """
       "type": "token",
       "extension": [{
         "url": "http://hl7.org/fhir/uv/bulkdata/Extension/operation-not-supported",
-        "valueCanonical": "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data"
+        "valueCanonical": "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-export"
       }]
     }]
   ```
@@ -18,4 +18,4 @@ Context: "CapabilityStatement.rest.resource | CapabilityStatement.rest.resource.
 * ^extension[+].url = $fmm
 * ^extension[=].valueInteger = 5
 * value[x] only canonical
-  * ^short = "Canonical URL for unsupported operation"
+  * ^short = "Canonical URL for unsupported operation or CapabilityStatement"

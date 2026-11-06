@@ -6,6 +6,7 @@
 ### STU4 - v4.0.0 Ballot
 * Added Bulk Submit and Bulk Submit Status operations.
 * Added Bulk Publish operation.
+* Renamed the `bulk-data` CapabilityStatement to `bulk-export` (`http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-export`), and added separate `bulk-submit` and `bulk-publish` CapabilityStatements. Servers that declared conformance with STU3 by including `http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data` in `CapabilityStatement.instantiates` should use the new Bulk Export canonical URL.
 * Migrated the FHIR Asynchronous Bulk Interaction Pattern documentation from the core FHIR spec into this IG and aligned with the current version of Bulk Export.
 * Defined a logical model for the Bulk Data Manifest JSON format.
   - In STU3, the `extension` property on any manifest object had a value of a JSON object where the properties are the extension name and the values are the extension value. In STU4, the `extension` property contains an array of FHIR Extension elements.

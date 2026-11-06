@@ -84,8 +84,12 @@ menu:
   Change Log: changes.html
 
 resources:
-  CapabilityStatement/bulk-data:
-    name: Capability Statement
+  CapabilityStatement/bulk-export:
+    name: Bulk Export Capability Statement
+  CapabilityStatement/bulk-submit:
+    name: Bulk Submit Capability Statement
+  CapabilityStatement/bulk-publish:
+    name: Bulk Publish Capability Statement
   OperationDefinition/export:
     name: System Level Export Operation Definition
   OperationDefinition/async:

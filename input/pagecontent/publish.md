@@ -36,6 +36,7 @@ GET `[base]/$bulk-publish`
 - A Data Provider SHALL support retrieval of a Bulk Publish manifest through an HTTP GET request to an endpoint that terminates with a `$bulk-publish` segment.
 - A Data Consumer SHOULD include the conditional request HTTP header `If-None-Match` with each request when it has a previously received `ETag` value to avoid retrieving data when nothing has changed since the last request. Data Providers MAY support the use of this header.
 - When the `If-None-Match` value matches the current `ETag`, a Data Provider MAY return `304 Not Modified`.
+- A Data Provider that declares conformance with this operation SHOULD serve a CapabilityStatement at `[base]/metadata` whose `instantiates` includes `http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-publish` (see [Conformance and Publication](index.html#conformance-and-publication)).
 
 #### Response - Manifest
 

@@ -69,7 +69,11 @@ Many Bulk Export workflows are applicable to a specific cohort of patients rathe
 
 ### Conformance and Publication
 
-To declare conformance with this IG, a server SHOULD include the following URL in its `CapabilityStatement.instantiates`: `http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data`.
+To declare conformance with the Bulk Export Operation in this IG, a FHIR server SHALL include the following URL in its `CapabilityStatement.instantiates`: [`http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-export`](CapabilityStatement-bulk-export.html).
+
+To declare conformance with the Bulk Submit Operation in this IG, a FHIR server SHALL include the following URL in its `CapabilityStatement.instantiates`: [`http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-submit`](CapabilityStatement-bulk-submit.html).
+
+To declare conformance with the Bulk Publish Operation in this IG, a server SHOULD host a `/metadata` endpoint that includes the following URL in its `CapabilityStatement.instantiates`: [`http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-publish`](CapabilityStatement-bulk-publish.html).
 
 The [Bulk Data Access Implementation Guide Resource](ImplementationGuide-hl7.fhir.uv.bulkdata.html) defines the technical details of this publication, including dependencies and publishing parameters.
 
