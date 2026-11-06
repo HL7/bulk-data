@@ -18,7 +18,7 @@ Usage: #definition
 * implementationGuide = "http://hl7.org/fhir/uv/bulkdata/ImplementationGuide/hl7.fhir.uv.bulkdata"
 * rest
   * mode = #server
-  * documentation = "These FHIR Operations initiate the generation of data to which the Data Consumer is authorized, whether that be all patients, a subset (defined group) of patients, or all available data contained in a Data Provider's FHIR server.\n\nThe Data Provider's FHIR server SHALL limit the data returned to only those FHIR resources for which the Data Consumer is authorized.\n\nThe Data Provider's FHIR server SHALL support invocation of this operation using HTTP POST and the [FHIR Asynchronous Bulk Interaction Pattern](async.html). Request parameters SHALL be supplied using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html). GET requests SHALL NOT be used to kick off a Bulk Data Export Operation."
+  * documentation = "These FHIR Operations initiate the generation of data to which the Data Consumer is authorized, whether that be all patients, a subset (defined group) of patients, or all available data contained in a Data Provider's FHIR server.\n\nThe Data Provider's FHIR server SHALL limit the data returned to only those FHIR resources for which the Data Consumer is authorized.\n\nThe Data Provider's FHIR server SHALL support invocation of this operation using HTTP POST and the [FHIR Asynchronous Bulk Interaction Pattern](async.html). Request parameters SHALL be supplied using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html)."
   * resource[0]
     * type = #Group
     * operation

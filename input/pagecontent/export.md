@@ -60,6 +60,10 @@ As discussed in [Privacy and Security Considerations](#privacy-and-security-cons
 
 The Data Provider's FHIR Resource Server SHALL support invocation of this operation using HTTP POST and the [FHIR Asynchronous Bulk Interaction Pattern](async.html). Request parameters SHALL be supplied using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
+Version 4.0.0 of this operation does not support HTTP GET kick-off requests. (Versions 3.0.0 and earlier allowed a subset of the kick-off parameters to be supplied as URL query parameters in a GET request.)
+
+A Data Provider that does not accept HTTP GET invocation SHALL respond to such a request with an HTTP `405 Method Not Allowed` and an `Allow` header listing the supported methods. To communicate the details, the server MAY provide an OperationOutcome indicating that the kick-off request must be submitted using HTTP POST.
+
 If a parameter has a cardinality greater than one, a Data Consumer MAY repeat the kick-off parameter by including multiple `Parameters.parameter` entries with the same `name`. A Data Consumer SHALL NOT represent multiple values by comma-delimiting them within a single parameter value.
 
 For Patient-level requests and Group-level requests associated with groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Implementers should be aware that the Patient Compartment may not include all resources associated with a patient; for example, resources associated with a patient indirectly through membership in a Group may fall outside of the Patient Compartment. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
@@ -264,7 +268,7 @@ The Data Provider MAY include a FHIR `OperationOutcome` resource in the body in 
 
 ##### Response - Error (e.g., unsupported search parameter)
 
-The Data Provider SHALL return an error response with:
+Except for the HTTP `405 Method Not Allowed` response to an HTTP GET kick-off request described in the [Kick-off Request](#kick-off-request) section, the Data Provider SHALL return an error response with:
 
 - HTTP status `4XX` or `5XX`
 - FHIR `OperationOutcome` resource in the body in JSON format
@@ -465,6 +469,8 @@ When a Data Provider supports multiple versions of a Bulk Export operation at th
     "definition": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export|4.0.0"
 }]
 ```
+
+The `operation.name` identifies the name used to invoke the advertised operation. For example, with the CapabilityStatement above, Group-level export version 3.0.0 would be invoked at `[base]/Group/[id]/$export`, while version 4.0.0 would be invoked at `[base]/Group/[id]/$export-v4`. This allows multiple versions of the Bulk Export contract to be supported at the same FHIR base URL while keeping version selection explicit in the operation URL.
 
 Data Providers SHOULD also ensure that their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
 
