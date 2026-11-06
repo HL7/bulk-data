@@ -32,10 +32,10 @@ Description: "Logical model describing a standard format to provide links to FHI
   * url 1..1 url "File URL" "The absolute path to the file."
   * count 0..1 integer "Resource Count" "The number of resources in the file."
   * fileSize 0..1 integer "File Size" "The size of the file in bytes. This provides Data Consumers with information about the storage and processing requirements for downloading and parsing the file."
-  * countSeverity 0..* BackboneElement "Count by severity" "Count of OperationOutcome resources grouped by severity level."
+  * countSeverity 0..* BackboneElement "Count by severity" "Count of `OperationOutcome.issue` entries in the file, grouped by issue severity."
     * code 1..1 code "Severity" "Severity level from OperationOutcome.issue.severity (fatal, error, warning, information, success)"
     * code from http://hl7.org/fhir/ValueSet/issue-severity (required)
-    * count 1..1 integer "Count" "The number of OperationOutcome resources in the file with this severity level."
+    * count 1..1 integer "Count" "The number of `OperationOutcome.issue` entries in the file with this severity."
 
 * link 0..* BackboneElement "Paging links" "Link to related manifest."
   * obeys bdm-link-relation-next

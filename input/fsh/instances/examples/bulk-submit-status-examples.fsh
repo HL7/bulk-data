@@ -4,9 +4,9 @@ Title: "Bulk Submit Resource-Level Status OperationOutcome Example"
 Description: "Example OperationOutcome describing resource-level validation failures for a bulk submit."
 Usage: #example
 * id = "submit-status-resource-operationoutcome-example"
-* extension[+].url = "http://hl7.org/fhir/StructureDefinition/operationoutcome-sourceResource"
+* extension[+].url = "http://hl7.org/fhir/StructureDefinition/operationoutcome-resource"
 * extension[=].valueReference.reference = "http://example.org/fhir/Patient/pt-1"
-* extension[+].url = "http://hl7.org/fhir/StructureDefinition/operationoutcome-sourceResource"
+* extension[+].url = "http://hl7.org/fhir/StructureDefinition/operationoutcome-resource"
 * extension[=].valueReference.reference = "http://example.org/fhir/Patient/pt-2"
 * issue[0].severity = #error
 * issue[0].code = #structure
