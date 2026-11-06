@@ -86,6 +86,7 @@ The [Bulk Data Access Implementation Guide Resource](ImplementationGuide-hl7.fhi
 * [RFC6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
 * [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
 * [RFC7240, Prefer Header for HTTP](https://tools.ietf.org/html/rfc7240)
+* [SMART App Launch, version 2.0.0 or later](https://hl7.org/fhir/smart-app-launch/), in particular the [Backend Services Authorization Profile](https://hl7.org/fhir/smart-app-launch/backend-services.html)
 
 ### Terminology
 
