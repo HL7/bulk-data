@@ -72,16 +72,18 @@ parameters:
 
 menu:
   Home: index.html
-  Export Operation: export.html
-  Groups: group.html
-  Submit Operation: submit.html
-  Publish Operation: publish.html
-  Async Pattern: async.html
-  Authorization: authorization.html
+  Specification:
+    Export Operation: export.html
+    Submit Operation: submit.html
+    Publish Operation: publish.html
+    Groups: group.html
+    Async Pattern: async.html
+    Authorization: authorization.html
   FHIR Artifacts: artifacts.html
-  Downloads: downloads.html
-  Abbreviations: abbreviations.html
-  Change Log: changes.html
+  Support:
+    Downloads: downloads.html
+    Abbreviations: abbreviations.html
+    Change Log: changes.html
 
 resources:
   CapabilityStatement/bulk-export:
