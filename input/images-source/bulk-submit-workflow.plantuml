@@ -7,36 +7,38 @@ participant "Submission File Server" as SubmitFiles
 end box
 
 box "Data Consumer"
-participant "Submission Endpoint" as SubmitEndpoint
-participant "Status Endpoint" as StatusEndpoint
+participant "Submission Server" as SubmitServer
+participant "File Retrieval Client" as RetrievalClient
 participant "Status File Server" as StatusFiles
 end box
 
-SubmitClient -> SubmitEndpoint: Submit first manifest URL (submissionStatus: in-progress)
-SubmitEndpoint --> SubmitClient: Success OperationOutcome
+SubmitClient -> SubmitServer: Submit first manifest URL (submissionStatus: in-progress)
+SubmitServer --> SubmitClient: Success OperationOutcome
 
-SubmitEndpoint -> SubmitFiles: Retrieve manifest file
-SubmitFiles --> SubmitEndpoint
-SubmitEndpoint -> SubmitFiles: Retrieve submission bulk data files
-SubmitFiles --> SubmitEndpoint
+RetrievalClient -> SubmitFiles: Retrieve manifest file
+SubmitFiles --> RetrievalClient
+RetrievalClient -> SubmitFiles: Retrieve submission bulk data files
+SubmitFiles --> RetrievalClient
 
-SubmitClient -> StatusEndpoint: Status kick-off
-StatusEndpoint --> SubmitClient: Polling URL
+SubmitClient -> SubmitServer: Status kick-off
+SubmitServer --> SubmitClient: Polling URL
 
-SubmitClient -> StatusEndpoint: Poll request
-StatusEndpoint --> SubmitClient: Partial status manifest
+SubmitClient -> SubmitServer: Poll request
+SubmitServer --> SubmitClient: Partial status manifest
 
 SubmitClient -> StatusFiles: Retrieve status files
 StatusFiles --> SubmitClient
 
-SubmitClient -> SubmitEndpoint: Submit second manifest URL (submissionStatus: completed)
-SubmitEndpoint --> SubmitClient: Success OperationOutcome
+SubmitClient -> SubmitServer: Submit second manifest URL (submissionStatus: completed)
+SubmitServer --> SubmitClient: Success OperationOutcome
 
-SubmitEndpoint -> SubmitFiles: Retrieve submission bulk data files
-SubmitFiles --> SubmitEndpoint
+RetrievalClient -> SubmitFiles: Retrieve manifest file
+SubmitFiles --> RetrievalClient
+RetrievalClient -> SubmitFiles: Retrieve submission bulk data files
+SubmitFiles --> RetrievalClient
 
-SubmitClient -> StatusEndpoint: Poll request
-StatusEndpoint --> SubmitClient: Complete status manifest
+SubmitClient -> SubmitServer: Poll request
+SubmitServer --> SubmitClient: Complete status manifest
 
 SubmitClient -> StatusFiles: Retrieve final status files
 StatusFiles --> SubmitClient

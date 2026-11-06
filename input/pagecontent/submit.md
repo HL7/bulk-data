@@ -16,6 +16,8 @@ Bulk Export is the better fit for ad hoc, data consumer-driven requests where th
 
 Bulk Submit may also be used in conjunction with Bulk Export through an intermediary application that first requests a bulk export, retrieves the data, optionally transforms it, and then submits the resulting dataset to the Data Consumer.
 
+In Bulk Submit, the roles are reversed relative to Bulk Export in several respects. The Data Consumer hosts the Submission Server, which the Data Provider invokes for both `$bulk-submit` and `$bulk-submit-status`. Submission data moves from the Data Provider to the Data Consumer: the Data Provider supplies URLs for the manifest and Bulk Data files, and the Data Consumer retrieves them. Status data can move in the opposite direction: the Data Consumer supplies URLs for files referenced by Bulk Submit Status manifests, and the Data Provider retrieves them from the Data Consumer's Status File Server.
+
 ### Privacy and Security Considerations
 
 All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL.
@@ -30,23 +32,27 @@ There are two primary roles involved in a Bulk Submit transaction:
 
    a. **Submission Client**: Provides details on one or more bulk submission manifests to the Data Consumer and optionally tracks job status and, when applicable, job output.
 
-   b. **Submission File Server**: Returns files and attachments in response to URLs in the submission manifests. This may be integrated with a FHIR server, or the files may be independently hosted.
+   b. **Submission File Server**: Returns files and attachments in response to URLs in the submission manifests. This may be integrated with a FHIR server, or the files may be independently hosted. Although shown as a Data Provider role, the underlying storage may be provided by the Data Provider, the Data Consumer, or another party.
 
-   c. **Authorization Server**: Issues access tokens and authenticates file requests to the Submission File Server.
+   c. **Authorization Server**: Issues access tokens and authenticates manifest and file requests to the Submission File Server, when that server is operated by the Data Provider.
 
 2. **Data Consumer**:
 
-   a. **Submission Server**: Accepts manifest details and provides job status.
+   a. **Submission Server**: Accepts Bulk Submit requests, supports Bulk Submit Status requests and associated status polling, and returns status manifests.
 
-   b. **Authorization Server**: Issues access tokens and authenticates manifest submission and job status requests.
+   b. **Status File Server**: Returns files referenced by Bulk Submit Status manifests. This may be integrated with the Submission Server or the files may be independently hosted.
 
-   c. **File Retrieval Client**: Retrieves files listed in manifests from the Data Provider.
+   c. **Authorization Server**: Issues access tokens and authenticates manifest submission, status requests, and, when applicable, requests for files referenced by status manifests.
 
-   d. **File Processor**: Processes submitted files with operations such as validation, quality metric calculation, and/or merging into an existing data set.
+   d. **File Retrieval Client**: Retrieves submitted manifests and the files they list from the Submission File Server.
+
+   e. **File Processor**: Processes submitted files with operations such as validation, quality metric calculation, and/or merging into an existing data set.
 
 ### Sequence Overview
 
-This example represents the workflow for a submission comprised of two manifests. As described above, the number of manifests in a submission may differ based on the use case and the volume of data being submitted.
+This example represents the workflow for a submission comprised of two manifests. The number of manifests in a submission may differ based on the use case and the volume of data being submitted.
+
+The sequence diagram illustrates the components that participate directly in the Bulk Submit protocol exchanges. Components involved only in internal processing, such as the File Processor, and authorization interactions are omitted for clarity. Components shown separately may also be combined within a single implementation.
 
 <figure>
   {% include bulk-submit-workflow.svg %}
@@ -99,6 +105,14 @@ If the `fileRequestHeader` parameter is included in the request, the Data Consum
 When populated, the `manifestUrl` parameter SHALL contain a URL pointing to a valid [Bulk Data Manifest](StructureDefinition-BulkDataManifest.html) that contains the bulk data files being submitted. When a manifest is used in a submission, the deprecated `request` field MAY be omitted. The manifest MAY contain a `link` field, and when present, the Data Consumer SHALL follow this link to retrieve additional manifests.
 
 Alternatively, the Data Provider MAY call the Bulk Submit operation multiple times, each with a different `manifestUrl`, using the same `submitter` and `submissionId` parameters to indicate that the contents of those manifests are part of a single submission. All operation parameters other than `submitter`, `submissionId`, and `submissionStatus` relate to the `manifestUrl` being sent and, when applicable, SHALL be included in the request even if they were populated in a previous request.
+
+###### Consumer-provided Upload Locations
+
+As an optional deployment pattern, a Data Consumer may provide a location where the Data Provider can upload files before invoking `$bulk-submit`. The Data Provider can upload Bulk Data files and, optionally, manifest files to this location and then use the resulting URLs in the normal Bulk Submit workflow.
+
+The mechanism used to upload these files is outside the scope of this specification. For example, a Data Consumer might provide a FHIR `Binary` endpoint or object storage upload URLs.
+
+This pattern does not change `$bulk-submit`, the manifest format, or Bulk Submit Status processing. URLs submitted through `manifestUrl` or included in a manifest may therefore identify storage provided by the Data Consumer rather than infrastructure operated by the Data Provider.
 
 ##### Headers
 
