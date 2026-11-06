@@ -96,7 +96,7 @@ If a specific portion of the data is incorrect, the Data Provider SHOULD NOT can
 
 If the `oauthMetadataUrl` parameter in the request is populated with the path to an [OAuth 2.0 Protected Resource Metadata file](https://datatracker.ietf.org/doc/rfc9728/), such as a [FHIR Authorization Endpoint and Capabilities Discovery file](https://hl7.org/fhir/smart-app-launch/conformance.html#using-well-known) for [SMART Backend Services](authorization.html), the Data Consumer SHALL obtain and use a valid token when retrieving the manifest at `manifestUrl`. If `requiresAccessToken` in the retrieved manifest is also set to `true`, the Data Consumer SHALL obtain and use a token scoped to read the resource types included in the manifest when retrieving the referenced files.
 
-If the `fileEncryptionKey` parameter in the request is set to `jwe`, the Data Provider SHALL use the key in `fileEncryptionKey.value` to encrypt the manifest and each file listed in the manifest's `output` section, and the Data Consumer SHALL use this key to decrypt those files.
+Files exchanged in a Bulk Submit workflow MAY be encrypted. A future release of the FHIR Extensions Pack is expected to define a standard extension for conveying file encryption key information; implementers who need encryption before then should coordinate the mechanism out of band.
 
 If the `fileRequestHeader` parameter is included in the request, the Data Consumer SHALL provide the listed header name and value pairs when requesting the OAuth metadata at `oauthMetadataUrl`, the manifest(s), and the files they reference.
 

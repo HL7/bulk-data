@@ -124,33 +124,6 @@ Usage: #definition
   * type = #url
 
 * parameter[+]
-  * name = #fileEncryptionKey
-  * use = #in
-  * min = 0
-  * max = "1"
-  * documentation = """
-    Encryption key information for the Data Consumer to decrypt retrieved data files from the Data Provider.
-    """
-  * part[+]
-    * name = #coding
-    * use = #in
-    * min = 0
-    * max = "1"
-    * documentation = """
-      If omitted, defaults to a system of `http://hl7.org/fhir/uv/bulkdata/ValueSet/file-encryption-type` and code of `jwe`.
-      """
-    * type = #Coding
-  * part[+]
-    * name = #value
-    * use = #in
-    * min = 1
-    * max = "1"
-    * documentation = """
-      For the system of `file-encryption-type` and code of `jwe`, populate with the JSON Web Encryption structure to deliver a Content Encryption Key for the Data Consumer to decrypt retrieved data files from the Data Provider.
-      """
-    * type = #string
-
-* parameter[+]
   * name = #metadata
   * use = #in
   * min = 0
