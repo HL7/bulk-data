@@ -9,7 +9,7 @@ Description: "Logical model describing the status manifest returned by a Data Co
 * ^jurisdiction = $m49.htm#001 "World"
 
 * manifestType ^short = "Logical model that defines this status manifest"
-* manifestType ^definition = "Canonical URL of the logical model that defines the structure of this status manifest. E.g., `http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkSubmitStatusManifest`. This element will be mandatory in a future release of this IG."
+* manifestType ^definition = "Canonical reference to the logical model that defines the structure of this status manifest. When populated, the canonical SHALL include the version of the logical model, e.g., `http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkSubmitStatusManifest|4.0.0`. This element will be mandatory in a future release of this IG."
 * transactionTime ^short = "Timestamp for the data included in this manifest"
 * transactionTime ^definition = "Indicates the Data Consumer's time when this status manifest and its referenced files were generated. The returned files SHOULD NOT include resources modified after this instant, and SHALL include any matching resources prepared up to and including this instant."
 * requiresAccessToken ^short = "Token required to retrieve status files"

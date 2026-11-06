@@ -1,5 +1,5 @@
 {
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest|4.0.0",
   "transactionTime": "2021-01-01T00:00:00Z",
   "updateCadence": "P1D",
   "requiresAccessToken": false,

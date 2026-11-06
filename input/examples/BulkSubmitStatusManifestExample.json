@@ -1,6 +1,6 @@
 {
   "submissionId": "a15eea1f-1605-4303-989f-542d3a7962d8",
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkSubmitStatusManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkSubmitStatusManifest|4.0.0",
   "transactionTime": "2025-01-01T00:00:00Z",
   "requiresAccessToken": true,
   "outcome": [{

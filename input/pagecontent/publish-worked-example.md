@@ -26,8 +26,11 @@ The Data Provider publishes:
 | 2026-01-29 | Weekly update | `update-2026-01-29` |
 | 2026-02-01 | Refreshed root snapshot | `snapshot-2026-02` |
 | 2026-02-05 | Weekly update | `update-2026-02-05` |
+| 2026-03-01 | Refreshed root snapshot | `snapshot-2026-03` |
 | 2026-03-05 | Paged weekly update | `update-2026-03-05`, `update-2026-03-05-page-2` |
+| 2026-03-26 | Weekly update | `update-2026-03-26` |
 | 2026-04-01 | Snapshot and old-chain close | `snapshot-2026-04`, `#closed` |
+| 2026-04-01 | Stub manifest page | `update-chain-2026-04` |
 | 2026-04-02 | Weekly update | `update-2026-04-02` |
 
 Through March, all manifests in this example use the same chain. The February and March snapshots are newer starting points for new Data Consumers, but they do not require existing Data Consumers to restart. The April snapshot starts a new chain; older pages that still advertise `#pending` are closed so existing Data Consumers restart from the root endpoint.
@@ -42,7 +45,7 @@ GET https://exchange.example.org/fhir/$bulk-publish
 
 ```json
 {
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest|4.0.0",
   "transactionTime": "2026-01-01T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -81,7 +84,7 @@ GET https://exchange.example.org/fhir/bulk/manifest/update-chain-2026-01
 
 ```json
 {
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest|4.0.0",
   "transactionTime": "2026-01-01T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -100,7 +103,7 @@ On January 8, the Data Provider publishes `update-2026-01-08`. It then updates t
 
 ```json
 {
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest|4.0.0",
   "transactionTime": "2026-01-01T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -119,7 +122,7 @@ GET https://exchange.example.org/fhir/bulk/manifest/update-2026-01-08
 
 ```json
 {
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest|4.0.0",
   "transactionTime": "2026-01-08T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -160,7 +163,7 @@ GET https://exchange.example.org/fhir/bulk/manifest/update-2026-03-05
 
 ```json
 {
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest|4.0.0",
   "transactionTime": "2026-03-05T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -183,7 +186,7 @@ GET https://exchange.example.org/fhir/bulk/manifest/update-2026-03-05-page-2
 
 ```json
 {
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest|4.0.0",
   "transactionTime": "2026-03-05T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -206,7 +209,7 @@ On April 1, the Data Provider publishes a new complete snapshot at `[base]/$bulk
 
 ```json
 {
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest|4.0.0",
   "transactionTime": "2026-04-01T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
@@ -231,7 +234,7 @@ Existing Data Consumers on the old chain learn about the reset when the Data Pro
 
 ```json
 {
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest|4.0.0",
   "transactionTime": "2026-03-26T00:00:00Z",
   "requiresAccessToken": true,
   "updateCadence": "P7D",
