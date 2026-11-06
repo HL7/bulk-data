@@ -88,7 +88,7 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    Base url to be used by the Data Consumer when resolving relative references in the submitted resources. When the `manifestUrl` parameter is populated, this parameter SHALL be populated.
+    Base URL to be used by the Data Consumer when resolving relative references in the submitted resources. The URL does not need to identify an operational FHIR REST endpoint or be dereferenceable by the Data Consumer. When the `manifestUrl` parameter is populated, this parameter SHALL be populated.
     """
   * type = #url
 
