@@ -60,7 +60,7 @@ The Data Provider's FHIR Resource Server SHALL support invocation of this operat
 
 If a parameter has a cardinality greater than one, a Data Consumer MAY repeat the kick-off parameter by including multiple `Parameters.parameter` entries with the same `name`. A Data Consumer SHALL NOT represent multiple values by comma-delimiting them within a single parameter value.
 
-For Patient-level requests and Group-level requests associated with groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
+For Patient-level requests and Group-level requests associated with groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Implementers should be aware that the Patient Compartment may not include all resources associated with a patient; for example, resources associated with a patient indirectly through membership in a Group may fall outside of the Patient Compartment. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
 
 Binary Resources whose content is associated with an individual patient SHALL be serialized as DocumentReference Resources with the `content.attachment` element populated as described in the [Attachments](#attachments) section below. Binary Resources not associated with an individual patient MAY be included in a System Level export.
 
@@ -115,8 +115,6 @@ Export data from a Data Provider's FHIR server, whether or not it is associated 
 
 *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). If the Data Consumer explicitly asks for export of resources that the Data Provider does not support, the Data Provider SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
 
-If an <code>includeAssociatedData</code> value relevant to provenance is not specified, or if this parameter is not supported by the Data Provider, the Data Provider SHALL include all available Provenance resources whose `Provenance.target` is a resource in the Patient compartment in a patient level export request, and all available Provenance resources in a system level export request unless a specific resource set is specified using the <code>_type</code> parameter and this set does not include Provenance.
-
 ##### Group Membership Request Pattern
 
 To obtain new and updated resources for patients in a group, as well as all data for patients who have joined the group since a prior query, a Data Consumer can use the following pattern:
@@ -141,7 +139,7 @@ To obtain new and updated resources for patients in a group, as well as all data
       "resourceType": "Parameters",
       "parameter": [{
         "name": "_type",
-        "valueString": "Patient"
+        "valueUri": "Patient"
       },{
         "name": "_elements",
         "valueString": "id"
@@ -186,6 +184,22 @@ To obtain new and updated resources for patients in a group, as well as all data
 
   - Data Consumer retains the transactionTime value from the response.
 
+##### `includeAssociatedData` Parameter
+
+The `includeAssociatedData` parameter allows a Data Consumer to request additional resources associated with the resources being exported.
+
+When `includeAssociatedData` is omitted, no additional resources are included as a result of this parameter. This does not affect the inclusion of resources that would otherwise be returned by the export. For example, Provenance resources may be included when they are part of the Data Provider's default export dataset or when `Provenance` is explicitly included in `_type`, subject to any other applicable filters and authorization constraints.
+
+A Data Consumer MAY specify one or more of the following values:
+
+- **`LatestProvenanceResources`**: A Data Provider supporting this value SHALL include the most recent available Provenance resource associated with each non-Provenance resource being returned in the export, as identified by `Provenance.target`. This applies to the resources selected after all other applicable export parameters and filters have been applied, including `_type`, `_typeFilter`, `_since`, `_until`, and `patient`. The associated Provenance resources SHALL be included regardless of whether `Provenance` is specified in `_type` or whether the Provenance resources themselves satisfy the other filtering criteria. This value does not exclude Provenance resources that would otherwise be returned as part of the export.
+
+- **`RelevantProvenanceResources`**: A Data Provider supporting this value SHALL include all available Provenance resources associated with each non-Provenance resource being returned in the export, as identified by `Provenance.target`. This applies to the resources selected after all other applicable export parameters and filters have been applied, including `_type`, `_typeFilter`, `_since`, `_until`, and `patient`. The associated Provenance resources SHALL be included regardless of whether `Provenance` is specified in `_type` or whether the Provenance resources themselves satisfy the other filtering criteria. This value does not exclude Provenance resources that would otherwise be returned as part of the export.
+
+When multiple values are specified, the Data Provider SHALL include the union of the resources required by each value.
+
+Additional resources included as a result of `includeAssociatedData` remain subject to the Data Consumer's authorization.
+
 <a name="_typefilter-parameter"></a>
 
 ##### `_typeFilter` Parameter
@@ -194,7 +208,7 @@ The `_typeFilter` parameter enables finer-grained filtering out of resources in 
 
 Filtering resources based on the dates associated with a clinical or administrative event, such as exporting encounters that occurred within a certain time period, SHOULD be done using the `_typeFilter` parameter and not the `_since` and `_until` parameters, since the resource modification date used in those filters might not correspond to the date of the clinical or administrative event.
 
-The value of the `_typeFilter` parameter is a FHIR REST API query. Resources with a resource type specified in this query that do not meet the criteria in the search expression in the query SHALL NOT be returned, with the exception of related resources being included by the Data Provider to provide context about the resources being exported (see [processing model](#processing-model)). A Data Consumer MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When more than one `_typeFilter` parameter is provided with a query for the same resource type, the Data Provider SHALL include resources of that resource type that meet the criteria in any of the parameters (a logical "or").
+The value of the `_typeFilter` parameter is a FHIR REST API query. Resources with a resource type specified in this query that do not meet the criteria in the search expression in the query SHALL NOT be returned, with the exception of related resources being included by the Data Provider to provide context about the resources being exported (see [processing model](#processing-model)) and additional resources included as a result of the `includeAssociatedData` parameter. A Data Consumer MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When more than one `_typeFilter` parameter is provided with a query for the same resource type, the Data Provider SHALL include resources of that resource type that meet the criteria in any of the parameters (a logical "or").
 
 FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `_typeFilter` criteria. Additionally, a query in the `_typeFilter` parameter SHALL have the [search context](https://hl7.org/fhir/search.html#searchcontexts) of a single FHIR Resource Type. The contexts "all resource types" and "a specified compartment" are not allowed. Data Consumers SHOULD consult the Data Provider's CapabilityStatement to identify supported search parameters (see [Data Provider capability documentation](#data-provider-capability-documentation)). Since support for `_typeFilter` is OPTIONAL for a Data Provider, Data Consumers SHOULD be robust to Data Providers that ignore `_typeFilter`.
 
@@ -213,7 +227,7 @@ POST [fhir base]/$export
   "resourceType": "Parameters",
   "parameter": [{
     "name": "_type",
-    "valueString": "MedicationRequest"
+    "valueUri": "MedicationRequest"
   },{
     "name": "_typeFilter",
     "valueString": "MedicationRequest?status=active"
