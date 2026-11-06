@@ -119,6 +119,8 @@ Export data from a Data Provider's FHIR server, whether or not it is associated 
 
 ##### Parameters
 
+Data Consumers are encouraged to use these parameters to limit a request to the data needed for their use case.
+
 {% include export-query-parameters.md %}
 
 *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). If the Data Consumer explicitly asks for export of resources that the Data Provider does not support, the Data Provider SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
