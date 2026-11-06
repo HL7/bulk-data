@@ -463,6 +463,8 @@ Resources that appear in a deleted resources file SHALL NOT also appear in an `o
 
 {% include async-attachments.md %}
 
+For document-based exchange, a Data Consumer can request DocumentReference resources and, when supported, use _typeFilter with DocumentReference search parameters to select particular documents; the referenced document content is then available through the returned DocumentReference.content.attachment elements as described above.
+
 ### Data Provider Capability Documentation
 
 This implementation guide is structured to support a wide variety of Bulk Data Export use cases and Data Provider architectures. To provide clarity to developers on which capabilities are implemented by a particular Data Provider, Data Providers SHALL ensure that their CapabilityStatement accurately reflects the implemented Bulk Data Operations. Additionally, the Data Provider's CapabilityStatement SHOULD list the resource types available for export in the `rest.resource` element, and SHOULD list the search parameters that can be used in the `_typeFilter` parameter in `rest.resource.searchParam` elements.
