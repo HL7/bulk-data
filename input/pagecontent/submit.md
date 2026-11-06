@@ -134,6 +134,14 @@ The Data Consumer SHALL return an error response with:
 
 If a Data Consumer wants to prevent a Data Provider from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests`.
 
+### Processing Submissions
+
+Depending on use case, Data Consumers may process submitted data in different ways, including validating resources, calculating metrics, loading a FHIR server, transforming data, or combining it with other datasets.
+
+Bulk Submit does not require FHIR transaction processing or storage in a FHIR repository. Consumers that store resources can preserve submitted resource ids or assign local ids. Beyond its explicit replacement and cancellation requirements, the operation does not prescribe a general policy for resolving local id collisions or deciding whether to create, update, or merge records.
+
+The `fhirBaseUrl` parameter, together with resource type and id, identifies a resource in its source namespace. Data Consumers can use this identity to recognize a resource within and across submissions.
+
 ### Bulk Submit Status Request Flow
 
 After a Data Provider has kicked off a Bulk Submit operation, it may wish to receive updates on the status of the submission. For example, a Data Consumer may indicate files it was unable to retrieve, resources that failed validation, or resources that were not able to be merged into an existing data set. Additionally, the Data Consumer may need to return processed data back to the Data Provider, such as computed quality measures or a de-identified version of the submitted data. The Bulk Submit Status operation provides a way for a Data Provider to request resources related to a submission from the Data Consumer.
