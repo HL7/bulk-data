@@ -6,7 +6,7 @@ The FHIR Asynchronous Bulk Interaction Pattern, described below, is a FHIR reque
 
 The [Bulk Export Operation](export.html) and the [Bulk Submit Status Operation](submit.html#bulk-submit-status-request-flow) in this IG build on this pattern.
 
-Use cases that return small amounts of data but may take a lot of time to process may prefer to use the related [Asynchronous Interaction Request Pattern](https://hl7.org/fhir/async-bundle.html).
+Use cases that return small amounts of data but may take a lot of time to process may prefer to use the related [Asynchronous Interaction Request Pattern](https://hl7.org/fhir/R5/async-bundle.html).
 
 ### FHIR Asynchronous Bulk Interaction Flow
 
@@ -97,8 +97,6 @@ Example NDJSON file when the manifest does not include `outputOrganizedBy`:
 {"id":"p-3","resourceType":"Patient", "name":[{"given":["Sandy"],"family":"Hamlin"}],"gender":"female", ...}
 {...}
 ```
-
-<a name="submit-status-organize-output-by-file-example"></a>
 
 Example NDJSON file when `outputOrganizedBy` is set to `Patient`:
 
