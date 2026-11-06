@@ -98,7 +98,7 @@ Usage: #definition
   * min = 0
   * max = "*"
   * documentation = """
-    HTTP headers that the Data Consumer SHOULD use when requesting a data file from the Data Provider.
+    HTTP headers that the Data Consumer SHALL use when requesting the OAuth metadata, the manifest(s), and the files they reference.
     """
   * part[+]
     * name = #headerName

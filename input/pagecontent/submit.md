@@ -98,7 +98,7 @@ If the `oauthMetadataUrl` parameter in the request is populated with the path to
 
 If the `fileEncryptionKey` parameter in the request is set to `jwe`, the Data Provider SHALL use the key in `fileEncryptionKey.value` to encrypt the manifest and each file listed in the manifest's `output` section, and the Data Consumer SHALL use this key to decrypt those files.
 
-If the `fileRequestHeader` parameter is included in the request, the Data Consumer SHALL provide the listed header name and value pairs when requesting a manifest or data file.
+If the `fileRequestHeader` parameter is included in the request, the Data Consumer SHALL provide the listed header name and value pairs when requesting the OAuth metadata at `oauthMetadataUrl`, the manifest(s), and the files they reference.
 
 ##### Manifest
 
