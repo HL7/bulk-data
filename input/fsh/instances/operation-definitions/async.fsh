@@ -2,7 +2,6 @@ Instance: async
 InstanceOf: OperationDefinition
 Usage: #definition
 * url = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/async"
-* version = "2.0.0"
 * name = "AsynchronousBulkInteractionPattern"
 * title = "FHIR Asynchronous Bulk Interaction Pattern"
 * status = #active

@@ -3,7 +3,7 @@
 	h4:before {content: none}
 </style>
 
-### STU4 - v4.0.0 Ballot
+### STU4 - v4.0.0
 * Added Bulk Submit and Bulk Submit Status operations.
 * Added Bulk Publish operation.
 * Renamed the `bulk-data` CapabilityStatement to `bulk-export` (`http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-export`), and added separate `bulk-submit` and `bulk-publish` CapabilityStatements. Servers that declared conformance with STU3 by including `http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data` in `CapabilityStatement.instantiates` should use the new Bulk Export canonical URL.

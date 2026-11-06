@@ -2,7 +2,6 @@ Instance: bulk-submit-status
 InstanceOf: OperationDefinition
 Usage: #definition
 * url = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-submit-status"
-* version = "1.0.0"
 * name = "BulkSubmitStatus"
 * title = "FHIR Bulk Data Submit Status"
 * status = #active

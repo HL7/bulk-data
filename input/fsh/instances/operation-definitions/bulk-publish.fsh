@@ -2,7 +2,6 @@ Instance: bulk-publish
 InstanceOf: OperationDefinition
 Usage: #definition
 * url = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-publish"
-* version = "1.0.0"
 * name = "BulkDataPublish"
 * title = "FHIR Bulk Data Publish"
 * status = #active
