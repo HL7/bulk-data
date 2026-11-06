@@ -419,7 +419,7 @@ The manifest logical models support standard FHIR extensions. Extensions may be 
 Implementation notes:
 
 - For `transactionTime`, to properly meet the inclusion constraints above, the Data Provider's FHIR server might need to wait for any pending transactions to resolve in its database before starting the export process.
-- Error, warning, and information messages related to the export SHOULD be included in `outcome` and not in `output`. If the request contained invalid or unsupported parameters along with a `Prefer: handling=lenient` header and the Data Provider processed the request, the Data Provider SHOULD include a FHIR `OperationOutcome` resource for each of these parameters.
+- Error, warning, and information messages related to the export SHOULD be included in `outcome` and not in `output`. If the request contained invalid or unsupported parameters along with a `Prefer: handling=lenient` header and the Data Provider processed the request, the Data Provider SHALL include one or more FHIR `OperationOutcome` resources to communicate ignored parameters.
 - When the `_since` timestamp is supplied in the export request, the `deleted` array SHOULD be populated with files containing FHIR transaction Bundles for resources that match the kick-off request criteria but were deleted after the `_since` date. If no resources have been deleted, if `_since` was not supplied, or if the Data Provider has other reasons to avoid exposing these data, the Data Provider MAY omit this key. See [Deleted Resources](#deleted-resources).
 
 <a name="manifest-link"></a>
