@@ -406,6 +406,10 @@ The output manifest is a JSON object providing metadata and links to the generat
 
 {% include export-manifest-fields.md %}
 
+The manifest logical models support standard FHIR extensions. Extensions may be added to the manifest itself or to individual elements as permitted by the logical model. In STU3 and earlier, manifest extensions were represented as a JSON object whose property names were extension names and whose values were the extension values. In this release, extensions use the standard FHIR `Extension` representation.
+
+[View Bulk Data Manifest logical model](StructureDefinition-BulkDataManifest.html)
+
 Implementation notes:
 
 - For `transactionTime`, to properly meet the inclusion constraints above, the Data Provider's FHIR server might need to wait for any pending transactions to resolve in its database before starting the export process.

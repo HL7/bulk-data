@@ -58,7 +58,7 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    Url pointing to a [Bulk Export Manifest](https://build.fhir.org/ig/HL7/bulk-data/export.html#response---output-manifest) with a pre-coordinated FHIR data set. Files in multiple submitted manifests with the same `submitter` and `submissionId` SHALL be treated by the Data Consumer as if they were submitted in a single manifest. This parameter MAY be omitted when the operation is being called to set the submissionStatus to `completed` or `stopped`. The value SHALL be unique for all manifests that share a `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated. When this parameter is populated, the `fhirBaseUrl` parameter SHALL also be populated.
+    Url pointing to a [Bulk Data Manifest](StructureDefinition-BulkDataManifest.html) with a pre-coordinated FHIR data set. Files in multiple submitted manifests with the same `submitter` and `submissionId` SHALL be treated by the Data Consumer as if they were submitted in a single manifest. This parameter MAY be omitted when the operation is being called to set the submissionStatus to `completed` or `stopped`. The value SHALL be unique for all manifests that share a `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated. When this parameter is populated, the `fhirBaseUrl` parameter SHALL also be populated.
     """
   * type = #url
 

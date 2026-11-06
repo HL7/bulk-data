@@ -174,6 +174,10 @@ For a step-by-step example, see [Bulk Publish Worked Example](publish-worked-exa
 
 {% include publish-manifest-fields.md %}
 
+The manifest logical models support standard FHIR extensions. Extensions may be added to the manifest itself or to individual elements as permitted by the logical model.
+
+[View Bulk Publish Manifest logical model](StructureDefinition-BulkPublishManifest.html)
+
 Implementation notes:
 
 - For `transactionTime`, to properly meet the inclusion constraints above, a Data Provider might need to wait for pending updates in its publishing pipeline or source systems to resolve before publishing a new manifest.
