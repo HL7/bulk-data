@@ -19,6 +19,7 @@ The scope of this document does NOT include:
 - A healthcare organization moving data from a clinical system onto a standalone FHIR server to consolidate data from multiple systems in order to run analytic queries
 - An organization providing FHIR data to an internal or external service to process the data for de-identification or other transformation
 - An organization sharing a pre-defined dataset from a clinical system with another application, such as a care management tool
+- A healthcare organization submitting data to a public health agency to inform health research, policy and practice
 
 
 ### Choosing a Bulk Operation
