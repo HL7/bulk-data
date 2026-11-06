@@ -24,6 +24,6 @@ Description: "Logical model describing the status manifest returned by a Data Co
 * output.manifestUrl 0..1 url "Source Manifest URL" "URL of the manifest submitted by the Data Provider that the resources in this output file relate to. A single manifestUrl MAY be referenced from multiple items in the output section."
 
 * deleted ^short = "Deleted Resource Files"
-* deleted ^definition = "References to files containing pointers to previously submitted resources marked for removal by the Data Provider. Each line in the deleted files SHALL contain a FHIR Bundle with a type of transaction which SHALL contain one or more entry items that reflect a deleted resource. In each entry, the request.url and request.method elements SHALL be populated and request.method SHALL be set to DELETE."
+* deleted ^definition = "References to files identifying resources previously returned in the `output` of a status manifest for this submission that the Data Consumer requests the Data Provider to remove. See [Deleted Resources](submit.html#deleted-resources)."
 
 * outcome.manifestUrl 1..1 url "Source Manifest URL" "URL of the manifest submitted by the Data Provider where the issues described in this outcome file occurred. Each item in the outcome section SHALL include this element. A single manifestUrl MAY be referenced from multiple items in the outcome section."

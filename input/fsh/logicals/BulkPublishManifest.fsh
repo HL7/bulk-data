@@ -20,6 +20,7 @@ Description: "Logical model describing the manifest returned by a $bulk-publish 
 * outputFormat ^definition = "MIME type of the published files referenced in this manifest. Defaults to application/fhir+ndjson when omitted. Describes the expected format of the published files."
 * output.url ^short = "File URL"
 * output.url ^definition = "The absolute path to the file. The format of the file SHOULD match the outputFormat element in this manifest when that element is populated."
+* deleted ^definition = "References to files identifying resources that the Data Provider is requesting the Data Consumer to remove from its local dataset. See [Deleted Resources](publish.html#deleted-resources)."
 
 * link 0..1
 * link ^short = "Next manifest page or update-chain marker"

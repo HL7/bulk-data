@@ -23,7 +23,7 @@ Description: "Logical model describing a standard format to provide links to FHI
   * count 0..1 integer "Resource Count" "The number of resources in the file."
   * fileSize 0..1 integer "File Size" "The size of the file in bytes. This provides Data Consumers with information about the storage and processing requirements for downloading and parsing the file."
 
-* deleted 0..* BackboneElement "Deleted Resource Files" "References to files containing pointers to deleted resources in the form of FHIR Transaction Bundles. Each line in the output files SHALL contain a FHIR Bundle with a type of transaction which SHALL contain one or more entry items that reflect a deleted resource. In each entry, the request.url and request.method elements SHALL be populated and request.method SHALL be set to DELETE."
+* deleted 0..* BackboneElement "Deleted Resource Files" "References to files identifying resources that the Data Provider is requesting the Data Consumer to remove from its local dataset. See [Deleted Resources](export.html#deleted-resources)."
   * url 1..1 url "File URL" "The absolute path to the file."
   * count 0..1 integer "Resource Count" "The number of resources in the file."
   * fileSize 0..1 integer "File Size" "The size of the file in bytes. This provides Data Consumers with information about the storage and processing requirements for downloading and parsing the file."

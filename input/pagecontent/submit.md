@@ -86,7 +86,7 @@ The Data Provider uses the `submissionStatus` parameter to indicate the state of
 
 - `in-progress` (default if parameter is omitted): Additional requests to the `$bulk-submit` endpoint are expected for the `submitter` and `submissionId` combination in that request.
 - `completed`: No additional requests to the `$bulk-submit` endpoint are expected for the `submitter` and `submissionId` combination in that request.
-- `stopped`: The submission is invalid. The Data Consumer SHALL stop retrieving files and delete any data already processed from this submission. No additional requests to the `$bulk-submit` endpoint are expected for this `submitter` and `submissionId` combination.
+- `stopped`: The submission is invalid. The Data Consumer SHALL stop retrieving files and SHOULD delete any data already processed from this submission. No additional requests to the `$bulk-submit` endpoint are expected for this `submitter` and `submissionId` combination.
 
 ###### Correcting Data Without Aborting
 
@@ -199,7 +199,7 @@ Each item in the `outcome` section of the manifest SHALL include `manifestUrl` t
 
 If there are resources to return, the Data Consumer SHALL populate the `output` section of the manifest with one or more files that contain FHIR resources. Each item in the `output` section SHOULD include `manifestUrl` to link the returned file back to the submitted manifest. A single `manifestUrl` may be referenced from multiple items in the `output` section.
 
-If the Data Consumer wishes to indicate that resources included as part of the submission be removed by the Data Provider, the Data Consumer MAY populate the `deleted` section with one or more files containing FHIR transaction Bundles. Each line in such a file SHALL contain a FHIR `Bundle` with a type of `transaction` containing one or more `entry` items that reflect a deleted resource. In each entry, `request.url` and `request.method` SHALL be populated and `request.method` SHALL be set to `DELETE`. Resources that appear in `deleted` SHALL NOT also appear in `output`.
+If the Data Consumer wishes to indicate that resources it previously returned in the `output` section of a status manifest for this submission should be removed by the Data Provider, the Data Consumer MAY populate the `deleted` section with one or more files containing FHIR transaction Bundles, as described in [Deleted Resources](#deleted-resources).
 
 When the status response is returned incrementally, including when a partial status manifest is returned with an HTTP status of `202 Accepted`, the Data Consumer MAY populate the `link` section with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another status manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `outcome`, and `link` arrays.
 
@@ -230,6 +230,21 @@ Example OperationOutcome (manifest-level status):
 </div>
 
 [View Example](OperationOutcome-submit-status-manifest-operationoutcome-example.html)
+
+###### Deleted Resources
+
+Files referenced by the Bulk Submit Status manifest's `deleted` array identify resources previously returned in the `output` of a status manifest for this submission that the Data Consumer is requesting the Data Provider to remove. The `request.url` in each entry identifies the resource as it appeared in that earlier `output`.
+
+Each resource in a deleted resources file SHALL be a FHIR `Bundle` with `Bundle.type` set to `transaction`. Each Bundle SHALL contain one or more entries identifying resources to delete. For each entry, `request.url` SHALL identify the resource and `request.method` SHALL be `DELETE`.
+
+For example, an NDJSON deleted resources file containing two deletion transactions could be:
+
+```json
+{"resourceType":"Bundle","type":"transaction","entry":[{"request":{"method":"DELETE","url":"Patient/123"}}]}
+{"resourceType":"Bundle","type":"transaction","entry":[{"request":{"method":"DELETE","url":"Observation/456"}}]}
+```
+
+Resources that appear in a deleted resources file SHALL NOT also appear in an `output` file of the same manifest.
 
 ---
 {% include async-delete-request.md %}

@@ -410,7 +410,7 @@ Implementation notes:
 
 - For `transactionTime`, to properly meet the inclusion constraints above, the Data Provider's FHIR server might need to wait for any pending transactions to resolve in its database before starting the export process.
 - Error, warning, and information messages related to the export SHOULD be included in `outcome` and not in `output`. If the request contained invalid or unsupported parameters along with a `Prefer: handling=lenient` header and the Data Provider processed the request, the Data Provider SHOULD include a FHIR `OperationOutcome` resource for each of these parameters.
-- When the `_since` timestamp is supplied in the export request, the `deleted` array SHOULD be populated with files containing FHIR transaction Bundles for resources that match the kick-off request criteria but were deleted after the `_since` date. If no resources have been deleted, if `_since` was not supplied, or if the Data Provider has other reasons to avoid exposing these data, the Data Provider MAY omit this key. Resources that appear in `deleted` SHALL NOT also appear in `output`.
+- When the `_since` timestamp is supplied in the export request, the `deleted` array SHOULD be populated with files containing FHIR transaction Bundles for resources that match the kick-off request criteria but were deleted after the `_since` date. If no resources have been deleted, if `_since` was not supplied, or if the Data Provider has other reasons to avoid exposing these data, the Data Provider MAY omit this key. See [Deleted Resources](#deleted-resources).
 
 <a name="manifest-link"></a>
 
@@ -433,13 +433,20 @@ Example manifest, `organizeOutputBy` kickoff parameter is `Patient`, and `allowP
 
 [View Example](Binary-BulkDataManifestOrganizedByPatientExample.html)
 
-Example deleted resource bundle (represents one line in an output file):
+###### Deleted Resources
 
-<div class="language-json">
-{% fragment Bundle/deleted-resource-transaction-bundle-example JSON %}
-</div>
+Files referenced by the manifest's `deleted` array identify resources that the Data Provider is requesting the Data Consumer to remove from its dataset.
 
-[View Example](Bundle-deleted-resource-transaction-bundle-example.html)
+Each resource in a deleted resources file SHALL be a FHIR `Bundle` with `Bundle.type` set to `transaction`. Each Bundle SHALL contain one or more entries identifying resources to delete. For each entry, `request.url` SHALL identify the resource and `request.method` SHALL be `DELETE`.
+
+For example, an NDJSON deleted resources file containing two deletion transactions could be:
+
+```json
+{"resourceType":"Bundle","type":"transaction","entry":[{"request":{"method":"DELETE","url":"Patient/123"}}]}
+{"resourceType":"Bundle","type":"transaction","entry":[{"request":{"method":"DELETE","url":"Observation/456"}}]}
+```
+
+Resources that appear in a deleted resources file SHALL NOT also appear in an `output` file of the same manifest or of any manifest linked from it.
 
 
 ---

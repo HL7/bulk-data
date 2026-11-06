@@ -56,7 +56,7 @@ The Data Provider SHOULD populate the `updateCadence` element to indicate the fr
 
 Data Providers SHOULD set a reasonable `Cache-Control` header on the manifest (e.g., public, max-age=10) and SHOULD serve immutable files with long-lived caching headers (e.g., public, max-age=31536000, immutable).
 
-The `output`, `deleted`, and `outcome` arrays describe downloadable files. Files listed in `output` contain FHIR resources to insert or update. Files listed in `deleted` contain FHIR transaction Bundles whose entries identify resources to delete. Files listed in `outcome` contain OperationOutcome resources with errors, warnings, success, or informational messages about the dataset or publication process. For a given file URL, file contents are immutable: if the content changes, the Data Provider SHALL publish it at a new URL.
+The `output`, `deleted`, and `outcome` arrays describe downloadable files. Files listed in `output` contain FHIR resources to insert or update. Files listed in `deleted` identify resources to delete, as described in [Deleted Resources](#deleted-resources). Files listed in `outcome` contain OperationOutcome resources with errors, warnings, success, or informational messages about the dataset or publication process. For a given file URL, file contents are immutable: if the content changes, the Data Provider SHALL publish it at a new URL.
 
 A Data Provider MAY divide a large manifest into multiple manifest pages, by including a single instance of a `link` element that has a `relation` element with a value of `next`, and a `url` element pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `outcome`, and `link` arrays.
 
@@ -179,13 +179,18 @@ Implementation notes:
 - For `transactionTime`, to properly meet the inclusion constraints above, a Data Provider might need to wait for pending updates in its publishing pipeline or source systems to resolve before publishing a new manifest.
 - Error, warning, and information messages related to the published dataset or publication process SHOULD be included in `outcome` and not in `output`.
 
-Deleted resource bundle example (represents one line in a `deleted` file):
+#### Deleted Resources
 
-<div class="language-json">
-{% fragment Bundle/deleted-resource-transaction-bundle-example JSON %}
-</div>
+Files referenced by the manifest's `deleted` array identify resources that the Data Provider is requesting the Data Consumer to remove from its dataset.
 
-[View Example](Bundle-deleted-resource-transaction-bundle-example.html)
+Each resource in a deleted resources file SHALL be a FHIR `Bundle` with `Bundle.type` set to `transaction`. Each Bundle SHALL contain one or more entries identifying resources to delete. For each entry, `request.url` SHALL identify the resource and `request.method` SHALL be `DELETE`.
+
+For example, an NDJSON deleted resources file containing two deletion transactions could be:
+
+```json
+{"resourceType":"Bundle","type":"transaction","entry":[{"request":{"method":"DELETE","url":"Patient/123"}}]}
+{"resourceType":"Bundle","type":"transaction","entry":[{"request":{"method":"DELETE","url":"Observation/456"}}]}
+```
 
 
 ---
