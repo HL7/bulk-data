@@ -48,7 +48,7 @@ The Data Provider SHALL return a manifest response with:
 
 The response MAY include an `ETag` header. When included, the `ETag` value SHALL change when the manifest body changes.
 
-A manifest page is a JSON object providing metadata and links to the generated FHIR Bulk Data files. These files SHALL be accessible to the Data Consumer at the URLs advertised. The manifest and these URLs MAY be served by file servers other than the server hosting the manifest endpoint.
+A manifest page is a JSON object providing metadata and links to the generated FHIR Bulk Data files. These files SHALL be accessible to the Data Consumer at the URLs advertised. The Bulk Data files MAY be served by file servers other than the server hosting the manifest endpoint.
 
 The Data Provider MAY update the manifest at any time and SHALL use the `transactionTime` element to indicate when the files were generated. The files referenced by the manifest SHOULD NOT include any FHIR resources modified after this instant, and SHALL include any matching resources modified up to and including this instant. File URLs SHALL NOT be reused between updates unless their contents have remained the same, and files that no longer appear in a manifest SHOULD remain available for a grace period following an update to avoid interrupting downloads that are in progress.
 
