@@ -1,5 +1,7 @@
 {% assign bulk_server_role = "Data Provider" %}
 {% assign bulk_client_role = "Data Consumer" %}
+{% assign bulk_request_name = "a Bulk Data Export request" %}
+{% assign bulk_file_kind = "output files" %}
 ### Audience and Scope
 
 The Bulk Export operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which an authenticated and authorized system (Data Consumer) may request a FHIR Data Export from another system (Data Provider), receive status information regarding progress in the generation of the requested files, and retrieve those files.  The data consumer can control the data being returned by optionally selecting the cohort, resource types, filters, data elements, and time window.

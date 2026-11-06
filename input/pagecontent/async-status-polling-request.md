@@ -1,6 +1,6 @@
 #### Bulk Data Status Request
 
-After an asynchronous bulk request has been started, the {{ bulk_client_role }} MAY poll the status URL provided in the `Content-Location` header.
+After {{ bulk_request_name }} has been started, the {{ bulk_client_role }} MAY poll the status URL provided in the `Content-Location` header.
 
 When polling for status, {{ bulk_client_role }}s SHOULD follow an [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff) approach. A {{ bulk_server_role }} SHOULD supply a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header with a delay time in seconds (for example, `120` to represent two minutes) or an HTTP-date (for example, `Fri, 31 Dec 1999 23:59:59 GMT`). When provided, {{ bulk_client_role }}s SHOULD use this information to inform the timing of future polling requests. The {{ bulk_server_role }} SHOULD keep an accounting of status queries received from a given {{ bulk_client_role }}, and if a {{ bulk_client_role }} is polling too frequently, the {{ bulk_server_role }} SHOULD respond with a `429 Too Many Requests` status code in addition to a `Retry-After` header, and optionally a FHIR `OperationOutcome` resource with further explanation. If excessively frequent status queries persist, the {{ bulk_server_role }} MAY return a `429 Too Many Requests` status code and terminate the session. Other standard HTTP `4XX` and `5XX` status codes MAY be used to identify errors as mentioned below.
 
