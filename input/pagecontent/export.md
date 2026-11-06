@@ -27,6 +27,8 @@ Healthcare organizations have an imperative to protect PHI persisted in file ser
 
 Data access control obligations can be met with a combination of in-band restrictions (e.g., OAuth scopes) and out-of-band restrictions, where the Data Provider limits the data returned to a specific Data Consumer in accordance with local considerations such as policies or regulations. The Data Provider's FHIR server SHALL limit the data returned to only those FHIR resources for which the Data Consumer is authorized. Implementers are encouraged to incorporate technology that preserves and respects an individual's wishes to share their data with desired privacy protections. For example, some Data Consumers are authorized to access sensitive mental health information and some are not; this authorization is defined out of band, but when a Data Consumer requests a full data set, filtering is automatically applied by the Data Provider, restricting the data that the Data Consumer receives.
 
+These limitations include any constraints expressed in granted SMART scopes. Export-selection parameters do not expand any granted authorization; for example, access limited to laboratory Observations does not become access to all Observations when `_type` includes Observation.
+
 Bulk Data Export can be a resource-intensive operation. Data Providers SHOULD consider and mitigate the risk of intentional or inadvertent denial-of-service attacks, though the details are beyond the scope of this specification. For example, transactional systems may wish to provide Bulk Data access to a read-only mirror of the database or may distribute processing over time to avoid loads that could impact clinical operations.
 
 ### Roles
