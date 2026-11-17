@@ -8,7 +8,7 @@ Description: """
       "name": "clinical-status",
       "type": "token",
       "extension": [{
-        "url": "http://hl7.org/fhir/uv/bulkdata/Extension/operation-not-supported",
+        "url": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/operation-not-supported",
         "valueCanonical": "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-export"
       }]
     }]

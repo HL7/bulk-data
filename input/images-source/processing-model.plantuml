@@ -8,12 +8,20 @@ if (group export) then (yes)
   :Exclude resources for patients outside group;
 else (no)
 endif
+if (`patient` parameter?) then (yes)
+  :Exclude resources for patients not listed in `patient` parameter;
+else (no)
+endif
 if (`_type` parameter?) then (yes)
   :Exclude resource of types not listed in `_type` parameter;
 else (no)
 endif
 if (`_since` parameter?) then (yes)
   :Exclude resources updated prior to `_since` timestamp*;
+else (no)
+endif
+if (`_until` parameter?) then (yes)
+  :Exclude resources updated after `_until` timestamp;
 else (no)
 endif
 if (`_typeFilter` parameter?) then (yes)
