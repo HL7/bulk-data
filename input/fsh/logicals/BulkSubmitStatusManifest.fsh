@@ -9,11 +9,11 @@ Description: "Logical model describing the status manifest returned by a Data Co
 * ^jurisdiction = $m49.htm#001 "World"
 
 * manifestType ^short = "Logical model that defines this status manifest"
-* manifestType ^definition = "Canonical URL of the logical model that defines the structure of this status manifest. E.g., `http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkSubmitStatusManifest`. This element will be mandatory in a future release of this IG."
+* manifestType ^definition = "Canonical reference to the logical model that defines the structure of this status manifest. When populated, the canonical SHALL include the version of the logical model, e.g., `http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkSubmitStatusManifest|4.0.0`. This element will be mandatory in a future release of this IG."
 * transactionTime ^short = "Timestamp for the data included in this manifest"
-* transactionTime ^definition = "Indicates the Data Consumer's time when this status manifest and its referenced files were generated. The returned files SHOULD NOT include resources modified after this instant, and SHALL include any matching resources prepared up to and including this instant."
+* transactionTime ^definition = "Indicates the Data Consumer's time when this status manifest and its referenced files were generated. The returned files SHOULD NOT include resources modified after this instant, and SHALL include any resources and outcomes the Data Consumer has produced for this submission up to and including this instant."
 * requiresAccessToken ^short = "Token required to retrieve status files"
-* requiresAccessToken ^definition = "Indicates whether downloading the files referenced in this status manifest requires the same authorization mechanism as the `$bulk-submit-status` interaction that produced it. Value SHALL be true when both the Data Consumer's status endpoint and file endpoints control access using OAuth 2.0 bearer tokens. Value MAY be false for file endpoints that use other access-control schemes such as capability URLs or verifiable file servers within an organization's firewall."
+* requiresAccessToken ^definition = "Indicates whether downloading the files referenced in this status manifest requires the same authorization mechanism as the `$bulk-submit-status` interaction that produced it. Value SHALL be true when both the Data Consumer's Submission Server and Status File Server control access using OAuth 2.0 bearer tokens. Value MAY be false for Status File Servers that use other access-control schemes such as capability URLs or verifiable file servers within an organization's firewall."
 * outputFormat ^short = "MIME type of the referenced status files"
 * outputFormat ^definition = "MIME type of the files referenced in this status manifest. Defaults to application/fhir+ndjson when omitted. Corresponds to the `_outputFormat` parameter in the Bulk Submit Status operation."
 * output.url ^short = "File URL"
@@ -24,6 +24,6 @@ Description: "Logical model describing the status manifest returned by a Data Co
 * output.manifestUrl 0..1 url "Source Manifest URL" "URL of the manifest submitted by the Data Provider that the resources in this output file relate to. A single manifestUrl MAY be referenced from multiple items in the output section."
 
 * deleted ^short = "Deleted Resource Files"
-* deleted ^definition = "References to files containing pointers to previously submitted resources marked for removal by the Data Provider. Each line in the deleted files SHALL contain a FHIR Bundle with a type of transaction which SHALL contain one or more entry items that reflect a deleted resource. In each entry, the request.url and request.method elements SHALL be populated and request.method SHALL be set to DELETE."
+* deleted ^definition = "References to files identifying resources previously returned in the `output` of a status manifest for this submission that the Data Consumer requests the Data Provider to remove. See [Deleted Resources](submit.html#deleted-resources)."
 
 * outcome.manifestUrl 1..1 url "Source Manifest URL" "URL of the manifest submitted by the Data Provider where the issues described in this outcome file occurred. Each item in the outcome section SHALL include this element. A single manifestUrl MAY be referenced from multiple items in the outcome section."

@@ -4,6 +4,7 @@ publisher_jar=publisher.jar
 dlurl=$pubsource$publisher_jar
 
 input_cache_path=$PWD/input-cache/
+publisher_home="${FHIR_PUBLISHER_HOME:-$HOME/.fhir/tools/publisher}"
 
 scriptdlroot=https://raw.githubusercontent.com/HL7/ig-publisher-scripts/main
 update_bat_url=$scriptdlroot/_updatePublisher.bat
@@ -16,7 +17,6 @@ build_sh_url=$scriptdlroot/_build.sh
 build_bat_url=$scriptdlroot/_build.bat
 
 skipPrompts=false
-FORCE=false
 
 if ! type "curl" > /dev/null; then
 	echo "ERROR: Script needs curl to download latest IG Publisher. Please install curl."
@@ -25,33 +25,17 @@ fi
 
 while [ "$#" -gt 0 ]; do
     case $1 in
-    -f|--force)  FORCE=true ;;
-    -y|--yes)  skipPrompts=true ; FORCE=true ;;
+    -f|--force)  : ;;
+    -y|--yes)  skipPrompts=true ;;
     *)  echo "Unknown parameter passed: $1.  Exiting"; exit 1 ;;
     esac
     shift
 done
 
 echo "Checking internet connection"
-curl -sSf tx.fhir.org > /dev/null
-
-if [ $? -ne 0 ] ; then
+if ! curl -sSf tx.fhir.org > /dev/null; then
   echo "Offline (or the terminology server is down), unable to update.  Exiting"
   exit 1
-fi
-
-if [ ! -d "$input_cache_path" ] ; then
-  if [ $FORCE != true ]; then
-    echo "$input_cache_path does not exist"
-    message="create it?"
-    read -r -p "$message" response
-    else
-    response=y
-  fi
-fi
-
-if [[ $response =~ ^[yY].*$ ]] ; then
-  mkdir ./input-cache
 fi
 
 publisher="$input_cache_path$publisher_jar"
@@ -62,17 +46,16 @@ if test -f "$publisher" ; then
 	jarlocationname="Input Cache"
 	upgrade=true
 else
-	publisher="../$publisher_jar"
-	upgrade=true
+	publisher="$publisher_home/$publisher_jar"
 	if test -f "$publisher"; then
-		echo "IG Publisher FOUND in parent folder"
+		echo "IG Publisher FOUND in FHIR publisher home"
 		jarlocation="$publisher"
-		jarlocationname="Parent Folder"
+		jarlocationname="FHIR Publisher Home"
 		upgrade=true
 	else
-		echo "IG Publisher NOT FOUND in input-cache or parent folder"
-		jarlocation=$input_cache_path$publisher_jar
-		jarlocationname="Input Cache"
+		echo "IG Publisher NOT FOUND in input-cache or FHIR publisher home"
+		jarlocation="$publisher_home/$publisher_jar"
+		jarlocationname="FHIR Publisher Home"
 		upgrade=false
 	fi
 fi
@@ -92,7 +75,8 @@ fi
 if [[ $skipPrompts == true ]] || [[ $response =~ ^[yY].*$ ]]; then
 
 	echo "Downloading most recent publisher to $jarlocationname - it's ~100 MB, so this may take a bit"
-	curl -L $dlurl -o "$jarlocation" --create-dirs
+	mkdir -p "$(dirname "$jarlocation")"
+	curl -L "$dlurl" -o "$jarlocation"
 else
 	echo cancelled publisher update
 fi

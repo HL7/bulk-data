@@ -2,12 +2,12 @@ id: hl7.fhir.uv.bulkdata
 canonical: http://hl7.org/fhir/uv/bulkdata
 name: BulkDataAccessIG
 title: Bulk Data Access IG
-description: FHIR based approach for exporting large data sets from a FHIR server to a client application
+description: FHIR-based operations for exporting, submitting, and publishing large FHIR datasets
 status: active
-version: 4.0.0-ballot
+version: 4.0.0
 fhirVersion: 4.0.1
 copyrightYear: 2025+
-releaseLabel: "STU 4 Ballot" # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
+releaseLabel: "STU 4" # ci-build | draft | qa-preview | ballot | trial-use | release | update | normative+trial-use
 license: CC0-1.0 # https://www.hl7.org/fhir/valueset-spdx-license.html
 jurisdiction: http://unstats.un.org/unsd/methods/m49/m49.htm#001
 publisher:
@@ -59,8 +59,6 @@ pages:
     title: Change Log
   downloads.html:
     title: Downloads
-  tools.md:
-    title: Tools
   ImplementationGuide-hl7.fhir.uv.bulkdata.md:
     title: Bulk Data Implementation Guide Resource
 
@@ -72,20 +70,26 @@ parameters:
 
 menu:
   Home: index.html
-  Export Operation: export.html
-  Groups: group.html
-  Submit Operation: submit.html
-  Publish Operation: publish.html
-  Async Pattern: async.html
-  Authorization: authorization.html
+  Specification:
+    Export Operation: export.html
+    Submit Operation: submit.html
+    Publish Operation: publish.html
+    Groups: group.html
+    Async Pattern: async.html
+    Authorization: authorization.html
   FHIR Artifacts: artifacts.html
-  Downloads: downloads.html
-  Abbreviations: abbreviations.html
-  Change Log: changes.html
+  Support:
+    Downloads: downloads.html
+    Abbreviations: abbreviations.html
+    Change Log: changes.html
 
 resources:
-  CapabilityStatement/bulk-data:
-    name: Capability Statement
+  CapabilityStatement/bulk-export:
+    name: Bulk Export Capability Statement
+  CapabilityStatement/bulk-submit:
+    name: Bulk Submit Capability Statement
+  CapabilityStatement/bulk-publish:
+    name: Bulk Publish Capability Statement
   OperationDefinition/export:
     name: System Level Export Operation Definition
   OperationDefinition/async:
@@ -116,7 +120,7 @@ resources:
         valueCode: application/json
   Binary/BulkDataManifestMinimalExample:
     name: Minimal Bulk Data Manifest
-    description: Example Bulk Data output manifest when organizeOutputBy is Patient and allowPartialManifests is true.
+    description: Minimal example Bulk Data output manifest with a single output file.
     exampleCanonical: http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkDataManifest
     extension:
       - url: http://hl7.org/fhir/tools/StructureDefinition/implementationguide-resource-format

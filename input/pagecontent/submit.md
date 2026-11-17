@@ -1,5 +1,8 @@
 {% assign bulk_server_role = "Data Consumer" %}
 {% assign bulk_client_role = "Data Provider" %}
+{% assign bulk_request_name = "a Bulk Submit Status request" %}
+{% assign bulk_file_kind = "status files" %}
+{% assign bulk_delete_note = "Cancelling a Bulk Submit Status request does not affect the submission; use `submissionStatus = stopped` to cancel a submission." %}
 ### Audience and Scope
 
 The Bulk Submit operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which an authenticated and authorized system (Data Provider) may submit bulk FHIR data to a server (Data Consumer) and receive status information regarding the Data Consumer's receipt and processing of the data and, where applicable, processed data. The general-purpose Bulk Submit operation can be implemented as defined here, or further profiled in implementation guides that constrain the options available in order to address a specific scenario.
@@ -14,11 +17,13 @@ Bulk Export is the better fit for ad hoc, data consumer-driven requests where th
 
 Bulk Submit may also be used in conjunction with Bulk Export through an intermediary application that first requests a bulk export, retrieves the data, optionally transforms it, and then submits the resulting dataset to the Data Consumer.
 
+In Bulk Submit, the roles are reversed relative to Bulk Export in several respects. The Data Consumer hosts the Submission Server, which the Data Provider invokes for both `$bulk-submit` and `$bulk-submit-status`. Submission data moves from the Data Provider to the Data Consumer: the Data Provider supplies URLs for the manifest and Bulk Data files, and the Data Consumer retrieves them. Status data can move in the opposite direction: the Data Consumer supplies URLs for files referenced by Bulk Submit Status manifests, and the Data Provider retrieves them from the Data Consumer's Status File Server.
+
 ### Privacy and Security Considerations
 
 All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL.
 
-The Data Consumer SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](https://www.hl7.org/fhir/smart-app-launch/backend-services.html). When SMART Backend Services Authorization is used, the Data Provider SHALL use a token with a scope of `system/bulk-submit` when kicking off the `$bulk-submit` operation, kicking off the `$bulk-submit-status` operation, making a polling request to the endpoint provided from the kickoff, or retrieving files from status manifests returned by the operation.
+The Data Consumer SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). When SMART Backend Services Authorization is used, the Data Provider SHALL use a token with a scope of `system/bulk-submit` when kicking off the `$bulk-submit` operation, kicking off the `$bulk-submit-status` operation, making a polling or delete request to the endpoint provided from the kickoff, or retrieving files listed in a status manifest whose `requiresAccessToken` is `true`.
 
 ### Roles
 
@@ -28,23 +33,27 @@ There are two primary roles involved in a Bulk Submit transaction:
 
    a. **Submission Client**: Provides details on one or more bulk submission manifests to the Data Consumer and optionally tracks job status and, when applicable, job output.
 
-   b. **Submission File Server**: Returns files and attachments in response to URLs in the submission manifests. This may be integrated with a FHIR server, or the files may be independently hosted.
+   b. **Submission File Server**: Returns files and attachments in response to URLs in the submission manifests. This may be integrated with a FHIR server, or the files may be independently hosted. Although shown as a Data Provider role, the underlying storage may be provided by the Data Provider, the Data Consumer, or another party.
 
-   c. **Authorization Server**: Issues access tokens and authenticates file requests to the Submission File Server.
+   c. **Authorization Server**: Issues access tokens and authenticates manifest and file requests to the Submission File Server, when that server is operated by the Data Provider.
 
 2. **Data Consumer**:
 
-   a. **Submission Server**: Accepts manifest details and provides job status.
+   a. **Submission Server**: Accepts Bulk Submit requests, supports Bulk Submit Status requests and associated status polling, and returns status manifests.
 
-   b. **Authorization Server**: Issues access tokens and authenticates manifest submission and job status requests.
+   b. **Status File Server**: Returns files referenced by Bulk Submit Status manifests. This may be integrated with the Submission Server or the files may be independently hosted.
 
-   c. **File Retrieval Client**: Retrieves files listed in manifests from the Data Provider.
+   c. **Authorization Server**: Issues access tokens and authenticates manifest submission, status requests, and, when applicable, requests for files referenced by status manifests.
 
-   d. **File Processor**: Processes submitted files with operations such as validation, quality metric calculation, and/or merging into an existing data set.
+   d. **File Retrieval Client**: Retrieves submitted manifests and the files they list from the Submission File Server.
+
+   e. **File Processor**: Processes submitted files with operations such as validation, quality metric calculation, and/or merging into an existing data set.
 
 ### Sequence Overview
 
-This example represents the workflow for a submission comprised of two manifests. As described above, the number of manifests in a submission may differ based on the use case and the volume of data being submitted.
+This example represents the workflow for a submission comprised of two manifests. The number of manifests in a submission may differ based on the use case and the volume of data being submitted.
+
+The sequence diagram illustrates the components that participate directly in the Bulk Submit protocol exchanges. Components involved only in internal processing, such as the File Processor, and authorization interactions are omitted for clarity. Components shown separately may also be combined within a single implementation.
 
 <figure>
   {% include bulk-submit-workflow.svg %}
@@ -77,8 +86,8 @@ Constraints:
 The Data Provider uses the `submissionStatus` parameter to indicate the state of a submission to the Data Consumer. Values SHALL be drawn from the [Submission Status Value Set](ValueSet-submission-status.html), which constrains the [`http://hl7.org/fhir/event-status`](https://hl7.org/fhir/valueset-event-status.html) code system. These values have the following meanings:
 
 - `in-progress` (default if parameter is omitted): Additional requests to the `$bulk-submit` endpoint are expected for the `submitter` and `submissionId` combination in that request.
-- `completed`: No additional requests to the `$bulk-submit` endpoint are expected for the `submitter` and `submissionId` combination in that request.
-- `stopped`: The submission is invalid. The Data Consumer SHALL stop retrieving files and delete any data already processed from this submission. No additional requests to the `$bulk-submit` endpoint are expected for this `submitter` and `submissionId` combination.
+- `completed`: The Data Provider SHALL NOT send additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
+- `stopped`: The submission is invalid. The Data Consumer SHALL stop retrieving files and SHOULD delete any data already processed from this submission. The Data Provider SHALL NOT send additional requests to the `$bulk-submit` endpoint for this `submitter` and `submissionId` combination.
 
 ###### Correcting Data Without Aborting
 
@@ -86,17 +95,25 @@ If a specific portion of the data is incorrect, the Data Provider SHOULD NOT can
 
 ##### Manifest and File Security
 
-If the `oauthMetadataUrl` parameter in the request is populated with the path to an [OAuth 2.0 Protected Resource Metadata file](https://datatracker.ietf.org/doc/rfc9728/), such as a [FHIR Authorization Endpoint and Capabilities Discovery file](https://hl7.org/fhir/smart-app-launch/conformance.html#using-well-known) for [SMART Backend Services](authorization.html), the Data Consumer SHALL obtain and use a valid token when retrieving the manifest at `manifestUrl`. If `requiresAccessToken` in the retrieved manifest is also set to `true`, the Data Consumer SHALL obtain and use a token scoped to read the resource types included in the manifest when retrieving the referenced files.
+If the `oauthMetadataUrl` parameter in the request is populated with the path to an [OAuth 2.0 Protected Resource Metadata file](https://datatracker.ietf.org/doc/rfc9728/), such as a [FHIR Authorization Endpoint and Capabilities Discovery file](https://hl7.org/fhir/smart-app-launch/conformance.html#using-well-known) for [SMART Backend Services](authorization.html), the Data Consumer SHALL obtain and use a valid token when retrieving the manifest at `manifestUrl`. If `requiresAccessToken` in the retrieved manifest is also set to `true`, the Data Consumer SHALL obtain and use a token scoped to read the resource types included in the manifest when retrieving the referenced files. If `oauthMetadataUrl` is not supplied and `requiresAccessToken` in the retrieved manifest is `true`, the access token is obtained by prior arrangement between the Data Provider and the Data Consumer.
 
-If the `fileEncryptionKey` parameter in the request is set to `jwe`, the Data Provider SHALL use the key in `fileEncryptionKey.value` to encrypt the manifest and each file listed in the manifest's `output` section, and the Data Consumer SHALL use this key to decrypt those files.
+Files exchanged in a Bulk Submit workflow MAY be encrypted. A future release of the FHIR Extensions Pack is expected to define a standard extension for conveying file encryption key information; implementers who need encryption before then should coordinate the mechanism out of band.
 
-If the `fileRequestHeader` parameter is included in the request, the Data Consumer SHALL provide the listed header name and value pairs when requesting a manifest or data file.
+If the `fileRequestHeader` parameter is included in the request, the Data Consumer SHALL provide the listed header name and value pairs when requesting the OAuth metadata at `oauthMetadataUrl`, the manifest(s), and the files they reference.
 
 ##### Manifest
 
-When populated, the `manifestUrl` parameter SHALL contain a URL pointing to a valid [Bulk Data Manifest](StructureDefinition-BulkDataManifest.html) that contains the bulk data files being submitted. When a manifest is used in a submission, the deprecated `request` field MAY be omitted. The manifest MAY contain a `link` field, and when present, the Data Consumer SHALL follow this link to retrieve additional manifests.
+When populated, the `manifestUrl` parameter SHALL contain a URL pointing to a valid [Bulk Data Manifest](StructureDefinition-BulkDataManifest.html) that contains the bulk data files being submitted. If a submitted manifest includes an `outputFormat` element and the `$bulk-submit` request includes an `outputFormat` parameter, the two values are expected to match. The manifest MAY contain a `link` field, and when present, the Data Consumer SHALL follow this link to retrieve additional manifests.
 
 Alternatively, the Data Provider MAY call the Bulk Submit operation multiple times, each with a different `manifestUrl`, using the same `submitter` and `submissionId` parameters to indicate that the contents of those manifests are part of a single submission. All operation parameters other than `submitter`, `submissionId`, and `submissionStatus` relate to the `manifestUrl` being sent and, when applicable, SHALL be included in the request even if they were populated in a previous request.
+
+###### Consumer-provided Upload Locations
+
+As an optional deployment pattern, a Data Consumer may provide a location where the Data Provider can upload files before invoking `$bulk-submit`. The Data Provider can upload Bulk Data files and, optionally, manifest files to this location and then use the resulting URLs in the normal Bulk Submit workflow.
+
+The mechanism used to upload these files is outside the scope of this specification. For example, a Data Consumer might provide a FHIR `Binary` endpoint or object storage upload URLs.
+
+This pattern does not change `$bulk-submit`, the manifest format, or Bulk Submit Status processing. URLs submitted through `manifestUrl` or included in a manifest may therefore identify storage provided by the Data Consumer rather than infrastructure operated by the Data Provider.
 
 ##### Headers
 
@@ -117,6 +134,14 @@ The Data Consumer SHALL return an error response with:
 - FHIR `OperationOutcome` resource in the body
 
 If a Data Consumer wants to prevent a Data Provider from beginning a new submission before an in-progress submission is completed, it SHOULD respond with `429 Too Many Requests`.
+
+### Processing Submissions
+
+Depending on use case, Data Consumers may process submitted data in different ways, including validating resources, calculating metrics, loading a FHIR server, transforming data, or combining it with other datasets.
+
+Bulk Submit does not require FHIR transaction processing or storage in a FHIR repository. Consumers that store resources can preserve submitted resource ids or assign local ids. Beyond its explicit replacement and cancellation requirements, the operation does not prescribe a general policy for resolving local id collisions or deciding whether to create, update, or merge records.
+
+The `fhirBaseUrl` parameter, together with resource type and id, identifies a resource in its source namespace. Data Consumers can use this identity to recognize a resource within and across submissions.
 
 ### Bulk Submit Status Request Flow
 
@@ -139,7 +164,7 @@ The request body SHALL be a FHIR [Parameters resource](https://hl7.org/fhir/para
 ##### Headers
 
 - `Accept` (string)
-  Specifies the format of the optional FHIR `OperationOutcome` resource response to the kick-off request. Currently, only `application/fhir+json` is supported. A Data Provider SHOULD provide this header. If omitted, the Data Consumer MAY return an error or MAY process the request as if `application/fhir+json` was supplied.
+  Specifies the format of the optional FHIR `OperationOutcome` resource response to the kick-off request. The Data Consumer SHALL support `application/fhir+json`. A Data Provider SHOULD provide this header. If omitted, the Data Consumer MAY return an error or MAY process the request as if `application/fhir+json` was supplied.
 
 - `Prefer` (string)
   Specifies whether the response is immediate or asynchronous. A value of <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> indicates that the response is asynchronous. A Data Provider SHOULD provide this header. If omitted, the Data Consumer MAY return an error or MAY process the request as if `respond-async` was supplied.
@@ -171,7 +196,7 @@ The Data Consumer SHALL return an error response with:
 
 ##### Response - Output Manifest
 
-The Data Consumer MAY return a partial status manifest and an HTTP status of `202 Accepted` while the submission is incomplete or is still being processed.
+The Data Consumer MAY return a partial status manifest in an in-progress status response (see [Response - In-Progress Status](#response---in-progress-status)) while the submission is incomplete or is still being processed.
 
 Once the submission is complete, meaning the Data Provider has sent a request with `submissionStatus = completed` and the Data Consumer has retrieved and processed the submitted files, the Data Consumer SHALL return a status manifest and an HTTP status of `200 OK`.
 
@@ -179,17 +204,23 @@ These manifests provide a mechanism for the Data Consumer to return resources re
 
 If there is status information to communicate, the Data Consumer SHALL populate the `outcome` section of the manifest with one or more files that contain OperationOutcome resources. For example, the Data Consumer may want to indicate that there are files from the Data Provider it was unable to retrieve, resources that failed validation, or resources that were not successfully merged into an existing data set. The number and granularity of the OperationOutcome resources returned by the Data Consumer depend on the use case and implementation. A Data Consumer may wish to return a set of high-level OperationOutcome resources indicating the status of each manifest submitted, more granular OperationOutcome resources indicating the status of each resource submitted, or both.
 
-Each item in the `outcome` section of the manifest SHALL include `manifestUrl` to link the OperationOutcome file to the submitted manifest where the issue occurred. A single `manifestUrl` may be referenced from multiple items in the `outcome` section. Each `outcome` item SHALL also include `url`, pointing to a bulk file of OperationOutcome resources. If an issue is related to individual resources submitted by the Data Provider, the corresponding OperationOutcome SHOULD use the [operationoutcome-sourceResource](https://hl7.org/fhir/StructureDefinition/operationoutcome-sourceResource) extension at its root to reference those resources. If an issue is related to a large number of resources, the Data Consumer SHOULD provide multiple OperationOutcome resources, each of which references a few of the submitted resources, to avoid making individual OperationOutcome resources extremely large. The Data Consumer MAY include `countSeverity`, populated as an array of `code` / `count` objects summarizing the `OperationOutcome.issue.severity` values present in that file.
+Successful completion of submission processing does not imply acceptance of every submitted resource. Use case IGs can describe how senders reconcile partial acceptance using status manifests and OperationOutcome resources, including how reported issues inform correction and retry.
+
+Each item in the `outcome` section of the manifest SHALL include `manifestUrl` to link the OperationOutcome file to the submitted manifest where the issue occurred. A single `manifestUrl` may be referenced from multiple items in the `outcome` section. Each `outcome` item SHALL also include `url`, pointing to a bulk file of OperationOutcome resources. If an issue is related to individual resources submitted by the Data Provider, the corresponding OperationOutcome SHOULD use the [`operationoutcome-resource`](https://hl7.org/fhir/extensions/StructureDefinition-operationoutcome-resource.html) extension at its root to reference those resources. If an issue is related to a large number of resources, the Data Consumer SHOULD provide multiple OperationOutcome resources, each of which references a few of the submitted resources, to avoid making individual OperationOutcome resources extremely large. The Data Consumer MAY include `countSeverity`, populated as an array of `code` / `count` objects summarizing the `OperationOutcome.issue.severity` values present in that file.
 
 If there are resources to return, the Data Consumer SHALL populate the `output` section of the manifest with one or more files that contain FHIR resources. Each item in the `output` section SHOULD include `manifestUrl` to link the returned file back to the submitted manifest. A single `manifestUrl` may be referenced from multiple items in the `output` section.
 
-If the Data Consumer wishes to indicate that resources included as part of the submission be removed by the Data Provider, the Data Consumer MAY populate the `deleted` section with one or more files containing FHIR transaction Bundles. Each line in such a file SHALL contain a FHIR `Bundle` with a type of `transaction` containing one or more `entry` items that reflect a deleted resource. In each entry, `request.url` and `request.method` SHALL be populated and `request.method` SHALL be set to `DELETE`. Resources that appear in `deleted` SHALL NOT also appear in `output`.
+If the Data Consumer wishes to indicate that resources it previously returned in the `output` section of a status manifest for this submission should be removed by the Data Provider, the Data Consumer MAY populate the `deleted` section with one or more files containing FHIR transaction Bundles, as described in [Deleted Resources](#deleted-resources).
 
-When the status response is returned incrementally, including when a partial status manifest is returned with an HTTP status of `202 Accepted`, the Data Consumer MAY populate the `link` section with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another status manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `outcome`, and `link` arrays.
+When the status response is returned incrementally, including when a partial status manifest is returned in an in-progress status response, the Data Consumer MAY populate the `link` section with a single object containing a `relation` field with a value of `next`, and a `url` field pointing to the location of another status manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `outcome`, and `link` arrays.
 
 Generated field table from the logical model:
 
 {% include submit-status-manifest-fields.md %}
+
+The manifest logical models support standard FHIR extensions. Extensions may be added to the manifest itself or to individual elements as permitted by the logical model.
+
+[View Bulk Submit Status Manifest logical model](StructureDefinition-BulkSubmitStatusManifest.html)
 
 Example status manifest:
 
@@ -214,6 +245,21 @@ Example OperationOutcome (manifest-level status):
 </div>
 
 [View Example](OperationOutcome-submit-status-manifest-operationoutcome-example.html)
+
+###### Deleted Resources
+
+Files referenced by the Bulk Submit Status manifest's `deleted` array identify resources previously returned in the `output` of a status manifest for this submission that the Data Consumer is requesting the Data Provider to remove. The `request.url` in each entry identifies the resource as it appeared in that earlier `output`.
+
+Each resource in a deleted resources file SHALL be a FHIR `Bundle` with `Bundle.type` set to `transaction`. Each Bundle SHALL contain one or more entries identifying resources to delete. For each entry, `request.url` SHALL identify the resource and `request.method` SHALL be `DELETE`.
+
+For example, an NDJSON deleted resources file containing two deletion transactions could be:
+
+```json
+{"resourceType":"Bundle","type":"transaction","entry":[{"request":{"method":"DELETE","url":"Patient/123"}}]}
+{"resourceType":"Bundle","type":"transaction","entry":[{"request":{"method":"DELETE","url":"Observation/456"}}]}
+```
+
+Resources that appear in a deleted resources file SHALL NOT also appear in an `output` file of the same manifest.
 
 ---
 {% include async-delete-request.md %}

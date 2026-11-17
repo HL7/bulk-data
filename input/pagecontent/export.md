@@ -1,8 +1,10 @@
 {% assign bulk_server_role = "Data Provider" %}
 {% assign bulk_client_role = "Data Consumer" %}
+{% assign bulk_request_name = "a Bulk Data Export request" %}
+{% assign bulk_file_kind = "output files" %}
 ### Audience and Scope
 
-The Bulk Export operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which an authenticated and authorized system (Data Consumer) may request a FHIR Data Export from another system (Data Provider), receive status information regarding progress in the generation of the requested files, and retrieve those files.  The data consumer can control the data being returned by optionally selecting the cohort, resource types, filters, data elements, and time window.
+The Bulk Export operation is intended to be used by developers at organizations that aim to interoperate by sharing large FHIR datasets. It defines the application programming interfaces (APIs) through which an authenticated and authorized system (Data Consumer) may request a FHIR Data Export from another system (Data Provider), receive status information regarding progress in the generation of the requested files, and retrieve those files.  The Data Consumer can control the data being returned by optionally selecting the cohort, resource types, filters, data elements, and time window. These controls select or constrain the data returned by the Data Provider; they do not require the Data Provider to transform or normalize the exported data for a particular downstream use.
 
 Many Bulk Export workflows are cohort-driven. A Data Provider may expose one or more FHIR Group resources representing payer rosters, research cohorts, quality-measure populations, care management panels, or other recurring populations. As described on [the Group page](group.html), implementations may expose read-only groups managed by the Data Provider, member-based groups managed by the Data Consumer, or criteria-based groups whose membership is computed from characteristics. Some Data Providers may also support the Bulk Cohort API described in this guide for asynchronous creation of characteristic-based cohorts by a Data Consumer. A group-level export, described below, provides a standard way to request data on patients in any of these types of groups.
 
@@ -11,17 +13,21 @@ For a high-level comparison of Bulk Export, Bulk Submit, and Bulk Publish, see [
 
 ### Privacy and Security Considerations
 
+Implementers are responsible for following [FHIR security guidance](http://hl7.org/fhir/security.html). Some recommendations specific to bulk data are provided below.
+
 All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL.
 
-The Data Provider SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). When SMART Backend Services Authorization is used, Bulk Data Status Requests and Bulk Data Output File Requests with `requiresAccessToken=true` SHALL be protected the same way as the Bulk Data Kick-off Request, including an access token with scopes that cover all resources being exported. A Data Provider MAY additionally restrict Bulk Data Status Requests and Bulk Data Output File Requests by limiting them to the Data Consumer that originated the export. Implementations MAY include endpoints that use authorization schemes other than OAuth 2.0, such as mutual TLS or signed URLs.
+The Data Provider SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). When SMART Backend Services Authorization is used, Bulk Data Status Requests and Bulk Data Delete Requests SHALL be protected the same way as the Bulk Data Kick-off Request. Bulk Data Output File Requests for files referenced by a manifest with `requiresAccessToken=true` SHALL also be protected the same way. The access token presented with these requests SHALL have been granted the same set of scopes as the token presented with the Bulk Data Kick-off Request that initiated the export. A Data Provider SHALL reject a request presenting a token granted a different set of scopes, whether broader or narrower, with an HTTP `403 Forbidden` and an `OperationOutcome`. A Data Provider MAY additionally restrict Bulk Data Status Requests, Bulk Data Delete Requests, and Bulk Data Output File Requests by limiting them to the Data Consumer that originated the export. Implementations MAY include endpoints that use authorization schemes other than OAuth 2.0, such as mutual TLS or signed URLs.
 
 For Group level exports, in addition to requiring authorization to access the resources included in the export, a Data Provider SHOULD restrict Data Consumers from exporting data for Group resources they are not authorized to read (e.g., via `system/Group.rs` in SMART on FHIR v2). A Data Provider SHALL also restrict access to specific groups based on underlying business rules.
 
-This implementation guide does not address protection of a Data Provider from potential compromise. An adversary who successfully captures administrative rights to the Data Provider will have full control over that system and can use those rights to undermine its security protections. In the Bulk Data Export workflow, the Data Provider's file server will be a particularly attractive target, as it holds highly sensitive and valued PHI. An adversary who successfully takes control of a file server may choose to continue to deliver files in response to Data Consumer requests, so that neither the Data Consumer nor the Data Provider's FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own malicious purposes.
+This implementation guide does not address protection of a Data Provider from potential compromise or the reporting requirements for a Data Provider if a data breach occurs. An adversary who successfully captures administrative rights to the Data Provider will have full control over that system and can use those rights to undermine its security protections. In the Bulk Data Export workflow, the Data Provider's file server will be a particularly attractive target, as it holds highly sensitive and valued PHI. An adversary who successfully takes control of a file server may choose to continue to deliver files in response to Data Consumer requests, so that neither the Data Consumer nor the Data Provider's FHIR server is aware of the take-over. Meanwhile, the adversary is able to put the PHI to use for its own malicious purposes.
 
 Healthcare organizations have an imperative to protect PHI persisted in file servers in both cloud and data-center environments. A range of existing and emerging approaches can be used to accomplish this, not all of which would be visible at the API level. This specification does not dictate a particular approach at this time, though it does support the use of an `Expires` header to limit the time period a file will be available for Data Consumer download. Removal of the file from the Data Provider is left to the implementer. A Data Provider SHOULD NOT delete files from a Bulk Data response that a Data Consumer is actively in the process of downloading regardless of the pre-specified expiration time.
 
-Data access control obligations can be met with a combination of in-band restrictions (e.g., OAuth scopes) and out-of-band restrictions, where the Data Provider limits the data returned to a specific Data Consumer in accordance with local considerations such as policies or regulations. The Data Provider's FHIR server SHALL limit the data returned to only those FHIR resources for which the Data Consumer is authorized. Implementers SHOULD incorporate technology that preserves and respects an individual's wishes to share their data with desired privacy protections. For example, some Data Consumers are authorized to access sensitive mental health information and some are not; this authorization is defined out of band, but when a Data Consumer requests a full data set, filtering is automatically applied by the Data Provider, restricting the data that the Data Consumer receives.
+Data access control obligations can be met with a combination of in-band restrictions (e.g., OAuth scopes) and out-of-band restrictions, where the Data Provider limits the data returned to a specific Data Consumer in accordance with local considerations such as policies or regulations. The Data Provider's FHIR server SHALL limit the data returned to only those FHIR resources for which the Data Consumer is authorized. Implementers are encouraged to incorporate technology that preserves and respects an individual's wishes to share their data with desired privacy protections. For example, some Data Consumers are authorized to access sensitive mental health information and some are not; this authorization is defined out of band, but when a Data Consumer requests a full data set, filtering is automatically applied by the Data Provider, restricting the data that the Data Consumer receives.
+
+These limitations include any constraints expressed in granted SMART scopes. Export-selection parameters do not expand any granted authorization; for example, access limited to laboratory Observations does not become access to all Observations when `_type` includes Observation.
 
 Bulk Data Export can be a resource-intensive operation. Data Providers SHOULD consider and mitigate the risk of intentional or inadvertent denial-of-service attacks, though the details are beyond the scope of this specification. For example, transactional systems may wish to provide Bulk Data access to a read-only mirror of the database or may distribute processing over time to avoid loads that could impact clinical operations.
 
@@ -58,9 +64,13 @@ As discussed in [Privacy and Security Considerations](#privacy-and-security-cons
 
 The Data Provider's FHIR Resource Server SHALL support invocation of this operation using HTTP POST and the [FHIR Asynchronous Bulk Interaction Pattern](async.html). Request parameters SHALL be supplied using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html).
 
+Version 4.0.0 of this operation does not support HTTP GET kick-off requests. (Versions 3.0.0 and earlier allowed a subset of the kick-off parameters to be supplied as URL query parameters in a GET request.)
+
+A Data Provider that does not accept HTTP GET invocation SHALL respond to such a request with an HTTP `405 Method Not Allowed` and an `Allow` header listing the supported methods. To communicate the details, the server MAY provide an OperationOutcome indicating that the kick-off request must be submitted using HTTP POST.
+
 If a parameter has a cardinality greater than one, a Data Consumer MAY repeat the kick-off parameter by including multiple `Parameters.parameter` entries with the same `name`. A Data Consumer SHALL NOT represent multiple values by comma-delimiting them within a single parameter value.
 
-For Patient-level requests and Group-level requests associated with groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
+For Patient-level requests and Group-level requests associated with groups of patients, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned and, where applicable, Patient resources SHOULD be returned. Implementers should be aware that the Patient Compartment may not include all resources associated with a patient; for example, resources associated with a patient indirectly through membership in a Group may fall outside of the Patient Compartment. Other resources outside of the patient compartment that are helpful in interpreting the patient data (such as Organization and Practitioner) MAY also be returned.
 
 Binary Resources whose content is associated with an individual patient SHALL be serialized as DocumentReference Resources with the `content.attachment` element populated as described in the [Attachments](#attachments) section below. Binary Resources not associated with an individual patient MAY be included in a System Level export.
 
@@ -111,11 +121,11 @@ Export data from a Data Provider's FHIR server, whether or not it is associated 
 
 ##### Parameters
 
+Data Consumers are encouraged to use these parameters to limit a request to the data needed for their use case.
+
 {% include export-query-parameters.md %}
 
 *Note*: Implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). If the Data Consumer explicitly asks for export of resources that the Data Provider does not support, the Data Provider SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
-
-If an <code>includeAssociatedData</code> value relevant to provenance is not specified, or if this parameter is not supported by the Data Provider, the Data Provider SHALL include all available Provenance resources whose `Provenance.target` is a resource in the Patient compartment in a patient level export request, and all available Provenance resources in a system level export request unless a specific resource set is specified using the <code>_type</code> parameter and this set does not include Provenance.
 
 ##### Group Membership Request Pattern
 
@@ -141,7 +151,7 @@ To obtain new and updated resources for patients in a group, as well as all data
       "resourceType": "Parameters",
       "parameter": [{
         "name": "_type",
-        "valueString": "Patient"
+        "valueUri": "Patient"
       },{
         "name": "_elements",
         "valueString": "id"
@@ -186,6 +196,22 @@ To obtain new and updated resources for patients in a group, as well as all data
 
   - Data Consumer retains the transactionTime value from the response.
 
+##### `includeAssociatedData` Parameter
+
+The `includeAssociatedData` parameter allows a Data Consumer to request additional resources associated with the resources being exported.
+
+When `includeAssociatedData` is omitted, no additional resources are included as a result of this parameter. This does not affect the inclusion of resources that would otherwise be returned by the export. For example, Provenance resources may be included when they are part of the Data Provider's default export dataset or when `Provenance` is explicitly included in `_type`, subject to any other applicable filters and authorization constraints.
+
+A Data Consumer MAY specify one or more of the following values:
+
+- **`LatestProvenanceResources`**: A Data Provider supporting this value SHALL include the most recent available Provenance resource associated with each non-Provenance resource being returned in the export, as identified by `Provenance.target`. This applies to the resources selected after all other applicable export parameters and filters have been applied, including `_type`, `_typeFilter`, `_since`, `_until`, and `patient`. The associated Provenance resources SHALL be included regardless of whether `Provenance` is specified in `_type` or whether the Provenance resources themselves satisfy the other filtering criteria. This value does not exclude Provenance resources that would otherwise be returned as part of the export.
+
+- **`RelevantProvenanceResources`**: A Data Provider supporting this value SHALL include all available Provenance resources associated with each non-Provenance resource being returned in the export, as identified by `Provenance.target`. This applies to the resources selected after all other applicable export parameters and filters have been applied, including `_type`, `_typeFilter`, `_since`, `_until`, and `patient`. The associated Provenance resources SHALL be included regardless of whether `Provenance` is specified in `_type` or whether the Provenance resources themselves satisfy the other filtering criteria. This value does not exclude Provenance resources that would otherwise be returned as part of the export.
+
+When multiple values are specified, the Data Provider SHALL include the union of the resources required by each value.
+
+Additional resources included as a result of `includeAssociatedData` remain subject to the Data Consumer's authorization.
+
 <a name="_typefilter-parameter"></a>
 
 ##### `_typeFilter` Parameter
@@ -194,9 +220,9 @@ The `_typeFilter` parameter enables finer-grained filtering out of resources in 
 
 Filtering resources based on the dates associated with a clinical or administrative event, such as exporting encounters that occurred within a certain time period, SHOULD be done using the `_typeFilter` parameter and not the `_since` and `_until` parameters, since the resource modification date used in those filters might not correspond to the date of the clinical or administrative event.
 
-The value of the `_typeFilter` parameter is a FHIR REST API query. Resources with a resource type specified in this query that do not meet the criteria in the search expression in the query SHALL NOT be returned, with the exception of related resources being included by the Data Provider to provide context about the resources being exported (see [processing model](#processing-model)). A Data Consumer MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When more than one `_typeFilter` parameter is provided with a query for the same resource type, the Data Provider SHALL include resources of that resource type that meet the criteria in any of the parameters (a logical "or").
+The value of the `_typeFilter` parameter is a FHIR REST API query. Resources with a resource type specified in this query that do not meet the criteria in the search expression in the query SHALL NOT be returned, with the exception of related resources being included by the Data Provider to provide context about the resources being exported (see [processing model](#processing-model)) and additional resources included as a result of the `includeAssociatedData` parameter. A Data Consumer MAY repeat the `_typeFilter` parameter multiple times in a kick-off request. When more than one `_typeFilter` parameter is provided with a query for the same resource type, the Data Provider SHALL include resources of that resource type that meet the criteria in any of the parameters (a logical "or").
 
-FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `_typeFilter` criteria. Additionally, a query in the `_typeFilter` parameter SHALL have the [search context](https://hl7.org/fhir/search.html#searchcontexts) of a single FHIR Resource Type. The contexts "all resource types" and "a specified compartment" are not allowed. Data Consumers SHOULD consult the Data Provider's CapabilityStatement to identify supported search parameters (see [Data Provider capability documentation](#data-provider-capability-documentation)). Since support for `_typeFilter` is OPTIONAL for a Data Provider, Data Consumers SHOULD be robust to Data Providers that ignore `_typeFilter`.
+FHIR [search result parameters](https://www.hl7.org/fhir/search.html#modifyingresults) (such as _sort, _include, and _elements) SHALL NOT be used as `_typeFilter` criteria. Additionally, a query in the `_typeFilter` parameter SHALL have the [search context](https://hl7.org/fhir/search.html#searchcontexts) of a single FHIR Resource Type. The contexts "all resource types" and "a specified compartment" are not allowed. Data Consumers SHOULD consult the Data Provider's CapabilityStatement to identify supported search parameters (see [Data Provider capability documentation](#data-provider-capability-documentation)).
 
 <div class="stu-note">
 <a href="https://hl7.org/fhir/search.html#chaining">Chained parameters</a> used in a <code>_typeFilter</code> query are an experimental feature, and when supported by a Data Provider, the set of exported resources resulting from the interactions between the <code>_typeFilter</code> parameter and other kickoff parameters may be surprising. We are soliciting feedback on the use of chained parameters, and depending on the response may consider deprecating this capability in a future version of this IG.
@@ -213,7 +239,7 @@ POST [fhir base]/$export
   "resourceType": "Parameters",
   "parameter": [{
     "name": "_type",
-    "valueString": "MedicationRequest"
+    "valueUri": "MedicationRequest"
   },{
     "name": "_typeFilter",
     "valueString": "MedicationRequest?status=active"
@@ -248,7 +274,7 @@ The Data Provider MAY include a FHIR `OperationOutcome` resource in the body in 
 
 ##### Response - Error (e.g., unsupported search parameter)
 
-The Data Provider SHALL return an error response with:
+Except for the HTTP `405 Method Not Allowed` response to an HTTP GET kick-off request described in the [Kick-off Request](#kick-off-request) section, the Data Provider SHALL return an error response with:
 
 - HTTP status `4XX` or `5XX`
 - FHIR `OperationOutcome` resource in the body in JSON format
@@ -362,9 +388,9 @@ The body of the response SHOULD be a FHIR `OperationOutcome` resource in JSON fo
 
 When the body is a FHIR `OperationOutcome` resource, the response SHALL include a `Content-Type` header of `application/fhir+json`.
 
-In the case of a polling failure that does not indicate failure of the export job, a Data Provider SHOULD use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the FHIR `OperationOutcome` resource's `issue.code` element to indicate to the Data Consumer that it will need retry the request at a later time.
+In the case of a polling failure that does not indicate failure of the export job, a Data Provider SHOULD use a [transient code](https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-transient) from the [IssueType valueset](https://www.hl7.org/fhir/codesystem-issue-type.html) when populating the FHIR `OperationOutcome` resource's `issue.code` element to indicate to the Data Consumer that it will need to retry the request at a later time.
 
-*Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `Response.outcome` array of the completion response body SHALL be populated with one or more files in NDJSON format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). In the case of a partial success, the Data Provider SHALL use a `200` status code instead of `4XX` or `5XX`. The choice of when to determine that an export job has failed in its entirety (error status) vs. returning a partial success (complete status) is left to the Data Provider.
+*Note*: Even if some of the requested resources cannot successfully be exported, the overall export operation MAY still succeed. In this case, the `outcome` array of the output manifest SHALL reference one or more files in NDJSON format containing FHIR `OperationOutcome` resources to indicate what went wrong (see below). These OperationOutcome resources provide the Data Consumer with information about the partial result. If an issue relates to individual resources, the corresponding OperationOutcome SHOULD use the [`operationoutcome-resource`](https://hl7.org/fhir/extensions/StructureDefinition-operationoutcome-resource.html) extension at its root to reference those resources. OperationOutcomes describing omitted data SHALL use an `issue.severity` value of `error` (or `warning`), while purely informational entries use `information`. In the case of a partial success, the Data Provider SHALL use a `200` status code instead of `4XX` or `5XX`. The choice of when to determine that an export job has failed in its entirety (error status) vs. returning a partial success (complete status) is left to the Data Provider.
 
 ##### Response - Complete Status
 
@@ -386,11 +412,15 @@ The output manifest is a JSON object providing metadata and links to the generat
 
 {% include export-manifest-fields.md %}
 
+The manifest logical models support standard FHIR extensions. Extensions may be added to the manifest itself or to individual elements as permitted by the logical model. In STU3 and earlier, manifest extensions were represented as a JSON object whose property names were extension names and whose values were the extension values. In this release, extensions use the standard FHIR `Extension` representation.
+
+[View Bulk Data Manifest logical model](StructureDefinition-BulkDataManifest.html)
+
 Implementation notes:
 
 - For `transactionTime`, to properly meet the inclusion constraints above, the Data Provider's FHIR server might need to wait for any pending transactions to resolve in its database before starting the export process.
-- Error, warning, and information messages related to the export SHOULD be included in `outcome` and not in `output`. If the request contained invalid or unsupported parameters along with a `Prefer: handling=lenient` header and the Data Provider processed the request, the Data Provider SHOULD include a FHIR `OperationOutcome` resource for each of these parameters.
-- When the `_since` timestamp is supplied in the export request, the `deleted` array SHOULD be populated with files containing FHIR transaction Bundles for resources that match the kick-off request criteria but were deleted after the `_since` date. If no resources have been deleted, if `_since` was not supplied, or if the Data Provider has other reasons to avoid exposing these data, the Data Provider MAY omit this key. Resources that appear in `deleted` SHALL NOT also appear in `output`.
+- Error, warning, and information messages related to the export SHOULD be included in `outcome` and not in `output`. If the request contained invalid or unsupported parameters along with a `Prefer: handling=lenient` header and the Data Provider processed the request, the Data Provider SHALL include one or more FHIR `OperationOutcome` resources to communicate ignored parameters.
+- When the `_since` timestamp is supplied in the export request, the `deleted` array SHOULD be populated with files containing FHIR transaction Bundles for resources that match the kick-off request criteria but were deleted after the `_since` date. If no resources have been deleted, if `_since` was not supplied, or if the Data Provider has other reasons to avoid exposing these data, the Data Provider MAY omit this key. See [Deleted Resources](#deleted-resources).
 
 <a name="manifest-link"></a>
 
@@ -413,13 +443,20 @@ Example manifest, `organizeOutputBy` kickoff parameter is `Patient`, and `allowP
 
 [View Example](Binary-BulkDataManifestOrganizedByPatientExample.html)
 
-Example deleted resource bundle (represents one line in an output file):
+###### Deleted Resources
 
-<div class="language-json">
-{% fragment Bundle/deleted-resource-transaction-bundle-example JSON %}
-</div>
+Files referenced by the manifest's `deleted` array identify resources that the Data Provider is requesting the Data Consumer to remove from its dataset.
 
-[View Example](Bundle-deleted-resource-transaction-bundle-example.html)
+Each resource in a deleted resources file SHALL be a FHIR `Bundle` with `Bundle.type` set to `transaction`. Each Bundle SHALL contain one or more entries identifying resources to delete. For each entry, `request.url` SHALL identify the resource and `request.method` SHALL be `DELETE`.
+
+For example, an NDJSON deleted resources file containing two deletion transactions could be:
+
+```json
+{"resourceType":"Bundle","type":"transaction","entry":[{"request":{"method":"DELETE","url":"Patient/123"}}]}
+{"resourceType":"Bundle","type":"transaction","entry":[{"request":{"method":"DELETE","url":"Observation/456"}}]}
+```
+
+Resources that appear in a deleted resources file SHALL NOT also appear in an `output` file of the same manifest or of any manifest linked from it.
 
 
 ---
@@ -432,11 +469,13 @@ Example deleted resource bundle (represents one line in an output file):
 
 {% include async-attachments.md %}
 
+For document-based exchange, a Data Consumer can request DocumentReference resources and, when supported, use _typeFilter with DocumentReference search parameters to select particular documents; the referenced document content is then available through the returned DocumentReference.content.attachment elements as described above.
+
 ### Data Provider Capability Documentation
 
 This implementation guide is structured to support a wide variety of Bulk Data Export use cases and Data Provider architectures. To provide clarity to developers on which capabilities are implemented by a particular Data Provider, Data Providers SHALL ensure that their CapabilityStatement accurately reflects the implemented Bulk Data Operations. Additionally, the Data Provider's CapabilityStatement SHOULD list the resource types available for export in the `rest.resource` element, and SHOULD list the search parameters that can be used in the `_typeFilter` parameter in `rest.resource.searchParam` elements.
 
-Data Providers SHOULD indicate resource types and search parameters that are accessible through the REST API, but not available using the Bulk Export operation, with one or more extensions that have a URL of `http://hl7.org/fhir/uv/bulkdata/Extension/operation-not-supported` and a `valueCanonical` with the canonical URL for the [OperationDefinition](artifacts.html#behavior-operation-definitions) of the bulk operation that is not supported. Alternatively, the extension may be populated with the canonical URL for the FHIR Bulk Data Access Implementation Guide [CapabilityStatement](CapabilityStatement-bulk-data.html) when none of the bulk operations are supported.
+Data Providers SHOULD indicate resource types and search parameters that are accessible through the REST API, but not available using the Bulk Export operation, with one or more extensions that have a URL of `http://hl7.org/fhir/uv/bulkdata/StructureDefinition/operation-not-supported` and a `valueCanonical` with the canonical URL for the [OperationDefinition](artifacts.html#2) of the bulk operation that is not supported. Alternatively, the extension may be populated with the canonical URL for the Bulk Export [CapabilityStatement](CapabilityStatement-bulk-export.html) when none of the Bulk Export operations are supported.
 
 When a Data Provider supports multiple versions of a Bulk Export operation at the same FHIR endpoint, the CapabilityStatement can advertise each version with a distinct `operation.name` and a version-specific OperationDefinition canonical URL in `operation.definition`. For example, a Data Provider supporting two versions of Group-level export could advertise:
 
@@ -449,6 +488,8 @@ When a Data Provider supports multiple versions of a Bulk Export operation at th
     "definition": "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/group-export|4.0.0"
 }]
 ```
+
+The `operation.name` identifies the name used to invoke the advertised operation. For example, with the CapabilityStatement above, Group-level export version 3.0.0 would be invoked at `[base]/Group/[id]/$export`, while version 4.0.0 would be invoked at `[base]/Group/[id]/$export-v4`. This allows multiple versions of the Bulk Export contract to be supported at the same FHIR base URL while keeping version selection explicit in the operation URL.
 
 Data Providers SHOULD also ensure that their documentation addresses the topics below. Future versions of this IG may define a computable format for this information as well.
 

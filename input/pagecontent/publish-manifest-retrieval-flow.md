@@ -17,6 +17,9 @@ flowchart TD
     savePending["Store the ETag value (if present),<br/>updateCadence (if present)<br/> and page URL"]
     waitPending@{shape: delay, label: "Wait according to updateCadence<br/>or local policy"}
     pollPending["Conditional GET to saved page URL"]
+    commitPending["Commit the local dataset"]
+    pendingClosed{"Next link is `#closed`"}
+    pendingRestart@{shape: "circle", label: "Restart Flow"}
     pollRetrieve["GET the next manifest page"]
 
     start --> requestRoot --> startDataset --> processPage --> hasAbsoluteLink
@@ -35,11 +38,14 @@ flowchart TD
     pollRoot --> |not modified| waitRoot
     pollRoot --> |modified| restartFlow
 
-    hasPendingLink --> |yes| savePending
+    hasPendingLink --> |yes| commitPending
+    commitPending --> savePending
     savePending --> waitPending
     waitPending --> pollPending
     pollPending --> |not modified| waitPending
-    pollPending --> |updated link| pollRetrieve
+    pollPending --> |updated link| pendingClosed
+    pendingClosed --> |yes| pendingRestart
+    pendingClosed --> |no| pollRetrieve
     pollRetrieve --> processPage
 
 ```

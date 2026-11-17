@@ -1,11 +1,11 @@
 {
-  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest",
+  "manifestType": "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest|4.0.0",
   "updateCadence": "P1D",
   "transactionTime": "2021-01-02T00:00:00Z",
   "requiresAccessToken": false,
   "output": [{
       "type": "Organization",
-      "url": "https://example.com/output/organization_2.ndjson"
+      "url": "https://example.com/output/organization_update_1.ndjson"
     }],
   "deleted": [{
       "url": "https://example.com/output/deleted_org_1.ndjson"

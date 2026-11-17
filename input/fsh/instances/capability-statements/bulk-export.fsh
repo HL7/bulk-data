@@ -1,25 +1,24 @@
-Instance: bulk-data
+Instance: bulk-export
 InstanceOf: CapabilityStatement
 Usage: #definition
-* url = "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data"
+* url = "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-export"
 * version = "4.0.0"
-* name = "BulkDataIGCapabilityStatement"
-* title = "FHIR Bulk Data Access Implementation Guide"
+* name = "BulkExportCapabilityStatement"
+* title = "Bulk Export Capability Statement"
 * status = #active
 * extension[+].url = $fmm
 * extension[=].valueInteger = 5
 * experimental = false
-* date = "2021-07-29"
-* description = "The expected capabilities of a Data Provider actor (e.g., EHR systems, data warehouses, and other clinical and administrative systems that aim to interoperate by sharing large FHIR datasets) which is responsible for providing responses to requests submitted by a Data Consumer actor. Systems implementing this capability statement SHOULD meet the requirements set by the Bulk Data Access Implementation Guide. A Data Consumer MAY choose from this list to access necessary data based on use cases and other contextual requirements."
+* date = "2026-11-06"
+* description = "The expected capabilities of a Data Provider actor (e.g., EHR systems, data warehouses, and other clinical and administrative systems that aim to interoperate by sharing large FHIR datasets) which is responsible for providing responses to Bulk Export requests submitted by a Data Consumer actor. Systems implementing this capability statement SHOULD meet the Bulk Export requirements set by the Bulk Data Access Implementation Guide. A Data Consumer MAY choose from this list to access necessary data based on use cases and other contextual requirements."
 * jurisdiction = $m49.htm#001 "World"
 * kind = #requirements
-* instantiates = "http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data"
 * fhirVersion = #4.0.1
 * format = #application/fhir+json
 * implementationGuide = "http://hl7.org/fhir/uv/bulkdata/ImplementationGuide/hl7.fhir.uv.bulkdata"
 * rest
   * mode = #server
-  * documentation = "These FHIR Operations initiate the generation of data to which the Data Consumer is authorized, whether that be all patients, a subset (defined group) of patients, or all available data contained in a Data Provider's FHIR server.\n\nThe Data Provider's FHIR server SHALL limit the data returned to only those FHIR resources for which the Data Consumer is authorized.\n\nThe Data Provider's FHIR server SHALL support invocation of this operation using HTTP POST and the [FHIR Asynchronous Bulk Interaction Pattern](async.html). Request parameters SHALL be supplied using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html). GET requests SHALL NOT be used to kick off a Bulk Data Export Operation."
+  * documentation = "These FHIR Operations initiate the generation of data to which the Data Consumer is authorized, whether that be all patients, a subset (defined group) of patients, or all available data contained in a Data Provider's FHIR server.\n\nThe Data Provider's FHIR server SHALL limit the data returned to only those FHIR resources for which the Data Consumer is authorized.\n\nThe Data Provider's FHIR server SHALL support invocation of this operation using HTTP POST and the [FHIR Asynchronous Bulk Interaction Pattern](async.html). Request parameters SHALL be supplied using the FHIR [Parameters Resource](https://www.hl7.org/fhir/parameters.html)."
   * resource[0]
     * type = #Group
     * operation
@@ -45,4 +44,4 @@ Usage: #definition
     * name = "export"
     * definition = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/export"
     * documentation = "FHIR Operation to export data from a Data Provider's FHIR server, whether or not it is associated with a patient. This supports use cases like backing up a Data Provider's FHIR server, or exporting terminology data by restricting the resources returned using the `_type` parameter."
-  * security.description = "Data Providers SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services: Authorization Guide](authorization.html). Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual TLS or signed URLs."
+  * security.description = "Data Providers SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). Implementations MAY include non-RESTful services that use authorization schemes other than OAuth 2.0, such as mutual TLS or signed URLs."

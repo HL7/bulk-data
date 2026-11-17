@@ -19,6 +19,7 @@ The scope of this document does NOT include:
 - A healthcare organization moving data from a clinical system onto a standalone FHIR server to consolidate data from multiple systems in order to run analytic queries
 - An organization providing FHIR data to an internal or external service to process the data for de-identification or other transformation
 - An organization sharing a pre-defined dataset from a clinical system with another application, such as a care management tool
+- A healthcare organization submitting data to a public health agency to inform health research, policy and practice
 
 
 ### Choosing a Bulk Operation
@@ -58,10 +59,10 @@ Multiple operations can be used to address a single use case. For example, an in
 
 |                   | Bulk Export                                                        | Bulk Submit                                               | Bulk Publish                                                        |
 |----------------------------|--------------------------------------------------------------------|-----------------------------------------------------------|---------------------------------------------------------------------|
-| Cohort and data elements  | **Recipient specifies**                                           | Provider defines                                          | Provider defines                                                    |
-| Kick-off workflow         | Recipient pull                                                    | **Provider push**                                         | Recipient pull                                                      |
-| Cardinality               | One provider to one recipient                                     | One provider to one recipient                             | **One provider to many recipients**                                 |
-| Feedback channel          | Out of band                                                       | **In band**                                               | Out of band                                                         |
+| Cohort and data elements  | Recipient specifies                                               | Provider defines                                          | Provider defines                                                    |
+| Kick-off workflow         | Recipient pull                                                    | Provider push                                             | Recipient pull                                                      |
+| Cardinality               | One provider to one recipient                                     | One provider to one recipient                             | One provider to many recipients                                     |
+| Feedback channel          | Outside Bulk Data protocol                                        | Bulk Submit Status Operation                              | Outside Bulk Data protocol                                          |
 
 ### Representing Cohorts
 
@@ -69,7 +70,11 @@ Many Bulk Export workflows are applicable to a specific cohort of patients rathe
 
 ### Conformance and Publication
 
-To declare conformance with this IG, a server SHOULD include the following URL in its `CapabilityStatement.instantiates`: `http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data`.
+To declare conformance with the Bulk Export Operation in this IG, a FHIR server SHALL include the following URL in its `CapabilityStatement.instantiates`: [`http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-export`](CapabilityStatement-bulk-export.html).
+
+To declare conformance with the Bulk Submit Operation in this IG, a FHIR server SHALL include the following URL in its `CapabilityStatement.instantiates`: [`http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-submit`](CapabilityStatement-bulk-submit.html).
+
+To declare conformance with the Bulk Publish Operation in this IG, a server SHOULD host a `/metadata` endpoint that includes the following URL in its `CapabilityStatement.instantiates`: [`http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-publish`](CapabilityStatement-bulk-publish.html).
 
 The [Bulk Data Access Implementation Guide Resource](ImplementationGuide-hl7.fhir.uv.bulkdata.html) defines the technical details of this publication, including dependencies and publishing parameters.
 
@@ -82,6 +87,7 @@ The [Bulk Data Access Implementation Guide Resource](ImplementationGuide-hl7.fhi
 * [RFC6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
 * [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
 * [RFC7240, Prefer Header for HTTP](https://tools.ietf.org/html/rfc7240)
+* [SMART App Launch, version 2.0.0 or later](https://hl7.org/fhir/smart-app-launch/), in particular the [Backend Services Authorization Profile](https://hl7.org/fhir/smart-app-launch/backend-services.html)
 
 ### Terminology
 
@@ -100,7 +106,7 @@ Common datasets to be exchanged through bulk operations include:
 
 The [Bulk Export Operation](export.html) and the [Bulk Submit Status Operation](submit.html#bulk-submit-status-request-flow) build on the [FHIR Asynchronous Bulk Interaction Pattern](async.html), a FHIR request and response flow that servers can implement for any [Operation](https://hl7.org/fhir/operations.html) or [Defined Interaction](https://hl7.org/fhir/http.html) that needs to return a large dataset. This pattern is described in the FHIR R4 and FHIR R5 versions of the [FHIR specification](https://hl7.org/fhir), and has been moved into this Implementation Guide going forward.
 
-Use cases that return small amounts of data but may take a lot of time to process may prefer to use the related [Asynchronous Interaction Request Pattern](https://hl7.org/fhir/async-bundle.html).
+Use cases that return small amounts of data but may take a lot of time to process may prefer to use the related [Asynchronous Interaction Request Pattern](https://hl7.org/fhir/R5/async-bundle.html).
 
 ### Additional Documentation
 * [Discussion Group (FHIR Zulip "Bulk Data" Track)](https://chat.fhir.org/#narrow/stream/bulk.20data)

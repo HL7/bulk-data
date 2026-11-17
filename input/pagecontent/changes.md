@@ -3,20 +3,25 @@
 	h4:before {content: none}
 </style>
 
-### STU4 - v4.0.0 Ballot
+### STU4 - v4.0.0
 * Added Bulk Submit and Bulk Submit Status operations.
 * Added Bulk Publish operation.
+* Renamed the `bulk-data` CapabilityStatement to `bulk-export` (`http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-export`), and added separate `bulk-submit` and `bulk-publish` CapabilityStatements. Servers that declared conformance with STU3 by including `http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data` in `CapabilityStatement.instantiates` should use the new Bulk Export canonical URL.
 * Migrated the FHIR Asynchronous Bulk Interaction Pattern documentation from the core FHIR spec into this IG and aligned with the current version of Bulk Export.
 * Defined a logical model for the Bulk Data Manifest JSON format.
   - In STU3, the `extension` property on any manifest object had a value of a JSON object where the properties are the extension name and the values are the extension value. In STU4, the `extension` property contains an array of FHIR Extension elements.
   - Added optional `manifestType` and `outputFormat` elements.
   - Removed the deprecated `request` element.
   - Renamed the `error` element to `outcome`.
+  - Changed the `outputOrganizedBy` element type to `uri`.
 * Aligned Bulk Export kick-off requests with the FHIR Operations Framework.
   - Removed support for HTTP `GET` kick-off requests, requiring use of HTTP `POST` with a FHIR Parameters Resource.
   - Removed support for representing repeated Bulk Export parameters as multiple comma-delimited values in a single parameter value.
+* Updated Bulk Export kick-off parameters.
+  - Removed the `experimental` label from the `_elements` and `includeAssociatedData` parameters.
   - Changed the `includeAssociatedData` parameter type to a `Coding` from a `code`.
-  - Removed `experimental` label from the `_elements` and `includeAssociatedData` parameters
+  - Changed the default `includeAssociatedData` behavior: when the parameter is omitted, no additional resources are included as a result of this parameter, so Provenance resources are no longer included by default unless they are part of the Data Provider's default export dataset or are requested using `_type`. Previously, when no provenance-related value was specified, Data Providers were required to include all available Provenance resources targeting resources in the Patient compartment for patient-level requests, and all available Provenance resources for system-level requests, unless `_type` excluded Provenance.
+  - Changed the `_type` and `organizeOutputBy` parameter types to `uri`, with an extensible binding to the FHIR resource types value set.
 
 ### STU3 - v3.0.0
 * Added support for partial export manifests to enable servers to make some files available prior to all of the files being ready and to split large lists of files across multiple manifests. Clients can select this behavior using the new `allowPartialManifests` kick-off request parameter.

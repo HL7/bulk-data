@@ -46,15 +46,22 @@ RuleSet: ExportParam_type
   * documentation = """
     Support is optional for a Data Provider, optional for a Data Consumer.
 
-    The response SHALL be filtered to only include resources of the specified resource type(s).
+    The response SHALL be filtered to only include resources of the specified resource type(s), except for related resources included by the Data Provider to provide context about the resources being exported (see [processing model](export.html#processing-model)) and additional resources included as a result of the `includeAssociatedData` parameter.
 
-    If this parameter is omitted, the Data Provider SHALL return all supported resources within the scope of the Data Consumer's authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. However, other resources outside of the Patient Compartment that are referenced by the resources being returned and would be helpful in interpreting the patient data MAY also be returned (such as Organization and Practitioner). When this behavior is supported, a Data Provider SHOULD document this support (for example, as narrative text, or by including a [GraphDefinition Resource](https://www.hl7.org/fhir/graphdefinition.html)).
+    Relative values are prefixed by `http://hl7.org/fhir/StructureDefinition/` such that a relative value of `Patient` resolves to the full URL of the Patient resource.
+
+    To specify multiple types, multiple repetitions of this parameter are used - callers cannot use a single parameter with comma-delimited values. Note that versions 3.0.0 and earlier of this IG supplied `_type` as a comma-delimited query parameter.
+
+    If this parameter is omitted, the Data Provider SHALL return all supported resources within the scope of the Data Consumer's authorization, though implementations MAY limit the resources returned to specific subsets of FHIR, such as those defined in the [US Core Implementation Guide](http://www.hl7.org/fhir/us/core/). For Patient- and Group-level requests, the [Patient Compartment](https://www.hl7.org/fhir/compartmentdefinition-patient.html) SHOULD be used as a point of reference for recommended resources to be returned. Implementers should be aware that the Patient Compartment may not include all resources associated with a patient; for example, resources associated with a patient indirectly through membership in a Group may fall outside of the Patient Compartment. However, other resources outside of the Patient Compartment that are referenced by the resources being returned and would be helpful in interpreting the patient data MAY also be returned (such as Organization and Practitioner). When this behavior is supported, a Data Provider SHOULD document this support (for example, as narrative text, or by including a [GraphDefinition Resource](https://www.hl7.org/fhir/graphdefinition.html)).
 
     A Data Provider that is unable to support `_type` SHOULD return an error and FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request omitting the `_type` parameter. If the Data Consumer explicitly asks for export of resources that the Data Provider does not support, or asks for only resource types that are outside the Patient Compartment, the Data Provider SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
 
-    For example `_type=Observation` could be used to filter a given export response to return only FHIR `Observation` resources.
+    For example, a `_type` parameter with a value of `Observation` could be used to filter a given export response to return only FHIR `Observation` resources.
     """
-  * type = #string
+  * type = #uri
+  * binding
+    * strength = #extensible
+    * valueSet = "http://hl7.org/fhir/ValueSet/resource-types"
 
 RuleSet: ExportParam_elements
 * parameter[+]
@@ -67,7 +74,7 @@ RuleSet: ExportParam_elements
 
     When provided, the Data Provider SHOULD omit unlisted, non-mandatory elements from the resources returned. Elements SHOULD be of the form `[resource type].[element name]` (e.g., `Patient.id`) or `[element name]` (e.g., `id`) and only root elements in a resource are permitted. If the resource type is omitted, the element SHOULD be returned for all resources in the response where it is applicable.
 
-    A Data Provider is not obliged to return just the requested elements. A Data Provider SHOULD always return mandatory elements whether they are requested or not. A Data Provider SHOULD mark the resources with the tag `SUBSETTED` to ensure that the incomplete resource is not actually used to overwrite a complete resource.
+    A Data Provider is not obliged to return just the requested elements. A Data Provider SHOULD always return mandatory elements whether they are requested or not. For guidance on indicating that resources are being returned with omitted elements, see the FHIR specification's definition of [`_elements`](https://hl7.org/fhir/R4/search.html#elements).
 
     A Data Provider that is unable to support `_elements` SHOULD return an error and a FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request omitting the `_elements` parameter. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
     """
@@ -82,7 +89,7 @@ RuleSet: ExportParam_patient
   * documentation = """
     Support is optional for a Data Provider, optional for a Data Consumer.
 
-    Not applicable to system level export requests. When provided, the Data Provider SHALL NOT return resources in the patient compartments belonging to patients outside of this list. If a Data Consumer requests patients who are not present on the Data Provider (or in the case of a group level export, who are not members of the group), the Data Provider SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
+    Not applicable to system level export requests. When provided, the Data Provider SHALL NOT return resources in the patient compartments belonging to patients outside of this list. This restriction does not apply to additional resources included as a result of the `includeAssociatedData` parameter. If a Data Consumer requests patients who are not present on the Data Provider (or in the case of a group level export, who are not members of the group), the Data Provider SHOULD return details via a FHIR `OperationOutcome` resource in an error response to the request.
 
     A Data Provider that is unable to support the `patient` parameter SHOULD return an error and FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request omitting the `patient` parameter. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
     """
@@ -98,15 +105,9 @@ RuleSet: ExportParam_includeAssociatedData
   * documentation = """
     Support is optional for a Data Provider, optional for a Data Consumer.
 
-    When provided, a Data Provider with support for the parameter and requested values SHALL return or omit a pre-defined set of FHIR resources associated with the request.
+    When provided, requests the inclusion of additional resources associated with the resources otherwise selected for export. When omitted, no additional resources are included as a result of this parameter. See the [`includeAssociatedData` Parameter](export.html#includeassociateddata-parameter) section for details.
 
-    A Data Provider that is unable to support the requested `includeAssociatedData` values SHOULD return an error and a FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request that omits those values (for example, if a Data Provider does not retain provenance data). When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
-
-    A Data Consumer MAY include one or more of the following values. If multiple conflicting values are included, the Data Provider SHALL apply the least restrictive value (value that will return the largest dataset).
-
-    * `LatestProvenanceResources`: Export will include the most recent Provenance resources associated with each of the non-provenance resources being returned. Other Provenance resources will not be returned.
-    * `RelevantProvenanceResources`: Export will include all Provenance resources associated with each of the non-provenance resources being returned.
-    * `_[custom value]`: A Data Provider MAY define and support custom values that are prefixed with an underscore (e.g., `_myCustomPreset`).
+    A Data Provider that is unable to support the requested `includeAssociatedData` values SHOULD return an error and a FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request that omits those values (for example, if provenance data is requested and a Data Provider does not retain provenance data). When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
   """
   * type = #Coding
   * binding
@@ -125,7 +126,7 @@ RuleSet: ExportParam_typeFilter
 
     String of a FHIR REST search query.
 
-    When provided, a Data Provider with support for the parameter and requested search queries SHALL filter the data in the response for resource types referenced in the `_typeFilter` expression to only include resources that meet the specified criteria. FHIR search result parameters such as `_include` and `_sort` SHALL NOT be used, and a query in the `_typeFilter` parameter SHALL have the search context of a single FHIR Resource Type.
+    When provided, a Data Provider with support for the parameter and requested search queries SHALL filter the data in the response for resource types referenced in the `_typeFilter` expression to only include resources that meet the specified criteria, except for related resources included by the Data Provider to provide context about the resources being exported (see [processing model](export.html#processing-model)) and additional resources included as a result of the `includeAssociatedData` parameter. FHIR search result parameters such as `_include` and `_sort` SHALL NOT be used, and a query in the `_typeFilter` parameter SHALL have the search context of a single FHIR Resource Type.
 
     A Data Provider unable to support the requested `_typeFilter` queries SHOULD return an error and FHIR `OperationOutcome` resource so the Data Consumer can re-submit a request that omits those queries. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
   """
@@ -139,13 +140,16 @@ RuleSet: ExportParam_organizeOutputBy
   * documentation = """
     Support is optional for a Data Provider, optional for a Data Consumer.
 
-    String of a FHIR resource type.
+    URI of a FHIR resource type (see `_type` for relative values). The `outputOrganizedBy` element in the resulting manifest contains the resource type name (e.g., `Patient`), even when this parameter is an absolute URI.
 
     When provided, a Data Provider with support for the parameter SHALL organize the resources in output files by instances of the specified resource type, including a header for each resource of the type specified in the parameter, followed by the resource and resources in the output that contain references to that resource. When omitted, Data Providers SHALL organize each output file with resources of only a single type. See [details](export.html#bulk-data-output-file-organization), [example manifest](export.html#organize-output-by-manifest-example), and [example output file](export.html#organize-output-by-file-example).
 
     A Data Provider unable to structure output by the requested `organizeOutputBy` resource SHOULD return an error and FHIR `OperationOutcome` resource. When a `Prefer: handling=lenient` header is included in the request, the Data Provider MAY process the request instead of returning an error.
   """
-  * type = #string
+  * type = #uri
+  * binding
+    * strength = #extensible
+    * valueSet = "http://hl7.org/fhir/ValueSet/resource-types"
 
 RuleSet: ExportParam_allowPartialManifests
 * parameter[+]
@@ -156,6 +160,6 @@ RuleSet: ExportParam_allowPartialManifests
   * documentation = """
     Support is optional for a Data Provider, optional for a Data Consumer.
 
-    When provided, a Data Provider with support for the parameter MAY distribute the bulk data output files among multiple manifests, providing links for Data Consumers to page through the manifests ([see details](export.html#manifest-link)). Prior to all of the files in the export being available, the Data Provider MAY return a manifest with files that are available along with a `202 Accepted` HTTP response status, and subsequently update the manifest with a paging link to a new manifest when additional files are ready for download ([see details](export.html#response---in-progress-status)).
+    When provided, a Data Provider with support for the parameter MAY distribute the bulk data output files among multiple manifests, providing links for Data Consumers to page through the manifests ([see details](export.html#manifest-link)). Prior to all of the files in the export being available, the Data Provider MAY return a manifest with files that are available in an in-progress status response, and subsequently update the manifest with a paging link to a new manifest when additional files are ready for download ([see details](export.html#response---in-progress-status)).
   """
   * type = #boolean

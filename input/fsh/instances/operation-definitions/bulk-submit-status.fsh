@@ -2,7 +2,6 @@ Instance: bulk-submit-status
 InstanceOf: OperationDefinition
 Usage: #definition
 * url = "http://hl7.org/fhir/uv/bulkdata/OperationDefinition/bulk-submit-status"
-* version = "1.0.0"
 * name = "BulkSubmitStatus"
 * title = "FHIR Bulk Data Submit Status"
 * status = #active
@@ -26,7 +25,7 @@ Usage: #definition
   * min = 1
   * max = "1"
   * documentation = """
-    The submitter must match a system and code specified by the Data Consumer (coordinated out-of-band or in an implementation guide specific to a use case).
+    SHALL match the submitter system and value supplied in the $bulk-submit request(s) for this submission.
     """
   * type = #Identifier
 
@@ -36,7 +35,7 @@ Usage: #definition
   * min = 1
   * max = "1"
   * documentation = """
-    The value must be unique for the `submitter`.
+    SHALL match a submissionId previously supplied by this submitter in a $bulk-submit request.
     """
   * type = #string
 

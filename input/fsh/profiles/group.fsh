@@ -35,7 +35,7 @@ Title: "Members Refreshed"
 Description: """
   Extension used by a server to indicate to a client when the members in a dynamic group were last updated. For example, the following extension would indicate that the group members were last updated January 1st 2024:
   ```
-  "Extension" : [{
+  "extension" : [{
     "url" : "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/members-refreshed",
     "valueDateTime" : "2024-01-01T13:28:17-05:00"
   }]
@@ -60,6 +60,9 @@ Description: "This Group resource profile enables the creation of patient cohort
   * ^definition = """
     A server MAY support the inclusion of one or more `member` elements that contain an `entity` element with a reference to a `Patient` resource, `Practitioner` resource, `Device` resource, or a `Group` resource that is a group of one of these resource types. When members are provided, the expression in the `member-filter` extension for the Group SHALL only be applied to the referenced resources and the compartments of the referenced resources, and the resources and compartments of the members of any referenced Groups. When members are not provided and the Group's `type` element is set to `person`, the expression in the `member-filter` extension SHALL be applied to all of the Patient resources and Patient compartments the client is authorized to access. When members are not provided and the Group's `type` element is set to `practitioner`, the expression in the `member-filter` extension SHALL be applied to all of the Practitioner resources and Practitioner compartments the client is authorized to access. When members are not provided and the Group's `type` element is set to `device`, the expression in the `member-filter` extension SHALL be applied to all of the Device resources and Device compartments the client is authorized to access.
     """
+  * ^comment = """
+    Note that servers are allowed to reject requests, fail exports, or ignore individual `member` repetitions that reference resources outside the scope of the server's capabilities or an individual export request. For example, a server might accept only Patient references, or might not support nested Group references. Servers SHOULD document capabilities related to `member-filter` and Group resource support.
+    """
   * entity only Reference (Patient or Practitioner or Device or Group)
 
 * modifierExtension contains MemberFilter named member-filter 1..*
@@ -72,7 +75,7 @@ Description: "This Group resource profile enables the creation of patient cohort
 * extension contains MembersRefreshed named members-refreshed 0..1
   * ^short = "when membership in this group was updated"
   * ^definition = """
-    If a group's membership is calculated periodically from the `member-filter` criteria, a server SHALL populate a `valueDateTime` with the date the group's membership was last updated. When a `date` element is populated for the Group, the `valueDateTime` element SHALL NOT be later than the date in that element, but might be the same or an earlier datetime. If members are calculated dynamically for the group (for example, when a Bulk Export operation is kicked off) this value SHALL be omitted. The server's refresh cycle capabilities and relevant configuration options SHOULD be described in the server's documentation.
+    If a group's membership is calculated periodically from the `member-filter` criteria, a server SHALL populate a `valueDateTime` with the date the group's membership was last updated. When `meta.lastUpdated` is populated for the Group, the `valueDateTime` element SHALL NOT be later than `meta.lastUpdated`, but might be the same or an earlier datetime. If members are calculated dynamically for the group (for example, when a Bulk Export operation is kicked off) this value SHALL be omitted. The server's refresh cycle capabilities and relevant configuration options SHOULD be described in the server's documentation.
     """
 * name 1..1
 * characteristic 0..0
@@ -93,7 +96,7 @@ Usage: #example
 * meta.extension[1].url = "http://hl7.org/fhir/StructureDefinition/instance-description"
 * meta.extension[1].valueMarkdown = "Blue cross plan member group with members filtered to patients that have an active diagnosis of diabetes on their problem list and an ambulatory encounter in January 2024"
 * name = "DM Dx and Jan. 2024 Ambulatory Encounter"
-* member.entity = Reference(http://example.org/fhir/Group/blue-cross-members)
+* member.entity = Reference(https://example.org/fhir/Group/blue-cross-members)
 * extension[members-refreshed].valueDateTime = "2024-08-22T10:00:00Z"
 * modifierExtension[member-filter][0].valueExpression.language = #application/x-fhir-query
 * modifierExtension[member-filter][0].valueExpression.expression = "Condition?category=http://terminology.hl7.org/CodeSystem/condition-category|problem-list-item&clinical-status=http://terminology.hl7.org/CodeSystem/condition-clinical|active&code=http://hl7.org/fhir/sid/icd-10-cm|E11.9"
