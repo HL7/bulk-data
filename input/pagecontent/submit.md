@@ -85,8 +85,8 @@ Constraints:
 The Data Provider uses the `submissionStatus` parameter to indicate the state of a submission to the Data Consumer. Values SHALL be drawn from the [Submission Status Value Set](ValueSet-submission-status.html), which constrains the [`http://hl7.org/fhir/event-status`](https://hl7.org/fhir/valueset-event-status.html) code system. These values have the following meanings:
 
 - `in-progress` (default if parameter is omitted): Additional requests to the `$bulk-submit` endpoint are expected for the `submitter` and `submissionId` combination in that request.
-- `completed`: No additional requests to the `$bulk-submit` endpoint are expected for the `submitter` and `submissionId` combination in that request.
-- `stopped`: The submission is invalid. The Data Consumer SHALL stop retrieving files and SHOULD delete any data already processed from this submission. No additional requests to the `$bulk-submit` endpoint are expected for this `submitter` and `submissionId` combination.
+- `completed`: The Data Provider SHALL NOT send additional requests to the `$bulk-submit` endpoint for the `submitter` and `submissionId` combination in that request.
+- `stopped`: The submission is invalid. The Data Consumer SHALL stop retrieving files and SHOULD delete any data already processed from this submission. The Data Provider SHALL NOT send additional requests to the `$bulk-submit` endpoint for this `submitter` and `submissionId` combination.
 
 ###### Correcting Data Without Aborting
 

@@ -25,7 +25,7 @@ Usage: #definition
   * min = 1
   * max = "1"
   * documentation = """
-    The submitter SHALL match a system and code specified by the Data Consumer (coordinated out-of-band or in an implementation guide specific to a use case).
+    The submitter SHALL match a system and value specified by the Data Consumer (coordinated out-of-band or in an implementation guide specific to a use case).
     """
   * type = #Identifier
 
@@ -57,7 +57,7 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    Url pointing to a [Bulk Data Manifest](StructureDefinition-BulkDataManifest.html) with a pre-coordinated FHIR data set. Files in multiple submitted manifests with the same `submitter` and `submissionId` SHALL be treated by the Data Consumer as if they were submitted in a single manifest. This parameter MAY be omitted when the operation is being called to set the submissionStatus to `completed` or `stopped`. The value SHALL be unique for all manifests that share a `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated. When this parameter is populated, the `fhirBaseUrl` parameter SHALL also be populated.
+    Url pointing to a [Bulk Data Manifest](StructureDefinition-BulkDataManifest.html) with a pre-coordinated FHIR data set. Files in multiple submitted manifests with the same `submitter` and `submissionId` SHALL be treated by the Data Consumer as if they were submitted in a single manifest. This parameter MAY be omitted when the operation is being called to set the `submissionStatus` to `completed` or `stopped`, or to remove a previously submitted manifest using `replacesManifestUrl`. The value SHALL be unique for all manifests that share a `submitter` and `submissionId` combination. At least one of the `submissionStatus` and `manifestUrl` parameters SHALL be populated. When this parameter is populated, the `fhirBaseUrl` parameter SHALL also be populated.
     """
   * type = #url
 
@@ -67,7 +67,7 @@ Usage: #definition
   * min = 0
   * max = "1"
   * documentation = """
-    The url of a previously submitted manifest that has the same `submissionId` and `submitter` as this request. When provided, Data Consumer SHALL replace the data in the referenced manifest with the one in the current request. If the url is invalid or the Data Consumer is unable to replace the data, it SHOULD respond to the request with an OperationOutcome describing the error.
+    The url of a previously submitted manifest that has the same `submissionId` and `submitter` as this request. When provided, the Data Consumer SHALL discard the data from the referenced manifest and, when `manifestUrl` is also populated, replace it with the data in that manifest. If the url is invalid or the Data Consumer is unable to replace the data, it SHALL return an error response as described in [Response - Error](submit.html#response---error).
     """
   * type = #url
 
@@ -116,7 +116,7 @@ Usage: #definition
   * name = #oauthMetadataUrl
   * use = #in
   * min = 0
-  * max = "*"
+  * max = "1"
   * documentation = """
     Location that a Data Consumer can use to obtain the information needed to retrieve files protected using OAuth 2.0. The url SHALL be the path to a [FHIR Authorization Endpoint and Capabilities Discovery file](https://hl7.org/fhir/smart-app-launch/conformance.html#using-well-known) or another [OAuth 2.0 Protected Resource Metadata file](https://datatracker.ietf.org/doc/rfc9728/) that is registered in the [IANA Well-Known URIs Registry](https://www.iana.org/assignments/well-known-uris/well-known-uris.xhtml).
     """
@@ -128,7 +128,7 @@ Usage: #definition
   * min = 0
   * max = "*"
   * documentation = """
-    Child parameters can be added under this parameter to pass pre-coordinated data relevant to the submission from the Data Provider to the Data Consumer. Each child parameter name SHALL be an absolute URL. Specific child parameters are defined in implementation guides for particular use cases.
+    Pre-coordinated data relevant to the submission, passed from the Data Provider to the Data Consumer. Each `metadata` parameter contains a `parameterUrl` part with an absolute URL identifying the metadata item and a `parameterValue` part with its value. This parameter MAY be repeated. Specific `parameterUrl` values are defined in implementation guides for particular use cases.
     """
   * part[+]
     * name = #parameterUrl
@@ -155,7 +155,7 @@ Usage: #definition
   * min = 0
   * max = "*"
   * documentation = """
-    Child parameters MAY be added under this parameter to pass pre-coordinated options relevant to how the data will be processed from the Data Provider to the Data Consumer. For example, a Data Consumer might allow the Data Provider to specify whether or not existing data should be replaced with the data in the submission. Each child parameter name SHALL be an absolute URL. Specific child parameters are defined in implementation guides for particular use cases.
+    Pre-coordinated options relevant to how the data will be processed, passed from the Data Provider to the Data Consumer. For example, a Data Consumer might allow the Data Provider to specify whether or not existing data should be replaced with the data in the submission. Each `import` parameter contains a `parameterUrl` part with an absolute URL identifying the option and a `parameterValue` part with its value. This parameter MAY be repeated. Specific `parameterUrl` values are defined in implementation guides for particular use cases.
     """
   * part[+]
     * name = #parameterUrl

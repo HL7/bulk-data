@@ -1,6 +1,8 @@
 The output manifest is a JSON object providing metadata and links to the generated Bulk Data files. The files SHALL be accessible to the {{ bulk_client_role }} at the URLs advertised. These URLs MAY be served by file servers other than the {{ bulk_server_role }} that accepted the asynchronous request.
 
-{% include export-manifest-fields.md %}
+Operations that use this pattern define manifests that extend the [Asynchronous Bulk Interaction Manifest](StructureDefinition-AsyncManifest.html) logical model, whose elements are shown below. For example, Bulk Export uses the [Bulk Data Manifest](StructureDefinition-BulkDataManifest.html).
+
+{% include async-manifest-fields.md %}
 
 Implementation notes:
 

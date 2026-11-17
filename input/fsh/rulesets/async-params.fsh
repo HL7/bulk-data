@@ -35,6 +35,6 @@ RuleSet: AsyncParam_maximumFileSize
   * documentation = """
     Support is optional for a server, optional for a client.
 
-    Specifies the maximum size in bytes for generated NDJSON files. The value SHALL be a positive integer and SHALL be greater than `_minimumFileSize` if both are specified. If a server supports this parameter, it SHALL construct files that do not exceed this size. The server MAY use a lower internal maximum.
+    Specifies the maximum size in bytes for generated NDJSON files. The value SHALL be a positive integer and SHALL be greater than `_minimumFileSize` if both are specified. If a server supports this parameter, it SHOULD construct files that do not exceed this size. The server MAY use a lower internal maximum.
     """
   * type = #positiveInt
