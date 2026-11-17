@@ -34,6 +34,7 @@ A Data Consumer requests the manifest describing a fully static or periodically 
 GET `[base]/$bulk-publish`
 
 - A Data Provider SHALL support retrieval of a Bulk Publish manifest through an HTTP GET request to an endpoint that terminates with a `$bulk-publish` segment.
+- A Data Consumer SHOULD include an `Accept` header of `application/json`.
 - A Data Consumer SHOULD include the conditional request HTTP header `If-None-Match` with each request when it has a previously received `ETag` value to avoid retrieving data when nothing has changed since the last request. Data Providers MAY support the use of this header.
 - When the `If-None-Match` value matches the current `ETag`, a Data Provider MAY return `304 Not Modified`.
 - A Data Provider that declares conformance with this operation SHOULD serve a CapabilityStatement at `[base]/metadata` whose `instantiates` includes `http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-publish` (see [Conformance and Publication](index.html#conformance-and-publication)).
@@ -45,6 +46,8 @@ The Data Provider SHALL return a manifest response with:
 - HTTP status `200 OK`
 - `Content-Type` header of `application/json`
 - Body of a root manifest page (see [Manifest Elements](#manifest-elements))
+
+The manifest is not a FHIR resource, so it is returned with a `Content-Type` of `application/json`, not `application/fhir+json`. The [Bulk Publish OperationDefinition](OperationDefinition-bulk-publish.html) models it as the `return` output parameter of type Binary.
 
 The response MAY include an `ETag` header. When included, the `ETag` value SHALL change when the manifest body changes.
 
