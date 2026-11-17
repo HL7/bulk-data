@@ -50,7 +50,7 @@ The response MAY include an `ETag` header. When included, the `ETag` value SHALL
 
 A manifest page is a JSON object providing metadata and links to the generated FHIR Bulk Data files. These files SHALL be accessible to the Data Consumer at the URLs advertised. The Bulk Data files MAY be served by file servers other than the server hosting the manifest endpoint.
 
-The Data Provider MAY update the manifest at any time and SHALL use the `transactionTime` element to indicate when the files were generated. The files referenced by the manifest SHOULD NOT include any FHIR resources modified after this instant, and SHALL include any matching resources modified up to and including this instant. File URLs SHALL NOT be reused between updates unless their contents have remained the same, and files that no longer appear in a manifest SHOULD remain available for a grace period following an update to avoid interrupting downloads that are in progress.
+The Data Provider MAY update the manifest at any time and SHALL use the `transactionTime` element to indicate when the files were generated. The files referenced by the manifest SHOULD NOT include any FHIR resources modified after this instant. Together with the files referenced by any preceding pages in the manifest chain, they SHALL reflect all changes to the published dataset up to and including this instant. File URLs SHALL NOT be reused between updates unless their contents have remained the same, and files that no longer appear in a manifest SHOULD remain available for a grace period following an update to avoid interrupting downloads that are in progress.
 
 The Data Provider SHOULD populate the `updateCadence` element to indicate the frequency with which the Data Provider expects to update the manifest.
 
@@ -58,11 +58,11 @@ Data Providers SHOULD set a reasonable `Cache-Control` header on the manifest (e
 
 The `output`, `deleted`, and `outcome` arrays describe downloadable files. Files listed in `output` contain FHIR resources to insert or update. Files listed in `deleted` identify resources to delete, as described in [Deleted Resources](#deleted-resources). Files listed in `outcome` contain OperationOutcome resources with errors, warnings, success, or informational messages about the dataset or publication process. For a given file URL, file contents are immutable: if the content changes, the Data Provider SHALL publish it at a new URL.
 
-A Data Provider MAY divide a large manifest into multiple manifest pages, by including a single instance of a `link` element that has a `relation` element with a value of `next`, and a `url` element pointing to the location of another manifest. All fields in the linked manifest SHALL be populated with the same values as the manifest with the link, apart from the `output`, `deleted`, `outcome`, and `link` arrays.
+A Data Provider MAY divide a large manifest into multiple manifest pages, by including a single instance of a `link` element that has a `relation` element with a value of `next`, and a `url` element pointing to the location of another manifest. Pages that describe a set of files SHALL be populated with the same values, apart from the `output`, `deleted`, `outcome`, and `link` arrays. The stub manifest page and each incremental update (see [Incremental Updates](#incremental-updates)) are not pages of the manifest that links to them, and have their own values, such as `transactionTime`.
 
-These `next` links represent ordinary manifest paging: the pages together describe one published dataset available when the Data Consumer starts retrieval. A Data Consumer follows ordinary `next` URLs until no `next` link is present.
+These `next` links represent ordinary manifest paging: the pages together describe one published dataset available when the Data Consumer starts retrieval. A Data Consumer follows ordinary `next` URLs until no `next` link is present or the next link URL is `#pending` or `#closed`.
 
-A Data Consumer SHALL process a manifest one page at a time by (1) inserting or updating all FHIR resources in files in the `output` array in array order, followed by (2) deleting all resources listed in files in the `deleted` array in array order. When the same resource type and logical id appear more than once, the Data Consumer SHALL keep the latest version by manifest order, unless it is later removed by a `deleted` entry. Files listed in the `outcome` array are informational. They convey errors, warnings, and information messages about the dataset or publication process and are not inserted into or deleted from the Data Consumer's dataset.
+A Data Consumer that maintains a local copy of the dataset SHALL process a manifest one page at a time by (1) inserting or updating all FHIR resources in files in the `output` array in array order, followed by (2) deleting all resources listed in files in the `deleted` array in array order. When the same resource type and logical id appear more than once, the Data Consumer SHALL keep the latest version by manifest order, unless it is later removed by a `deleted` entry. Files listed in the `outcome` array are informational. They convey errors, warnings, and information messages about the dataset or publication process and are not inserted into or deleted from the Data Consumer's dataset.
 
 Example simple manifest:
 
@@ -114,17 +114,17 @@ Separately from ordinary manifest paging, a Data Provider MAY provide manifests 
 
 For a visual overview of how a Data Consumer processes a Bulk Publish manifest that may include incremental updates, see the [Manifest Retrieval Flow](#manifest-retrieval-flow) diagram below.
 
-The `link` element in the manifest page returned at `[base]/$bulk-publish` SHALL NOT include a `url` with a value of `#pending`. To indicate that additional pages will be added to it with incremental updates, the Data Provider SHALL include a single instance of a `link` element that has a `relation` element with a value of `next`, and a `url` element pointing to the location of a "stub" manifest that does not contain files, but does contain a `#pending` next link URL.
+The `link` element in the manifest page returned at `[base]/$bulk-publish` SHALL NOT include a `url` with a value of `#pending`. To indicate that additional pages will be added with incremental updates, the Data Provider SHALL include in the last page of the root manifest a single instance of a `link` element that has a `relation` element with a value of `next`, and a `url` element pointing to the location of a "stub" manifest that does not contain files, but does contain a `#pending` next link URL.
 
 When an incremental update is available, the Data Provider SHALL update the link element in the last manifest page in the chain from `#pending` to the URL of the new manifest page. The Data Provider SHOULD periodically update the snapshot manifest at `[base]/$bulk-publish` with changes that have accrued since the last update, so a new client doesn't need to follow the entire chain to retrieve a full dataset.
 
 A Data Consumer SHOULD monitor the last manifest page in the chain with a link URL of `#pending` for changes and follow the next link URL when it is populated.
 
-A Data Provider SHALL end a manifest chain and indicate that a Data Consumer should reset their dataset to a new snapshot by replacing a `#pending` link URL value with a value of `#closed`, or by replacing the `#pending` link URL with a manifest that has a next link URL of `#closed`. Once a manifest advertises `#closed`, it is final and may not be mutated.
+When a Data Provider ends a manifest chain, it SHALL do so by replacing the `#pending` link URL with `#closed`, or with the URL of a new manifest page whose next link URL is `#closed`, to indicate that a Data Consumer should reset its dataset to a new snapshot. Once a manifest advertises `#closed`, it is final and may not be mutated.
 
 As with requests at `[base]/$bulk-publish`, when checking if a previously retrieved manifest has been updated, a Data Consumer SHOULD include the conditional request HTTP header `If-None-Match` when it has a previously received `ETag` value to avoid retrieving data when nothing has changed since the last request. Data Providers MAY support the use of this header, and when the `If-None-Match` value matches the current `ETag`, a Data Provider MAY return `304 Not Modified`.
 
-Manifests with a next link URL of `#pending` MAY carry an `ETag` and SHOULD NOT be served with long-lived immutable caching until finalized.
+Manifests with a next link URL of `#pending` MAY carry an `ETag` and SHOULD NOT be served with long-lived immutable caching until its next link URL is no longer `#pending`.
 
 If the manifest becomes temporarily unreachable (e.g., a 5xx error), a Data Consumer SHOULD back off and retry using exponential backoff bounded by the `updateCadence` of the manifest.
 
@@ -204,7 +204,7 @@ Using the URLs supplied by the Data Provider in the manifest, a Data Consumer MA
 
 If the `requiresAccessToken` element in the manifest is set to `true`, the request SHALL include a valid access token. See [Security Considerations](#security-considerations) above.
 
-If the `requiresAccessToken` element is set to `false` and no additional authorization-related extensions are present in the relevant manifest entry, then the referenced URLs SHALL be dereferenceable directly (a "capability URL"). A Data Consumer SHALL NOT provide a SMART Backend Services access token when dereferencing a URL from a manifest entry where `requiresAccessToken` is `false`.
+If the `requiresAccessToken` element is set to `false` and no additional authorization-related extensions are present in the relevant manifest entry, then the referenced URLs SHALL be dereferenceable without an access token (for example, a "capability URL", or a URL protected by mutual TLS or network-level controls). A Data Consumer SHALL NOT provide a SMART Backend Services access token when dereferencing a URL from a manifest entry where `requiresAccessToken` is `false`.
 
 A single data file SHALL include only the most recent version of any resource, though manifests that are updated incrementally MAY include an updated version of the resource in a subsequent file. Inclusion of the `Resource.meta` information in the resources is at the discretion of the Data Provider (as it is for all FHIR interactions).
 
@@ -297,7 +297,7 @@ A Data Provider may publish a new complete data snapshot at any time.
    - a new `transactionTime`
    - `output` entries for the new snapshot
    - `deleted` and `outcome` entries when applicable
-   - if the snapshot will be incrementally updated, a `next` link pointing to a manifest that contains a `next` link with a URL of `#pending`
+   - if the snapshot will be incrementally updated, a `next` link on the last page of the root manifest (which may be the root page itself) pointing to a "stub" manifest that contains a `next` link with a URL of `#pending`
 
 ---
 
@@ -311,7 +311,7 @@ A Data Provider may publish a new complete data snapshot at any time.
 
    - a new `transactionTime`;
    - `output`, `deleted`, and `outcome` entries for this step;
-   - `link[relation="next"].url = "#pending"` unless the provider already knows the chain is capped.
+   - `link[relation="next"].url = "#pending"`, or `"#closed"` if this page ends the chain.
 
 4. Update the prior pending page so that its `next` link points to this manifest.
 

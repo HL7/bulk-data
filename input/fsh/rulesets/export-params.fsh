@@ -160,6 +160,6 @@ RuleSet: ExportParam_allowPartialManifests
   * documentation = """
     Support is optional for a Data Provider, optional for a Data Consumer.
 
-    When provided, a Data Provider with support for the parameter MAY distribute the bulk data output files among multiple manifests, providing links for Data Consumers to page through the manifests ([see details](export.html#manifest-link)). Prior to all of the files in the export being available, the Data Provider MAY return a manifest with files that are available along with a `202 Accepted` HTTP response status, and subsequently update the manifest with a paging link to a new manifest when additional files are ready for download ([see details](export.html#response---in-progress-status)).
+    When provided, a Data Provider with support for the parameter MAY distribute the bulk data output files among multiple manifests, providing links for Data Consumers to page through the manifests ([see details](export.html#manifest-link)). Prior to all of the files in the export being available, the Data Provider MAY return a manifest with files that are available in an in-progress status response, and subsequently update the manifest with a paging link to a new manifest when additional files are ready for download ([see details](export.html#response---in-progress-status)).
   """
   * type = #boolean
