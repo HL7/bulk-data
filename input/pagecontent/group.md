@@ -30,6 +30,9 @@ Note: The FHIR Asynchronous Interaction Request pattern is defined in FHIR R5. I
 
 When a client and server are using SMART on FHIR authorization, scopes relevant to a group related API transaction SHALL be requested by the client and granted by the server prior to the client making the request. For example, when using SMART on FHIR v2, creating and managing Groups can be represented with `system/Group.cud` and retrieving the groups accessible to the client can be represented with `system/Group.rs`.
 
+#### Bulk Cohort Capability Documentation
+To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the Bulk Cohort profile as a `rest.resource.supportedProfile` of Group. Server providers SHOULD also ensure that their documentation addresses when and how often Bulk Cohort group membership is updated and which search parameters are supported in `member-filter` expressions.
+
 #### Group Profile
 
 **[Full Bulk Cohort Profile](StructureDefinition-bulk-cohort-group.html)**
@@ -93,6 +96,3 @@ Group with plan members filtered to patients with diabetes on their problem list
 {% fragment Group/BulkCohortGroupExample JSON ELIDE:id|meta|text %}
 
 [View Example](Group-BulkCohortGroupExample.json.html)
-
-### Server Capability Documentation
-To provide clarity to developers on which capabilities are implemented in a particular server, server providers SHALL ensure that their Capability Statement accurately reflects the Bulk Cohort profile as a `rest.resource.supportedProfile` of Group. Server providers SHOULD also ensure that their documentation addresses when and how often Bulk Cohort group membership is updated and which search parameters are supported in `member-filter` expressions.

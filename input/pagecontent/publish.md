@@ -12,9 +12,9 @@ In contrast to the [Bulk Export operation](export.html), the Bulk Publish operat
 
 Expected use cases include the publication of provider directory information, formulary information, and open scheduling slots.
 
-### Security Considerations
+### Privacy and Security Considerations
 
-All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL. With each of the requests described herein, implementers MAY implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html).
+All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://datatracker.ietf.org/doc/html/rfc5246) or a more recent version of TLS. Implementers MAY use mutual TLS. With each of the requests described herein, implementers MAY use OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html).
 
 ### Roles
 
@@ -125,7 +125,7 @@ A Data Consumer SHOULD monitor the last manifest page in the chain with a link U
 
 When a Data Provider ends a manifest chain, it SHALL do so by replacing the `#pending` link URL with `#closed`, or with the URL of a new manifest page whose next link URL is `#closed`, to indicate that a Data Consumer should reset its dataset to a new snapshot. Once a manifest advertises `#closed`, it is final and may not be mutated.
 
-As with requests at `[base]/$bulk-publish`, when checking if a previously retrieved manifest has been updated, a Data Consumer SHOULD include the conditional request HTTP header `If-None-Match` when it has a previously received `ETag` value to avoid retrieving data when nothing has changed since the last request. Data Providers MAY support the use of this header, and when the `If-None-Match` value matches the current `ETag`, a Data Provider MAY return `304 Not Modified`.
+The `If-None-Match` and `304 Not Modified` behavior described under Manifest Request also applies when a Data Consumer checks whether a previously retrieved manifest page has been updated.
 
 Manifests with a next link URL of `#pending` MAY carry an `ETag` and SHOULD NOT be served with long-lived immutable caching until its next link URL is no longer `#pending`.
 
@@ -205,7 +205,7 @@ For example, an NDJSON deleted resources file containing two deletion transactio
 
 Using the URLs supplied by the Data Provider in the manifest, a Data Consumer MAY download the referenced output, deleted, and outcome files.
 
-If the `requiresAccessToken` element in the manifest is set to `true`, the request SHALL include a valid access token. See [Security Considerations](#security-considerations) above.
+If the `requiresAccessToken` element in the manifest is set to `true`, the request SHALL include a valid access token. See [Privacy and Security Considerations](#privacy-and-security-considerations) above.
 
 If the `requiresAccessToken` element is set to `false` and no additional authorization-related extensions are present in the relevant manifest entry, then the referenced URLs SHALL be dereferenceable without an access token (for example, a "capability URL", or a URL protected by mutual TLS or network-level controls). A Data Consumer SHALL NOT provide a SMART Backend Services access token when dereferencing a URL from a manifest entry where `requiresAccessToken` is `false`.
 

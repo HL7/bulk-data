@@ -21,7 +21,7 @@ In Bulk Submit, the roles are reversed relative to Bulk Export in several respec
 
 ### Privacy and Security Considerations
 
-All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://tools.ietf.org/html/rfc5246) or a more recent version of TLS. Use of mutual TLS is OPTIONAL.
+All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://datatracker.ietf.org/doc/html/rfc5246) or a more recent version of TLS. Implementers MAY use mutual TLS.
 
 The Data Consumer SHOULD implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html). When SMART Backend Services Authorization is used, the Data Provider SHALL use a token with a scope of `system/bulk-submit` when kicking off the `$bulk-submit` operation, kicking off the `$bulk-submit-status` operation, making a polling or delete request to the endpoint provided from the kickoff, or retrieving files listed in a status manifest whose `requiresAccessToken` is `true`.
 
@@ -169,7 +169,7 @@ The request body SHALL be a FHIR [Parameters resource](https://hl7.org/fhir/para
 - `Prefer` (string)
   Specifies whether the response is immediate or asynchronous. A value of <a href="https://datatracker.ietf.org/doc/html/rfc7240#section-4.1"><code>respond-async</code></a> indicates that the response is asynchronous. A Data Provider SHOULD provide this header. If omitted, the Data Consumer MAY return an error or MAY process the request as if `respond-async` was supplied.
 
-  A Data Provider MAY also provide a second Prefer header value of `separate-export-status`, so the combined Prefer header for the kick-off request is `Prefer: respond-async,separate-export-status`. If this header value is included by a Data Provider and is supported by a Data Consumer, the Data Consumer SHALL return the header `Preference-Applied` with values of `respond-async` and `separate-export-status` in its response. These may be provided as comma-delimited values or the header may be repeated for each value.
+  A Data Provider MAY also provide a second Prefer header value of `separate-export-status`, so the combined Prefer header for the kick-off request is `Prefer: respond-async,separate-export-status`. If this header value is included by a Data Provider and is supported by a Data Consumer, the Data Consumer indicates this with a `Preference-Applied` header, as described under Response - Success below.
 
   When a Prefer header value of `separate-export-status` is provided in the kick-off request and supported by the Data Consumer, the HTTP status code in the response to a Bulk Data Status Request SHALL reflect the status request itself, and not the asynchronous job. In this case, when the HTTP status code of the Bulk Data Status Request is `200 OK`, the response SHALL also include an `X-Export-Status` header with an HTTP status code that reflects the status of the asynchronous job.
 
