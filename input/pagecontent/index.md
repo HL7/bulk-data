@@ -91,7 +91,7 @@ The [Bulk Data Access Implementation Guide Resource](ImplementationGuide-hl7.fhi
 
 ### Terminology
 
-The key words "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to be interpreted as described in [RFC2119](https://tools.ietf.org/html/rfc2119).
+The conformance verbs SHALL, SHALL NOT, SHOULD, SHOULD NOT, and MAY in this specification are to be interpreted as described in the [FHIR Conformance Language](https://hl7.org/fhir/R4/conformance-rules.html#conflang) rules.
 
 ### Datasets
 
