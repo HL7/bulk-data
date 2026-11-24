@@ -82,11 +82,14 @@ The [Bulk Data Access Implementation Guide Resource](ImplementationGuide-hl7.fhi
 
 * [HL7 FHIR](https://www.hl7.org/fhir/)
 * [Newline-delimited JSON](https://github.com/ndjson/ndjson-spec)
-* [RFC5246, Transport Layer Security (TLS) Protocol Version 1.2](https://tools.ietf.org/html/rfc5246)
-* [RFC6749, The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
-* [RFC6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://tools.ietf.org/html/rfc6750)
-* [RFC7159, The JavaScript Object Notation (JSON) Data Interchange Format](https://tools.ietf.org/html/rfc7159)
-* [RFC7240, Prefer Header for HTTP](https://tools.ietf.org/html/rfc7240)
+* [RFC5246, The Transport Layer Security (TLS) Protocol Version 1.2](https://datatracker.ietf.org/doc/html/rfc5246)
+* [RFC6749, The OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749)
+* [RFC6750, The OAuth 2.0 Authorization Framework: Bearer Token Usage](https://datatracker.ietf.org/doc/html/rfc6750)
+* [RFC7240, Prefer Header for HTTP](https://datatracker.ietf.org/doc/html/rfc7240)
+* [RFC8259, The JavaScript Object Notation (JSON) Data Interchange Format](https://datatracker.ietf.org/doc/html/rfc8259)
+* [RFC9700, Best Current Practice for OAuth 2.0 Security](https://datatracker.ietf.org/doc/html/rfc9700)
+* [RFC9728, OAuth 2.0 Protected Resource Metadata](https://datatracker.ietf.org/doc/html/rfc9728)
+* [RFC9846, The Transport Layer Security (TLS) Protocol Version 1.3](https://datatracker.ietf.org/doc/html/rfc9846)
 * [SMART App Launch, version 2.0.0 or later](https://hl7.org/fhir/smart-app-launch/), in particular the [Backend Services Authorization Profile](https://hl7.org/fhir/smart-app-launch/backend-services.html)
 
 ### Terminology
