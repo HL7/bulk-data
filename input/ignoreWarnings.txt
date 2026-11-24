@@ -5,6 +5,10 @@
 # 02. These are examples of the Bulk Data Manifest Logical Models and not FHIR Resources (see: https://chat.fhir.org/#narrow/channel/179252-IG-creation/topic/Logical.20Model.20Examples/with/392254859)
 %Unable to find resourceType property%
 
+# 10. The binary-content-model extension (http://hl7.org/fhir/StructureDefinition/binary-content-model) was approved for the FHIR Extensions Pack in FHIR-59964 and will be included in the next publication of the Extensions Pack.
+The extension http://hl7.org/fhir/StructureDefinition/binary-content-model could not be found so is not allowed here
+No definition could be found for URL value 'http://hl7.org/fhir/StructureDefinition/binary-content-model'
+
 
 # Warnings
 
