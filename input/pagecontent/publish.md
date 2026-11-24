@@ -125,7 +125,7 @@ A Data Consumer SHOULD monitor the last manifest page in the chain with a link U
 
 When a Data Provider ends a manifest chain, it SHALL do so by replacing the `#pending` link URL with `#closed`, or with the URL of a new manifest page whose next link URL is `#closed`, to indicate that a Data Consumer should reset its dataset to a new snapshot. Once a manifest advertises `#closed`, it is final and may not be mutated.
 
-As with requests at `[base]/$bulk-publish`, when checking if a previously retrieved manifest has been updated, a Data Consumer SHOULD include the conditional request HTTP header `If-None-Match` when it has a previously received `ETag` value to avoid retrieving data when nothing has changed since the last request. Data Providers MAY support the use of this header, and when the `If-None-Match` value matches the current `ETag`, a Data Provider MAY return `304 Not Modified`.
+The `If-None-Match` and `304 Not Modified` behavior described under Manifest Request also applies when a Data Consumer checks whether a previously retrieved manifest page has been updated.
 
 Manifests with a next link URL of `#pending` MAY carry an `ETag` and SHOULD NOT be served with long-lived immutable caching until its next link URL is no longer `#pending`.
 
