@@ -94,7 +94,7 @@ The [Bulk Data Access Implementation Guide Resource](ImplementationGuide-hl7.fhi
 
 ### Terminology
 
-The conformance verbs SHALL, SHALL NOT, SHOULD, SHOULD NOT, and MAY in this specification are to be interpreted as described in the [FHIR Conformance Language](https://hl7.org/fhir/R4/conformance-rules.html#conflang) rules.
+The conformance verbs SHALL, SHALL NOT, SHOULD, SHOULD NOT, and MAY in this specification are to be interpreted as described in the [FHIR Conformance Language](https://hl7.org/fhir/R4/conformance-rules.html#conflang) section.
 
 ### Datasets
 

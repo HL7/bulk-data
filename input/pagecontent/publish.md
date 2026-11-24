@@ -14,7 +14,7 @@ Expected use cases include the publication of provider directory information, fo
 
 ### Privacy and Security Considerations
 
-All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://datatracker.ietf.org/doc/html/rfc5246) or a more recent version of TLS. Implementations MAY use mutual TLS. With each of the requests described herein, implementers MAY implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html).
+All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://datatracker.ietf.org/doc/html/rfc5246) or a more recent version of TLS. Implementers MAY use mutual TLS. With each of the requests described herein, implementers MAY use OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html).
 
 ### Roles
 
