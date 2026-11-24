@@ -12,7 +12,7 @@ In contrast to the [Bulk Export operation](export.html), the Bulk Publish operat
 
 Expected use cases include the publication of provider directory information, formulary information, and open scheduling slots.
 
-### Security Considerations
+### Privacy and Security Considerations
 
 All exchanges described herein between a Data Consumer and a Data Provider SHALL be secured using [Transport Layer Security (TLS) Protocol Version 1.2 (RFC5246)](https://datatracker.ietf.org/doc/html/rfc5246) or a more recent version of TLS. Implementations MAY use mutual TLS. With each of the requests described herein, implementers MAY implement OAuth 2.0 access management in accordance with the [SMART Backend Services Authorization Profile](authorization.html).
 
@@ -205,7 +205,7 @@ For example, an NDJSON deleted resources file containing two deletion transactio
 
 Using the URLs supplied by the Data Provider in the manifest, a Data Consumer MAY download the referenced output, deleted, and outcome files.
 
-If the `requiresAccessToken` element in the manifest is set to `true`, the request SHALL include a valid access token. See [Security Considerations](#security-considerations) above.
+If the `requiresAccessToken` element in the manifest is set to `true`, the request SHALL include a valid access token. See [Privacy and Security Considerations](#privacy-and-security-considerations) above.
 
 If the `requiresAccessToken` element is set to `false` and no additional authorization-related extensions are present in the relevant manifest entry, then the referenced URLs SHALL be dereferenceable without an access token (for example, a "capability URL", or a URL protected by mutual TLS or network-level controls). A Data Consumer SHALL NOT provide a SMART Backend Services access token when dereferencing a URL from a manifest entry where `requiresAccessToken` is `false`.
 
