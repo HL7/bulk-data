@@ -21,6 +21,8 @@ Usage: #definition
   * min = 1
   * max = "1"
   * type = #Binary
+  * extension[+].url = "http://hl7.org/fhir/StructureDefinition/binary-content-model"
+  * extension[=].valueCanonical = "http://hl7.org/fhir/uv/bulkdata/StructureDefinition/BulkPublishManifest"
   * documentation = """
     The Bulk Publish manifest. The content is always returned as `application/json`, and the body is a [Bulk Publish Manifest](StructureDefinition-BulkPublishManifest.html), not a FHIR resource. A Data Consumer SHOULD specify `application/json` in the `Accept` header.
     """
