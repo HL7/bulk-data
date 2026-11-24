@@ -110,5 +110,5 @@ Use cases that return small amounts of data but may take a lot of time to proces
 
 ### Additional Documentation
 * [Discussion Group (FHIR Zulip "Bulk Data" Track)](https://chat.fhir.org/#narrow/stream/bulk.20data)
-* [Argonaut Project: Bulk Data Export Security Risk Assessment Report](security-risk-assessment-report.pdf)
+* [Argonaut Project: Bulk Data Export Security Risk Assessment Report](security-risk-assessment-report.pdf) (2019; assesses Bulk Export as defined in STU 1)
 * [Implementation Guide Change Log](changes.html)
