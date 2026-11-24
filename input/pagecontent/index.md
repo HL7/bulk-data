@@ -6,7 +6,7 @@ The operations are applicable to any data that can be represented in FHIR, and m
 
 The scope of this document does NOT include:
 
-* A legal framework for sharing data between partners, such as Business Associate Agreements, Service Level Agreements, and Data Use Agreements, though these may be required in many use cases.
+* A legal framework for sharing data between partners, such as Business Associate Agreements, Service Level Agreements, and Data Use Agreements, though these may be required in many use cases
 * Real-time data exchange
 * Data transformations, validation or processing that may be needed by the Data Consumer
 * Patient matching (although identifiers may be included in the FHIR resources being transmitted)
